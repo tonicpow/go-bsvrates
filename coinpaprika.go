@@ -17,7 +17,7 @@ import (
 // coinPaprikaBaseURL is the main url for the service
 const coinPaprikaBaseURL = "https://api.coinpaprika.com/v1/"
 
-// List of accepted known currencies (works for CoinPaprika)
+// List of accepted known currencies (works for CoinPaprika only)
 const (
 	AUDCurrencyID = "aud-australian-dollar"
 	BRLCurrencyID = "brl-brazil-real"

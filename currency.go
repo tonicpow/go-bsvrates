@@ -94,7 +94,7 @@ func TransformCurrencyToInt(decimalValue float64, currency Currency) (intVal int
 	return
 }
 
-// TransformIntToCurrency will take the int and return a float value
+// TransformIntToCurrency will take the int and return a float value.
 // Currently only supports USD and BSV
 func TransformIntToCurrency(intVal int, currency Currency) (decimalValue string, err error) {
 	if currency == CurrencyDollars {
@@ -165,7 +165,7 @@ func ConvertSatsToBSV(sats int) float64 {
 	return float64(sats) * 0.00000001
 }
 
-// ConvertPriceToSatoshis will get the satoshis (amount) from the current rate
+// ConvertPriceToSatoshis will get the satoshis (amount) from the current rate.
 // IE: 1 BSV = $150 and you want to know what $1 is in satoshis
 func ConvertPriceToSatoshis(currentRate float64, amount float64) (satoshis int64, err error) {
 

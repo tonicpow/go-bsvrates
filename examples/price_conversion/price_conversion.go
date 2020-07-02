@@ -11,7 +11,7 @@ import (
 
 func main() {
 
-	// Create a new client (all providers)
+	// Create a new client (all default providers)
 	client := bsvrates.NewClient(nil, nil)
 
 	// Get a conversion from $ to Sats

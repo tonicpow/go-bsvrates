@@ -39,15 +39,19 @@ View the generated [documentation](https://pkg.go.dev/github.com/tonicpow/go-bsv
 ### Features
 - [Client](client.go) is completely configurable
 - Using default [heimdall http client](https://github.com/gojek/heimdall) with exponential backoff & more
-- Use you own HTTP client
-- Helpful currency conversion and formatting methods
-- Supported Currencies
+- Use your own HTTP client
+- Helpful currency conversion and formatting methods:
+    - [ConvertSatsToBSV()](currency.go)
+    - [ConvertPriceToSatoshis()](currency.go)
+    - [TransformCurrencyToInt()](currency.go)
+    - [TransformIntToCurrency()](currency.go)
+    - [FormatCentsToDollars()](currency.go)
+- Supported Currencies:
     - USD
-- Supported Providers
+- Supported Providers:
     - [Coin Paprika](https://api.coinpaprika.com/)
     - [What's On Chain](https://developers.whatsonchain.com/)
     - [Preev](https://preev.pro/api/)
-
 
 <details>
 <summary><strong><code>Library Deployment</code></strong></summary>
@@ -130,7 +134,7 @@ Read more about this Go project's [code standards](CODE_STANDARDS.md).
 ## Usage
 View the [examples](examples)
 
-Basic implementation:
+Basic exchange rate implementation:
 ```go
 package main
 
@@ -142,12 +146,33 @@ import (
 
 func main() {
 
-	// Create a new client (all default providers)
+	// Create a new client (all default providers: Coin Paprika, WOC, Preev)
 	client := bsvrates.NewClient(nil, nil)
 
 	// Get rates
 	rate, provider, _ := client.GetRate(bsvrates.CurrencyDollars)
 	log.Printf("found rate: %v %s from provider: %s", rate, bsvrates.CurrencyToName(bsvrates.CurrencyDollars), provider.Name())
+}
+``` 
+
+Basic price conversion implementation:
+```go
+package main
+
+import (
+	"log"
+
+	"github.com/tonicpow/go-bsvrates"
+)
+
+func main() {
+
+	// Create a new client (all default providers: Coin Paprika, WOC, Preev)
+	client := bsvrates.NewClient(nil, nil)
+    
+	// Get a conversion from $ to Sats
+	satoshis, provider, _ := client.GetConversion(bsvrates.CurrencyDollars, 0.01)
+	log.Printf("$0.01 USD = %d Satoshis from provider: %s", satoshis, provider.Name())
 }
 ```
  

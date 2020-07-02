@@ -11,7 +11,7 @@ import (
 	"github.com/mrz1836/go-whatsonchain"
 )
 
-// GetRate will get a BSV->Currency rate from the list of providers
+// GetRate will get a BSV->Currency rate from the list of providers.
 // The first provider that succeeds is the rate that is returned
 func (c *Client) GetRate(currency Currency) (rate float64, providerUsed Provider, err error) {
 

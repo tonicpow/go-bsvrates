@@ -95,7 +95,7 @@ func (c *ClientOptions) ToWhatsOnChainOptions() (options *whatsonchain.Options) 
 	return
 }
 
-// DefaultClientOptions will return an Options struct with the default settings
+// DefaultClientOptions will return an Options struct with the default settings.
 // Useful for starting with the default and then modifying as needed
 func DefaultClientOptions() (clientOptions *ClientOptions) {
 	return &ClientOptions{

@@ -23,7 +23,7 @@ var (
 // Provider is a provider for rates or prices
 type Provider uint8
 
-// Provider constants for the different available rate providers
+// Provider constants for the different available rate providers.
 // Leave the start and last constants in place
 const (
 	_                    Provider = iota
@@ -60,7 +60,7 @@ func ProviderToName(provider Provider) string {
 // Currency is a valid currency for rates or prices
 type Currency uint8
 
-// Currency constants for the different available currencies
+// Currency constants for the different available currencies.
 // Leave the start and last constants in place
 const (
 	_               Currency = iota
@@ -76,7 +76,6 @@ func (c Currency) IsValid() bool {
 }
 
 // IsAccepted tests if the currency is accepted by all providers
-// todo: only supporting USD right now across all providers
 func (c Currency) IsAccepted() bool {
 	if c == CurrencyDollars {
 		return true

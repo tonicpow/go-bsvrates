@@ -8,7 +8,7 @@ import (
 	"github.com/mrz1836/go-whatsonchain"
 )
 
-// GetConversion will get the satoshi amount for the given currency + amount provided
+// GetConversion will get the satoshi amount for the given currency + amount provided.
 // The first provider that succeeds is the conversion that is returned
 func (c *Client) GetConversion(currency Currency, amount float64) (satoshis int64, providerUsed Provider, err error) {
 
