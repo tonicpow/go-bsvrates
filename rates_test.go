@@ -159,8 +159,8 @@ func (m *mockPaprikaFailed) IsAcceptedCurrency(currency string) bool {
 }
 
 // newMockClient returns a client for mocking
-func newMockClient(wocClient whatsOnChainInterface, paprikaClient coinPaprikaInterface, preevClient preevInterface) *Client {
-	client := NewClient(nil, nil)
+func newMockClient(wocClient whatsOnChainInterface, paprikaClient coinPaprikaInterface, preevClient preevInterface, providers ...Provider) *Client {
+	client := NewClient(nil, nil, providers...)
 	client.WhatsOnChain = wocClient
 	client.CoinPaprika = paprikaClient
 	client.Preev = preevClient
@@ -200,6 +200,25 @@ func TestClient_GetRateFailed(t *testing.T) {
 	}
 
 	// Test a valid response (after failing on the first provider)
+	rate, provider, err := client.GetRate(CurrencyDollars)
+	if err != nil {
+		t.Fatalf("error occurred: %s", err.Error())
+	} else if rate == 0 {
+		t.Fatalf("rate was 0 for provider: %s", provider.Name())
+	} else if !provider.IsValid() {
+		t.Fatalf("provider: %s was invalid", provider.Name())
+	}
+
+	t.Logf("found rate: %f from provider: %s", rate, provider.Name())
+}
+
+// TestClient_GetRateCustomProviders will test the method GetRate()
+func TestClient_GetRateCustomProviders(t *testing.T) {
+
+	// Set a valid client
+	client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{}, ProviderPreev, ProviderWhatsOnChain)
+
+	// Test a valid response
 	rate, provider, err := client.GetRate(CurrencyDollars)
 	if err != nil {
 		t.Fatalf("error occurred: %s", err.Error())
