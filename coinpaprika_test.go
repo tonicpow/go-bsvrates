@@ -23,31 +23,31 @@ func (m *mockHTTPPaprika) Do(req *http.Request) (*http.Response, error) {
 	}
 
 	// Valid
-	if req.URL.String() == coinPaprikaBaseURL+"price-converter?base_currency_id="+USDCurrencyID+"&quote_currency_id="+CoinPaprikaQuoteID+"&amount=0.01" {
+	if req.URL.String() == coinPaprikaBaseURL+"price-converter?base_currency_id="+USDCurrencyID+"&quote_currency_id="+CoinPaprikaQuoteID+"&amount=0.010000" {
 		resp.StatusCode = http.StatusOK
 		resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"base_currency_id":"usd-us-dollars","base_currency_name":"US Dollars","base_price_last_updated":"2020-06-28T19:05:12Z","quote_currency_id":"bsv-bitcoin-sv","quote_currency_name":"Bitcoin SV","quote_price_last_updated":"2020-06-28T19:04:16Z","amount":0.01,"price":0.000062865274346746}`)))
 	}
 
 	// Valid
-	if req.URL.String() == coinPaprikaBaseURL+"price-converter?base_currency_id="+USDCurrencyID+"&quote_currency_id="+CoinPaprikaQuoteID+"&amount=1" {
+	if req.URL.String() == coinPaprikaBaseURL+"price-converter?base_currency_id="+USDCurrencyID+"&quote_currency_id="+CoinPaprikaQuoteID+"&amount=1.000000" {
 		resp.StatusCode = http.StatusOK
 		resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"base_currency_id":"usd-us-dollars","base_currency_name":"US Dollars","base_price_last_updated":"2020-06-28T19:07:37Z","quote_currency_id":"bsv-bitcoin-sv","quote_currency_name":"Bitcoin SV","quote_price_last_updated":"2020-06-28T19:05:52Z","amount":1,"price":0.006277681354322026}`)))
 	}
 
 	// Valid
-	if req.URL.String() == coinPaprikaBaseURL+"price-converter?base_currency_id="+JPYCurrencyID+"&quote_currency_id="+CoinPaprikaQuoteID+"&amount=1" {
+	if req.URL.String() == coinPaprikaBaseURL+"price-converter?base_currency_id="+JPYCurrencyID+"&quote_currency_id="+CoinPaprikaQuoteID+"&amount=1.000000" {
 		resp.StatusCode = http.StatusOK
 		resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"base_currency_id":"jpy-japanese-yen","base_currency_name":"Japanese Yen","base_price_last_updated":"2020-06-28T19:01:09Z","quote_currency_id":"bsv-bitcoin-sv","quote_currency_name":"Bitcoin SV","quote_price_last_updated":"2020-06-28T19:10:17Z","amount":1,"price":0.00005857139480395992}`)))
 	}
 
 	// Invalid (error in request)
-	if req.URL.String() == coinPaprikaBaseURL+"price-converter?base_currency_id="+USDCurrencyID+"&quote_currency_id="+CoinPaprikaQuoteID+"&amount=501" {
+	if req.URL.String() == coinPaprikaBaseURL+"price-converter?base_currency_id="+USDCurrencyID+"&quote_currency_id="+CoinPaprikaQuoteID+"&amount=501.000000" {
 		resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(``)))
 		return resp, fmt.Errorf(`http timeout`)
 	}
 
 	// Invalid (bad gateway)
-	if req.URL.String() == coinPaprikaBaseURL+"price-converter?base_currency_id="+USDCurrencyID+"&quote_currency_id="+CoinPaprikaQuoteID+"&amount=502" {
+	if req.URL.String() == coinPaprikaBaseURL+"price-converter?base_currency_id="+USDCurrencyID+"&quote_currency_id="+CoinPaprikaQuoteID+"&amount=502.000000" {
 		resp.StatusCode = http.StatusBadGateway
 		resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(``)))
 		return resp, nil
@@ -147,28 +147,28 @@ func TestPaprikaClient_GetPriceConversion(t *testing.T) {
 	var tests = []struct {
 		baseCurrency  string
 		quoteCurrency string
-		amount        string
+		amount        float64
 		expectedPrice float64
 		expectedError bool
 		statusCode    int
 	}{
-		{USDCurrencyID, CoinPaprikaQuoteID, "0.01", 0.000062865274346746, false, http.StatusOK},
-		{USDCurrencyID, CoinPaprikaQuoteID, "1", 0.006277681354322026, false, http.StatusOK},
-		{USDCurrencyID, CoinPaprikaQuoteID, "501", 0, true, http.StatusBadRequest},
-		{USDCurrencyID, CoinPaprikaQuoteID, "502", 0, true, http.StatusBadGateway},
-		{JPYCurrencyID, CoinPaprikaQuoteID, "1", 0.00005857139480395992, false, http.StatusOK},
+		{USDCurrencyID, CoinPaprikaQuoteID, 0.01, 0.000062865274346746, false, http.StatusOK},
+		{USDCurrencyID, CoinPaprikaQuoteID, 1, 0.006277681354322026, false, http.StatusOK},
+		{USDCurrencyID, CoinPaprikaQuoteID, 501, 0, true, http.StatusBadRequest},
+		{USDCurrencyID, CoinPaprikaQuoteID, 502, 0, true, http.StatusBadGateway},
+		{JPYCurrencyID, CoinPaprikaQuoteID, 1, 0.00005857139480395992, false, http.StatusOK},
 	}
 
 	// Test all
 	for _, test := range tests {
 		if output, err := client.CoinPaprika.GetPriceConversion(test.baseCurrency, test.quoteCurrency, test.amount); err == nil && test.expectedError {
-			t.Errorf("%s Failed: expected to throw an error, no error [%s] [%s] [%s] inputted", t.Name(), test.baseCurrency, test.quoteCurrency, test.amount)
+			t.Errorf("%s Failed: expected to throw an error, no error [%s] [%s] [%f] inputted", t.Name(), test.baseCurrency, test.quoteCurrency, test.amount)
 		} else if err != nil && !test.expectedError {
-			t.Errorf("%s Failed: [%s] [%s] [%s] inputted, received: [%v] error [%s]", t.Name(), test.baseCurrency, test.quoteCurrency, test.amount, output, err.Error())
+			t.Errorf("%s Failed: [%s] [%s] [%f] inputted, received: [%v] error [%s]", t.Name(), test.baseCurrency, test.quoteCurrency, test.amount, output, err.Error())
 		} else if output != nil && output.Price != test.expectedPrice && !test.expectedError {
-			t.Errorf("%s Failed: [%s] [%s] [%s] inputted and [%f] expected, received: [%f]", t.Name(), test.baseCurrency, test.quoteCurrency, test.amount, test.expectedPrice, output.Price)
+			t.Errorf("%s Failed: [%s] [%s] [%f] inputted and [%f] expected, received: [%f]", t.Name(), test.baseCurrency, test.quoteCurrency, test.amount, test.expectedPrice, output.Price)
 		} else if output != nil && output.LastRequest.StatusCode != test.statusCode {
-			t.Errorf("%s Expected status code to be %d, got %d, [%s] [%s] [%s] inputted", t.Name(), test.statusCode, output.LastRequest.StatusCode, test.baseCurrency, test.quoteCurrency, test.amount)
+			t.Errorf("%s Expected status code to be %d, got %d, [%s] [%s] [%f] inputted", t.Name(), test.statusCode, output.LastRequest.StatusCode, test.baseCurrency, test.quoteCurrency, test.amount)
 		}
 	}
 
@@ -285,6 +285,43 @@ func TestPriceConversionResponse_GetSatoshi(t *testing.T) {
 			t.Errorf("%s Failed: [%f] inputted, received: [%s] error [%s]", t.Name(), test.response.Amount, satoshi, err.Error())
 		} else if satoshi != test.satoshi && !test.expectedError {
 			t.Errorf("%s Failed: [%f] inputted and [%s] expected, received: [%s]", t.Name(), test.response.Amount, test.satoshi, satoshi)
+		}
+	}
+}
+
+// TestPriceConversionResponse_GetSatoshiInt will test the method GetSatoshiInt()
+func TestPriceConversionResponse_GetSatoshiInt(t *testing.T) {
+	t.Parallel()
+
+	// Create the list of tests
+	var tests = []struct {
+		response      PriceConversionResponse
+		satoshi       int64
+		expectedError bool
+	}{
+		{PriceConversionResponse{Price: 0}, 0, false},
+		{PriceConversionResponse{Price: 1}, 100000000, false},
+		{PriceConversionResponse{Price: 0.01}, 1000000, false},
+		{PriceConversionResponse{Price: 0.001}, 100000, false},
+		{PriceConversionResponse{Price: 0.0001}, 10000, false},
+		{PriceConversionResponse{Price: 0.00001}, 1000, false},
+		{PriceConversionResponse{Price: 0.000001}, 100, false},
+		{PriceConversionResponse{Price: 0.0000001}, 10, false},
+		{PriceConversionResponse{Price: 0.00000001}, 1, false},
+		{PriceConversionResponse{Price: 0.000000001}, 0, false},
+		{PriceConversionResponse{Price: 45627467}, 4562746700000000, false},
+		{PriceConversionResponse{Price: math.NaN()}, 0, true},
+		{PriceConversionResponse{Price: math.Inf(1)}, 0, true},
+	}
+
+	// Test all
+	for _, test := range tests {
+		if satoshi, err := test.response.GetSatoshiInt(); err == nil && test.expectedError {
+			t.Errorf("%s Failed: expected to throw an error, no error [%v] inputted", t.Name(), test.response)
+		} else if err != nil && !test.expectedError {
+			t.Errorf("%s Failed: [%f] inputted, received: [%d] error [%s]", t.Name(), test.response.Amount, satoshi, err.Error())
+		} else if satoshi != test.satoshi && !test.expectedError {
+			t.Errorf("%s Failed: [%f] inputted and [%d] expected, received: [%d]", t.Name(), test.response.Amount, test.satoshi, satoshi)
 		}
 	}
 }

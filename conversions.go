@@ -25,7 +25,7 @@ func (c *Client) GetConversion(currency Currency, amount float64) (satoshis int6
 		switch provider {
 		case ProviderCoinPaprika:
 			var response *PriceConversionResponse
-			if response, err = c.CoinPaprika.GetPriceConversion(USDCurrencyID, CoinPaprikaQuoteID, fmt.Sprintf("%.2f", amount)); err == nil && response != nil {
+			if response, err = c.CoinPaprika.GetPriceConversion(USDCurrencyID, CoinPaprikaQuoteID, amount); err == nil && response != nil {
 				var sats string
 				if sats, err = response.GetSatoshi(); err == nil {
 					satoshis, err = strconv.ParseInt(sats, 10, 64)

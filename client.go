@@ -30,7 +30,7 @@ type whatsOnChainInterface interface {
 type coinPaprikaInterface interface {
 	GetBaseAmountAndCurrencyID(currency string, amount float64) (string, float64)
 	GetMarketPrice(coinID string) (response *TickerResponse, err error)
-	GetPriceConversion(baseCurrencyID, quoteCurrencyID, amount string) (response *PriceConversionResponse, err error)
+	GetPriceConversion(baseCurrencyID, quoteCurrencyID string, amount float64) (response *PriceConversionResponse, err error)
 	IsAcceptedCurrency(currency string) bool
 }
 

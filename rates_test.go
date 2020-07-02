@@ -3,7 +3,6 @@ package bsvrates
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 	"testing"
 
 	"github.com/mrz1836/go-preev"
@@ -64,11 +63,10 @@ func (m *mockPaprikaValid) GetBaseAmountAndCurrencyID(currency string, amount fl
 }
 
 // GetPriceConversion is a mock response
-func (m *mockPaprikaValid) GetPriceConversion(baseCurrencyID, quoteCurrencyID, amount string) (response *PriceConversionResponse, err error) {
+func (m *mockPaprikaValid) GetPriceConversion(baseCurrencyID, quoteCurrencyID string, amount float64) (response *PriceConversionResponse, err error) {
 
-	floatVal, _ := strconv.ParseFloat(amount, 64)
 	response = &PriceConversionResponse{
-		Amount:                floatVal,
+		Amount:                amount,
 		BaseCurrencyID:        baseCurrencyID,
 		BaseCurrencyName:      "US Dollars",
 		BasePriceLastUpdated:  "2020-07-01T22:03:14Z",
@@ -147,7 +145,7 @@ func (m *mockPaprikaFailed) GetBaseAmountAndCurrencyID(currency string, amount f
 }
 
 // GetPriceConversion is a mock response
-func (m *mockPaprikaFailed) GetPriceConversion(baseCurrencyID, quoteCurrencyID, amount string) (response *PriceConversionResponse, err error) {
+func (m *mockPaprikaFailed) GetPriceConversion(baseCurrencyID, quoteCurrencyID string, amount float64) (response *PriceConversionResponse, err error) {
 
 	return
 }
