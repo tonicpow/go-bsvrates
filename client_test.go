@@ -9,7 +9,7 @@ import (
 
 // TestNewClient test new client
 func TestNewClient(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 
 	client := NewClient(nil, nil)
 
