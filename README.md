@@ -1,11 +1,11 @@
 # go-bsvrates
 > Get the current exchange rate of BSV and other helpful currency conversions
 
-[![Release](https://img.shields.io/github/release-pre/tonicpow/go-bsvrates.svg?logo=github&style=flat&v=1)](https://github.com/tonicpow/go-bsvrates/releases)
-[![Build Status](https://travis-ci.com/tonicpow/go-bsvrates.svg?branch=master&v=1)](https://travis-ci.com/tonicpow/go-bsvrates)
-[![Report](https://goreportcard.com/badge/github.com/tonicpow/go-bsvrates?style=flat&v=1)](https://goreportcard.com/report/github.com/tonicpow/go-bsvrates)
-[![codecov](https://codecov.io/gh/tonicpow/go-bsvrates/branch/master/graph/badge.svg?v=1)](https://codecov.io/gh/tonicpow/go-bsvrates)
-[![Go](https://img.shields.io/github/go-mod/go-version/tonicpow/go-bsvrates?v=1)](https://golang.org/)
+[![Release](https://img.shields.io/github/release-pre/tonicpow/go-bsvrates.svg?logo=github&style=flat&v=2)](https://github.com/tonicpow/go-bsvrates/releases)
+[![Build Status](https://travis-ci.com/tonicpow/go-bsvrates.svg?branch=master&v=2)](https://travis-ci.com/tonicpow/go-bsvrates)
+[![Report](https://goreportcard.com/badge/github.com/tonicpow/go-bsvrates?style=flat&v=2)](https://goreportcard.com/report/github.com/tonicpow/go-bsvrates)
+[![codecov](https://codecov.io/gh/tonicpow/go-bsvrates/branch/master/graph/badge.svg?v=2)](https://codecov.io/gh/tonicpow/go-bsvrates)
+[![Go](https://img.shields.io/github/go-mod/go-version/tonicpow/go-bsvrates?v=2)](https://golang.org/)
 
 <br/>
 
@@ -178,4 +178,4 @@ or by making a [**bitcoin donation**](https://mrz1818.com/?tab=tips&af=go-bsvrat
 
 ## License
 
-![License](https://img.shields.io/github/license/tonicpow/go-bsvrates.svg?style=flat&v=1)
+![License](https://img.shields.io/github/license/tonicpow/go-bsvrates.svg?style=flat&v=2)
