@@ -160,6 +160,29 @@ func TestCurrencyToName(t *testing.T) {
 	}
 }
 
+// TestCurrencyFromName will test the method CurrencyFromName()
+func TestCurrencyFromName(t *testing.T) {
+	t.Parallel()
+
+	// Create the list of tests
+	var tests = []struct {
+		input    string
+		expected Currency
+	}{
+		{"", CurrencyDollars},
+		{"usd", CurrencyDollars},
+		{"bsv", CurrencyBitcoin},
+		{"bogus", CurrencyDollars},
+	}
+
+	// Test all
+	for _, test := range tests {
+		if currency := CurrencyFromName(test.input); currency != test.expected {
+			t.Errorf("%s Failed: Currency returned a unexpected result: %d", t.Name(), currency)
+		}
+	}
+}
+
 // TestCurrency_IsAccepted will test the method IsAccepted()
 func TestCurrency_IsAccepted(t *testing.T) {
 	t.Parallel()

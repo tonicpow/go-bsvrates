@@ -1,5 +1,7 @@
 package bsvrates
 
+import "strings"
+
 const (
 
 	// version is the current package version
@@ -90,11 +92,24 @@ func (c Currency) Name() string {
 		return "usd"
 	case CurrencyBitcoin:
 		return "bsv"
+	default:
+		return ""
 	}
-	return ""
 }
 
 // CurrencyToName helper function to convert the currency value to it's associated name
 func CurrencyToName(currency Currency) string {
 	return currency.Name()
+}
+
+// CurrencyFromName helper function to convert the name into it's Currency type
+func CurrencyFromName(name string) Currency {
+	switch strings.ToLower(name) {
+	case "usd":
+		return CurrencyDollars
+	case "bsv":
+		return CurrencyBitcoin
+	default:
+		return CurrencyDollars
+	}
 }
