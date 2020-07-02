@@ -132,9 +132,6 @@ func NewClient(clientOptions *ClientOptions, customHTTPClient *http.Client, prov
 		clientOptions = DefaultClientOptions()
 	}
 
-	// Set the user agent for the package
-	currentUserAgent = clientOptions.UserAgent
-
 	// Create a client for Coin Paprika
 	client.CoinPaprika = createPaprikaClient(clientOptions, customHTTPClient)
 

@@ -120,6 +120,7 @@ func (p PriceConversionResponse) GetSatoshi() (satoshi string, err error) {
 // PaprikaClient is the client for Coin Paprika
 type PaprikaClient struct {
 	HTTPClient httpInterface // carries out the http operations (heimdall client)
+	UserAgent  string
 }
 
 // lastRequest is used to track what was submitted via the Coin Paprika Request
@@ -146,6 +147,9 @@ func createPaprikaClient(options *ClientOptions, customHTTPClient *http.Client) 
 	if options == nil {
 		options = DefaultClientOptions()
 	}
+
+	// Set the user agent
+	c.UserAgent = options.UserAgent
 
 	// dial is the net dialer for clientDefaultTransport
 	dial := &net.Dialer{KeepAlive: options.DialerKeepAlive, Timeout: options.DialerTimeout}
@@ -268,7 +272,7 @@ func (p *PaprikaClient) GetPriceConversion(baseCurrencyID, quoteCurrencyID, amou
 	req.Header.Set("Content-Type", "application/json")
 
 	// Change the header (user agent is in case they block default Go user agents)
-	req.Header.Set("User-Agent", currentUserAgent)
+	req.Header.Set("User-Agent", p.UserAgent)
 
 	// Start the response
 	response = new(PriceConversionResponse)
@@ -321,7 +325,7 @@ func (p *PaprikaClient) GetMarketPrice(coinID string) (response *TickerResponse,
 	req.Header.Set("Content-Type", "application/json")
 
 	// Change the header (user agent is in case they block default Go user agents)
-	req.Header.Set("User-Agent", currentUserAgent)
+	req.Header.Set("User-Agent", p.UserAgent)
 
 	// Start the response
 	response = new(TickerResponse)

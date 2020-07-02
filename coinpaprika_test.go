@@ -138,7 +138,7 @@ func TestPaprikaClient_GetBaseAmountAndCurrencyID(t *testing.T) {
 
 // TestPaprikaClient_GetPriceConversion will test the method GetPriceConversion()
 func TestPaprikaClient_GetPriceConversion(t *testing.T) {
-	// t.Parallel()
+	t.Parallel()
 
 	// New mock client
 	client := newMockPaprikaClient(&mockHTTPPaprika{})

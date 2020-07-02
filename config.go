@@ -16,9 +16,6 @@ const (
 )
 
 var (
-	// currentUserAgent is the user agent for all package HTTP requests
-	currentUserAgent = defaultUserAgent
-
 	// defaultProviders (if no provider slice is set, use this as the default set)
 	defaultProviders = []Provider{ProviderCoinPaprika, ProviderWhatsOnChain, ProviderPreev}
 )
