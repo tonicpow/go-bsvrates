@@ -272,6 +272,7 @@ func TestConvertFloatToIntBSV(t *testing.T) {
 		{0.00000001, 1, false},
 		{0.00000111, 111, false},
 		{-0.00000111, -111, false},
+		{math.Inf(1), -111, true},
 	}
 
 	// Test all
@@ -537,6 +538,7 @@ func TestConvertPriceToSatoshis(t *testing.T) {
 		{1000000, 1, 100, false},
 		{0, 1, 0, true},
 		{1, 0, 0, true},
+		{math.Inf(1), 0, 0, true},
 	}
 
 	// Test all
