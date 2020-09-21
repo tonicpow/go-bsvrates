@@ -318,3 +318,45 @@ func ExampleTransformIntToCurrency() {
 	fmt.Printf("%s", val)
 	// Output:10.00
 }
+
+// TestConvertIntToFloatUSD will test the method ConvertIntToFloatUSD()
+func TestConvertIntToFloatUSD(t *testing.T) {
+	t.Parallel()
+
+	// Create the list of tests
+	var tests = []struct {
+		integer  uint64
+		expected float64
+	}{
+		{0, 0.00},
+		{1, 0.010000},
+		{10, 0.10000},
+		{100, 1.0},
+		{1000, 10.0},
+		{10000, 100.0},
+		{10001, 100.01},
+		{10099, 100.99},
+		{10999, 109.99},
+	}
+
+	// Test all
+	for _, test := range tests {
+		if output := ConvertIntToFloatUSD(test.integer); output != test.expected {
+			t.Errorf("%s Failed: [%d] inputted and [%f] expected, received: [%f]", t.Name(), test.integer, test.expected, output)
+		}
+	}
+}
+
+// BenchmarkConvertIntPriceToFloat benchmarks the method ConvertIntToFloatUSD()
+func BenchmarkConvertIntToFloatUSD(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = ConvertIntToFloatUSD(10000)
+	}
+}
+
+// ExampleConvertIntToFloatUSD example using ConvertIntToFloatUSD()
+func ExampleConvertIntToFloatUSD() {
+	val := ConvertIntToFloatUSD(1000000)
+	fmt.Printf("%f", val)
+	// Output:10000.000000
+}

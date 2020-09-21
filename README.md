@@ -42,6 +42,7 @@ View the generated [documentation](https://pkg.go.dev/github.com/tonicpow/go-bsv
 - Use your own HTTP client
 - Helpful currency conversion and formatting methods:
     - [ConvertFloatToIntBSV()](currency.go)
+    - [ConvertIntToFloatUSD()](currency.go)
     - [ConvertPriceToSatoshis()](currency.go)
     - [ConvertSatsToBSV()](currency.go)
     - [FormatCentsToDollars()](currency.go)

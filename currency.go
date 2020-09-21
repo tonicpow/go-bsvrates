@@ -83,7 +83,7 @@ func TransformIntToCurrency(intValue int, currency Currency) (string, error) {
 	return "", fmt.Errorf("currency %s cannot be transformed", currency.Name())
 }
 
-// ConvertFloatToIntBSV converts the BSV float value to the sats value
+// ConvertFloatToIntBSV converts the BSV float value to the sats int value
 func ConvertFloatToIntBSV(floatValue float64) int64 {
 
 	// Do conversion to satoshis (percentage) using decimal package to avoid float issues
@@ -93,4 +93,31 @@ func ConvertFloatToIntBSV(floatValue float64) int64 {
 
 	// Drop decimals after since can only have whole Satoshis
 	return satoshisDecimal.Ceil().IntPart()
+}
+
+// ConvertIntToFloatUSD converts int to float (int cents to float dollars)
+func ConvertIntToFloatUSD(cents uint64) float64 {
+
+	// Convert integer price to decimal price without float math
+	if cents == 0 {
+		return 0.0
+	}
+
+	// Create the cents string
+	centsString := strconv.FormatUint(cents, 10)
+	if cents < 100 {
+		centsString = "00" + centsString
+		centsString = centsString[len(centsString)-3:]
+	}
+
+	// Create the cents runes
+	centsChars := []rune(centsString)
+	l := len(centsChars) - 1
+	centsChars = append(centsChars, ' ')
+	centsChars[l+1], centsChars[l] = centsChars[l], centsChars[l-1]
+	centsChars[l-1] = '.'
+
+	// Parse into a float
+	dollars, _ := strconv.ParseFloat(string(centsChars), 64)
+	return dollars
 }
