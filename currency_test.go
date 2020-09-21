@@ -270,3 +270,51 @@ func ExampleConvertFloatToIntBSV() {
 	fmt.Printf("%d", val)
 	// Output:1001000000
 }
+
+// TestTransformIntToCurrency will test the method TransformIntToCurrency()
+func TestTransformIntToCurrency(t *testing.T) {
+	t.Parallel()
+
+	// Create the list of tests
+	var tests = []struct {
+		integer       int
+		currency      Currency
+		expected      string
+		expectedError bool
+	}{
+		{0, CurrencyDollars, "0.00", false},
+		{-1, CurrencyDollars, "-0.01", false},
+		{127, CurrencyDollars, "1.27", false},
+		{1274, CurrencyDollars, "12.74", false},
+		{1276, CurrencyDollars, "12.76", false},
+		{1270000, CurrencyDollars, "12700.00", false},
+		{127, CurrencyBitcoin, "0.00000127", false},
+		{123456789123, CurrencyBitcoin, "1234.56789123", false},
+		{111, 123, "", true},
+	}
+
+	// Test all
+	for _, test := range tests {
+		if output, err := TransformIntToCurrency(test.integer, test.currency); err == nil && test.expectedError {
+			t.Errorf("%s Failed: expected to throw an error, no error [%d] inputted [%s] currency", t.Name(), test.integer, test.currency.Name())
+		} else if err != nil && !test.expectedError {
+			t.Errorf("%s Failed: [%d] inputted, received: [%s] error [%s]", t.Name(), test.integer, output, err.Error())
+		} else if output != test.expected && !test.expectedError {
+			t.Errorf("%s Failed: [%d] inputted and [%s] expected, received: [%s]", t.Name(), test.integer, test.expected, output)
+		}
+	}
+}
+
+// BenchmarkTransformIntToCurrency benchmarks the method TransformIntToCurrency()
+func BenchmarkTransformIntToCurrency(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = TransformIntToCurrency(1000, CurrencyDollars)
+	}
+}
+
+// ExampleTransformIntToCurrency example using TransformIntToCurrency()
+func ExampleTransformIntToCurrency() {
+	val, _ := TransformIntToCurrency(1000, CurrencyDollars)
+	fmt.Printf("%s", val)
+	// Output:10.00
+}

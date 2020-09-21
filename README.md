@@ -46,6 +46,7 @@ View the generated [documentation](https://pkg.go.dev/github.com/tonicpow/go-bsv
     - [ConvertSatsToBSV()](currency.go)
     - [FormatCentsToDollars()](currency.go)
     - [TransformCurrencyToInt()](currency.go)
+    - [TransformIntToCurrency()](currency.go)
 - Supported Currencies:
     - USD
 - Supported Providers:

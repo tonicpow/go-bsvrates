@@ -72,6 +72,17 @@ func TransformCurrencyToInt(decimalValue float64, currency Currency) (int64, err
 	return 0, fmt.Errorf("currency %s cannot be transformed", currency.Name())
 }
 
+// TransformIntToCurrency will take the int and return a float value.
+// Currently only supports USD and BSV
+func TransformIntToCurrency(intValue int, currency Currency) (string, error) {
+	if currency == CurrencyDollars {
+		return FormatCentsToDollars(intValue), nil
+	} else if currency == CurrencyBitcoin {
+		return fmt.Sprintf("%8.8f", ConvertSatsToBSV(intValue)), nil
+	}
+	return "", fmt.Errorf("currency %s cannot be transformed", currency.Name())
+}
+
 // ConvertFloatToIntBSV converts the BSV float value to the sats value
 func ConvertFloatToIntBSV(floatValue float64) int64 {
 
