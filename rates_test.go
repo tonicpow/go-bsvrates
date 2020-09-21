@@ -23,6 +23,15 @@ func (m *mockWOCValid) GetExchangeRate() (rate *whatsonchain.ExchangeRate, err e
 	return
 }
 
+// mockWOCFailed for mocking requests
+type mockWOCFailed struct{}
+
+// GetExchangeRate is a mock response
+func (m *mockWOCFailed) GetExchangeRate() (rate *whatsonchain.ExchangeRate, err error) {
+
+	return
+}
+
 // mockPaprikaValid for mocking requests
 type mockPaprikaValid struct{}
 
@@ -154,6 +163,48 @@ func (m *mockPaprikaFailed) GetPriceConversion(baseCurrencyID, quoteCurrencyID s
 func (m *mockPaprikaFailed) IsAcceptedCurrency(currency string) bool {
 
 	return false
+}
+
+// mockPreevFailed for mocking requests
+type mockPreevFailed struct{}
+
+// GetPair is a mock response
+func (m *mockPreevFailed) GetPair(pairID string) (pair *preev.Pair, err error) {
+
+	return
+}
+
+// GetTicker is a mock response
+func (m *mockPreevFailed) GetTicker(pairID string) (ticker *preev.Ticker, err error) {
+
+	ticker = &preev.Ticker{
+		ID:        pairID,
+		Timestamp: 1593628860,
+		Tx: &preev.Transaction{
+			Hash:      "175d87a3656a5d745af9fe9cee6afc0297a83fb317255962c40085eb31f06a4b",
+			Timestamp: 1593628871,
+		},
+		Prices: &preev.PriceSource{
+			Ppi: &preev.Price{
+				LastPrice: 159.17,
+				Volume:    935279,
+			},
+		},
+	}
+
+	return
+}
+
+// GetTickers is a mock response
+func (m *mockPreevFailed) GetTickers() (tickerList *preev.TickerList, err error) {
+
+	return
+}
+
+// GetPairs is a mock response
+func (m *mockPreevFailed) GetPairs() (pairList *preev.PairList, err error) {
+
+	return
 }
 
 // newMockClient returns a client for mocking
