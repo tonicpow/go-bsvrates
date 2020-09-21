@@ -37,7 +37,7 @@ func (c *Client) GetRate(currency Currency) (float64, Providers, error) {
 				return rate, ProviderWhatsOnChain, err
 			}
 		}
-		// todo: log error ^^
+		// todo: log the error for sanity in case the user want's to see the failure?
 	}
 
 	if c.Providers&ProviderPreev != 0 {
@@ -46,10 +46,10 @@ func (c *Client) GetRate(currency Currency) (float64, Providers, error) {
 			rate := response.Prices.Ppi.LastPrice
 			return rate, ProviderPreev, nil
 		}
-		// todo: log error ^^
+		// todo: log the error for sanity in case the user want's to see the failure?
 	}
 
-	//TODO: average all received rates?
+	// TODO: average all received rates?
 	return 0, 0, fmt.Errorf("unable to get rate from providers: %s", c.Providers.Names())
 
 }

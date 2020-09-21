@@ -47,7 +47,7 @@ func ConvertPriceToSatoshis(currentRate float64, amount float64) (satoshis int64
 	// Do conversion to satoshis (percentage) using decimal package to avoid float issues
 	// => 1e8 * amount / currentRate
 	// (use 1e8 since rate is in Bitcoin not Satoshis)
-	satoshisDecimal := decimal.NewFromInt(1e8).Mul(decimal.NewFromFloat(amount)).Div(decimal.NewFromFloat(currentRate))
+	satoshisDecimal := decimal.NewFromInt(SatoshisPerBitcoin).Mul(decimal.NewFromFloat(amount)).Div(decimal.NewFromFloat(currentRate))
 
 	// Drop decimals after since can only have whole Satoshis
 	satoshis = satoshisDecimal.Ceil().IntPart()

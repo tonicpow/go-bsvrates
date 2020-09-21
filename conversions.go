@@ -16,12 +16,10 @@ func (c *Client) GetConversion(currency Currency, amount float64) (int64, Provid
 
 	// todo: serial for now, later can become a go routine group with a race across all providers
 	if c.Providers&ProviderCoinPaprika != 0 {
-		var err error
-
 		response, err := c.CoinPaprika.GetPriceConversion(USDCurrencyID, CoinPaprikaQuoteID, amount)
 		if response != nil && err == nil {
-			satoshis, err := response.GetSatoshi()
-			if err == nil {
+			var satoshis int64
+			if satoshis, err = response.GetSatoshi(); err == nil {
 				return satoshis, ProviderCoinPaprika, nil
 			}
 		}
@@ -29,14 +27,12 @@ func (c *Client) GetConversion(currency Currency, amount float64) (int64, Provid
 	}
 
 	if c.Providers&ProviderWhatsOnChain != 0 {
-		var err error
-
 		response, err := c.WhatsOnChain.GetExchangeRate()
 		if response != nil && err == nil {
-			rate, err := strconv.ParseFloat(response.Rate, 8)
-			if err == nil {
-				satoshis, err := ConvertPriceToSatoshis(rate, amount)
-				if err == nil {
+			var rate float64
+			if rate, err = strconv.ParseFloat(response.Rate, 8); err == nil {
+				var satoshis int64
+				if satoshis, err = ConvertPriceToSatoshis(rate, amount); err == nil {
 					return satoshis, ProviderWhatsOnChain, nil
 				}
 			}
@@ -46,18 +42,16 @@ func (c *Client) GetConversion(currency Currency, amount float64) (int64, Provid
 	}
 
 	if c.Providers&ProviderPreev != 0 {
-		var err error
-
 		response, err := c.Preev.GetTicker(PreevTickerID)
 		if response != nil && err == nil {
-			satoshis, err := ConvertPriceToSatoshis(response.Prices.Ppi.LastPrice, amount)
-			if err == nil {
+			var satoshis int64
+			if satoshis, err = ConvertPriceToSatoshis(response.Prices.Ppi.LastPrice, amount); err == nil {
 				return satoshis, ProviderPreev, nil
 			}
 		}
 		// todo: log the error for sanity in case the user want's to see the failure?
 	}
 
-	//TODO: average all received conversions?
+	// TODO: average all received conversions?
 	return 0, 0, fmt.Errorf("unable to get conversion from providers: %s", c.Providers.Names())
 }
