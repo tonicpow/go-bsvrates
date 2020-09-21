@@ -12,9 +12,9 @@ import (
 func main() {
 
 	// Create a new client (all default providers)
-	client := bsvrates.NewClient(nil, nil, bsvrates.DefaultProviders)
+	client := bsvrates.NewClient(nil, nil)
 
 	// Get rates
 	rate, provider, _ := client.GetRate(bsvrates.CurrencyDollars)
-	log.Printf("found rate: %v %s from provider: %s", rate, bsvrates.CurrencyToName(bsvrates.CurrencyDollars), provider.Names())
+	log.Printf("found rate: %v %s from provider: %s", rate, bsvrates.CurrencyToName(bsvrates.CurrencyDollars), provider.Name())
 }
