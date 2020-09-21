@@ -20,12 +20,9 @@ func (c *Client) GetConversion(currency Currency, amount float64) (int64, Provid
 
 		response, err := c.CoinPaprika.GetPriceConversion(USDCurrencyID, CoinPaprikaQuoteID, amount)
 		if response != nil && err == nil {
-			sats, err := response.GetSatoshi()
+			satoshis, err := response.GetSatoshiInt()
 			if err == nil {
-				satoshis, err := strconv.ParseInt(sats, 10, 64)
-				if err == nil {
-					return satoshis, ProviderCoinPaprika, nil
-				}
+				return satoshis, ProviderCoinPaprika, nil
 			}
 		}
 		// todo: log the error for sanity in case the user want's to see the failure?
