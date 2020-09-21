@@ -43,9 +43,6 @@ View the generated [documentation](https://pkg.go.dev/github.com/tonicpow/go-bsv
 - Helpful currency conversion and formatting methods:
     - [ConvertSatsToBSV()](currency.go)
     - [ConvertPriceToSatoshis()](currency.go)
-    - [TransformCurrencyToInt()](currency.go)
-    - [TransformIntToCurrency()](currency.go)
-    - [FormatCentsToDollars()](currency.go)
 - Supported Currencies:
     - USD
 - Supported Providers:
@@ -104,7 +101,7 @@ vet                    Run the Go vet application
 <br/>
 
 ## Examples & Tests
-All unit tests and [examples](examples) run via [Travis CI](https://travis-ci.org/tonicpow/go-bsvrates) and uses [Go version 1.14.x](https://golang.org/doc/go1.14). View the [deployment configuration file](.travis.yml).
+All unit tests and [examples](examples) run via [Travis CI](https://travis-ci.org/tonicpow/go-bsvrates) and uses [Go version 1.15.x](https://golang.org/doc/go1.15). View the [deployment configuration file](.travis.yml).
 
 Run all tests (including integration tests)
 ```shell script
@@ -146,12 +143,12 @@ import (
 
 func main() {
 
-	// Create a new client (all default providers: Coin Paprika, WOC, Preev)
-	client := bsvrates.NewClient(nil, nil)
-
+	// Create a new client (all default providers)
+	client := bsvrates.NewClient(nil, nil, bsvrates.DefaultProviders)
+    
 	// Get rates
 	rate, provider, _ := client.GetRate(bsvrates.CurrencyDollars)
-	log.Printf("found rate: %v %s from provider: %s", rate, bsvrates.CurrencyToName(bsvrates.CurrencyDollars), provider.Name())
+	log.Printf("found rate: %v %s from provider: %s", rate, bsvrates.CurrencyToName(bsvrates.CurrencyDollars), provider.Names())
 }
 ``` 
 
@@ -167,12 +164,12 @@ import (
 
 func main() {
 
-	// Create a new client (all default providers: Coin Paprika, WOC, Preev)
-	client := bsvrates.NewClient(nil, nil)
+	// Create a new client (all default providers)
+	client := bsvrates.NewClient(nil, nil, bsvrates.DefaultProviders)
     
 	// Get a conversion from $ to Sats
 	satoshis, provider, _ := client.GetConversion(bsvrates.CurrencyDollars, 0.01)
-	log.Printf("$0.01 USD = %d Satoshis from provider: %s", satoshis, provider.Name())
+	log.Printf("0.01 USD = satoshis: %d from provider: %s", satoshis, provider.Names())
 }
 ```
  
@@ -198,6 +195,8 @@ or by making a [**bitcoin donation**](https://mrz1818.com/?tab=tips&af=go-bsvrat
 ### Credits
 
 [Coin Paprika](https://tncpw.co/7c2cae76), [What's On Chain](https://tncpw.co/638d8e8a) and [Preev](https://tncpw.co/d19f43a3) for their hard work on their public API
+
+[Jad](https://github.com/jadwahab) for his contributions to the package!
 
 <br/>
 
