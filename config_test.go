@@ -1,6 +1,7 @@
 package bsvrates
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -10,7 +11,7 @@ func TestProvider_IsValid(t *testing.T) {
 
 	// Create the list of tests
 	var tests = []struct {
-		input    Provider
+		input    Providers
 		expected bool
 	}{
 		{0, false},
@@ -20,7 +21,7 @@ func TestProvider_IsValid(t *testing.T) {
 		{ProviderWhatsOnChain, true},
 		{ProviderCoinPaprika, true},
 		{ProviderPreev, true},
-		{providerLast, false},
+		{providerMask + 1, false},
 	}
 
 	// Test all
@@ -31,56 +32,74 @@ func TestProvider_IsValid(t *testing.T) {
 	}
 }
 
-// TestProvider_Name will test the method Name()
+// TestProvider_Name will test the method Names()
 func TestProvider_Name(t *testing.T) {
 	t.Parallel()
 
 	// Create the list of tests
 	var tests = []struct {
-		input    Provider
-		expected string
+		input    Providers
+		expected []string
 	}{
-		{0, ""},
-		{1, "WhatsOnChain"},
-		{2, "CoinPaprika"},
-		{3, "Preev"},
-		{ProviderWhatsOnChain, "WhatsOnChain"},
-		{ProviderCoinPaprika, "CoinPaprika"},
-		{ProviderPreev, "Preev"},
-		{providerLast, ""},
+		{0, []string{}},
+		{1, []string{"WhatsOnChain"}},
+		{2, []string{"CoinPaprika"}},
+		{3, []string{"WhatsOnChain", "CoinPaprika"}},
+		{4, []string{"Preev"}},
+		{5, []string{"WhatsOnChain", "Preev"}},
+		{6, []string{"CoinPaprika", "Preev"}},
+		{7, []string{"WhatsOnChain", "CoinPaprika", "Preev"}},
+		{8, []string{}},
+		{ProviderWhatsOnChain, []string{"WhatsOnChain"}},
+		{ProviderCoinPaprika, []string{"CoinPaprika"}},
+		{ProviderWhatsOnChain | ProviderCoinPaprika, []string{"WhatsOnChain", "CoinPaprika"}},
+		{ProviderPreev, []string{"Preev"}},
+		{ProviderWhatsOnChain | ProviderPreev, []string{"WhatsOnChain", "Preev"}},
+		{ProviderCoinPaprika | ProviderPreev, []string{"CoinPaprika", "Preev"}},
+		{ProviderWhatsOnChain | ProviderCoinPaprika | ProviderPreev, []string{"WhatsOnChain", "CoinPaprika", "Preev"}},
+		{providerMask + 1, []string{}},
 	}
 
 	// Test all
 	for _, test := range tests {
-		if name := test.input.Name(); name != test.expected {
-			t.Errorf("%s Failed: Name returned a unexpected result: %s", t.Name(), name)
+		if names := test.input.Names(); !reflect.DeepEqual(names, test.expected) {
+			t.Errorf("%s Failed: Names returned a unexpected result: %s\nExpected: %s", t.Name(), names, test.expected)
 		}
 	}
 }
 
-// TestProviderToName will test the method ProviderToName()
+// TestProviderToName will test the method ProviderToNames()
 func TestProviderToName(t *testing.T) {
 	t.Parallel()
 
 	// Create the list of tests
 	var tests = []struct {
-		input    Provider
-		expected string
+		input    Providers
+		expected []string
 	}{
-		{0, ""},
-		{1, "WhatsOnChain"},
-		{2, "CoinPaprika"},
-		{3, "Preev"},
-		{ProviderWhatsOnChain, "WhatsOnChain"},
-		{ProviderCoinPaprika, "CoinPaprika"},
-		{ProviderPreev, "Preev"},
-		{providerLast, ""},
+		{0, []string{}},
+		{1, []string{"WhatsOnChain"}},
+		{2, []string{"CoinPaprika"}},
+		{3, []string{"WhatsOnChain", "CoinPaprika"}},
+		{4, []string{"Preev"}},
+		{5, []string{"WhatsOnChain", "Preev"}},
+		{6, []string{"CoinPaprika", "Preev"}},
+		{7, []string{"WhatsOnChain", "CoinPaprika", "Preev"}},
+		{8, []string{}},
+		{ProviderWhatsOnChain, []string{"WhatsOnChain"}},
+		{ProviderCoinPaprika, []string{"CoinPaprika"}},
+		{ProviderWhatsOnChain | ProviderCoinPaprika, []string{"WhatsOnChain", "CoinPaprika"}},
+		{ProviderPreev, []string{"Preev"}},
+		{ProviderWhatsOnChain | ProviderPreev, []string{"WhatsOnChain", "Preev"}},
+		{ProviderCoinPaprika | ProviderPreev, []string{"CoinPaprika", "Preev"}},
+		{ProviderWhatsOnChain | ProviderCoinPaprika | ProviderPreev, []string{"WhatsOnChain", "CoinPaprika", "Preev"}},
+		{providerMask + 1, []string{}},
 	}
 
 	// Test all
 	for _, test := range tests {
-		if name := ProviderToName(test.input); name != test.expected {
-			t.Errorf("%s Failed: Name returned a unexpected result: %s", t.Name(), name)
+		if names := ProviderToNames(test.input); !reflect.DeepEqual(names, test.expected) {
+			t.Errorf("%s Failed: Names returned a unexpected result: %s\nExpected: %s", t.Name(), names, test.expected)
 		}
 	}
 }

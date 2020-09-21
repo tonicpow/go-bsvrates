@@ -82,7 +82,7 @@ func (m *mockHTTPPaprika) Do(req *http.Request) (*http.Response, error) {
 
 // newMockPaprikaClient returns a client for mocking (using a custom HTTP interface)
 func newMockPaprikaClient(httpClient httpInterface) *Client {
-	client := NewClient(nil, nil)
+	client := NewClient(nil, nil, DefaultProviders)
 	cp := createPaprikaClient(nil, nil)
 	cp.HTTPClient = httpClient
 	client.CoinPaprika = cp

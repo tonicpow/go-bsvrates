@@ -11,18 +11,15 @@ import (
 func TestNewClient(t *testing.T) {
 	t.Parallel()
 
-	client := NewClient(nil, nil)
+	client := NewClient(nil, nil, DefaultProviders)
 
 	if client == nil {
 		t.Fatal("failed to load client")
 	}
 
 	// Test default providers
-	if client.Providers[0] != ProviderCoinPaprika {
-		t.Fatalf("expected the first provider to be %d, not %d", ProviderCoinPaprika, client.Providers[0])
-	}
-	if client.Providers[1] != ProviderWhatsOnChain {
-		t.Fatalf("expected the first provider to be %d, not %d", ProviderWhatsOnChain, client.Providers[0])
+	if client.Providers != DefaultProviders {
+		t.Fatalf("expected default bits (%d) to be set, got: %d", DefaultProviders, client.Providers)
 	}
 }
 
@@ -37,15 +34,16 @@ func TestNewClient_CustomHttpClient(t *testing.T) {
 	}
 
 	// Test providers
-	if client.Providers[0] != ProviderPreev {
-		t.Fatalf("expected the first provider to be %d, not %d", ProviderPreev, client.Providers[0])
+
+	if client.Providers&ProviderPreev == 0 {
+		t.Fatalf("expected bit %d to be set, got: %d", ProviderPreev, client.Providers)
 	}
 }
 
 // BenchmarkNewClient benchmarks the NewClient method
 func BenchmarkNewClient(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_ = NewClient(nil, nil)
+		_ = NewClient(nil, nil, DefaultProviders)
 	}
 }
 
@@ -112,7 +110,7 @@ func TestDefaultClientOptions(t *testing.T) {
 func TestDefaultClientOptions_NoRetry(t *testing.T) {
 	options := DefaultClientOptions()
 	options.RequestRetryCount = 0
-	client := NewClient(options, nil)
+	client := NewClient(options, nil, DefaultProviders)
 
 	if client == nil {
 		t.Fatal("failed to load client")

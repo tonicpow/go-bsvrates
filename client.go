@@ -38,7 +38,7 @@ type coinPaprikaInterface interface {
 type Client struct {
 	CoinPaprika  coinPaprikaInterface  // Coin Paprika client
 	Preev        preevInterface        // Preev Client
-	Providers    []Provider            // List of providers to use (in order for fail-over)
+	Providers    Providers             // Bitstring of all providers to use (in order for fail-over)
 	WhatsOnChain whatsOnChainInterface // Whats On Chain client
 }
 
@@ -116,13 +116,13 @@ func DefaultClientOptions() (clientOptions *ClientOptions) {
 }
 
 // NewClient creates a new client for requests
-func NewClient(clientOptions *ClientOptions, customHTTPClient *http.Client, providers ...Provider) (client *Client) {
+func NewClient(clientOptions *ClientOptions, customHTTPClient *http.Client, providers Providers) (client *Client) {
 	client = new(Client)
 
 	// No providers? (Use the default set for now)
 	// todo: return an error or warning to the user?
-	if len(providers) == 0 {
-		client.Providers = defaultProviders
+	if providers == 0 {
+		client.Providers = DefaultProviders
 	} else {
 		client.Providers = providers
 	}

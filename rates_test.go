@@ -157,8 +157,8 @@ func (m *mockPaprikaFailed) IsAcceptedCurrency(currency string) bool {
 }
 
 // newMockClient returns a client for mocking
-func newMockClient(wocClient whatsOnChainInterface, paprikaClient coinPaprikaInterface, preevClient preevInterface, providers ...Provider) *Client {
-	client := NewClient(nil, nil, providers...)
+func newMockClient(wocClient whatsOnChainInterface, paprikaClient coinPaprikaInterface, preevClient preevInterface, providers Providers) *Client {
+	client := NewClient(nil, nil, providers)
 	client.WhatsOnChain = wocClient
 	client.CoinPaprika = paprikaClient
 	client.Preev = preevClient
@@ -169,19 +169,19 @@ func newMockClient(wocClient whatsOnChainInterface, paprikaClient coinPaprikaInt
 func TestClient_GetRate(t *testing.T) {
 
 	// Set a valid client
-	client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{})
+	client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{}, DefaultProviders)
 
 	// Test a valid response
 	rate, provider, err := client.GetRate(CurrencyDollars)
 	if err != nil {
 		t.Fatalf("error occurred: %s", err.Error())
 	} else if rate == 0 {
-		t.Fatalf("rate was 0 for provider: %s", provider.Name())
+		t.Fatalf("rate was 0 for provider: %s", provider.Names())
 	} else if !provider.IsValid() {
-		t.Fatalf("provider: %s was invalid", provider.Name())
+		t.Fatalf("provider: %s was invalid", provider.Names())
 	}
 
-	t.Logf("found rate: %f from provider: %s", rate, provider.Name())
+	t.Logf("found rate: %f from provider: %s", rate, provider.Names())
 }
 
 // TestClient_GetRateFailed will test the method GetRate()
@@ -189,7 +189,7 @@ func TestClient_GetRate(t *testing.T) {
 func TestClient_GetRateFailed(t *testing.T) {
 
 	// Set a valid client (2 valid, 1 invalid)
-	client := newMockClient(&mockWOCValid{}, &mockPaprikaFailed{}, &mockPreevValid{})
+	client := newMockClient(&mockWOCValid{}, &mockPaprikaFailed{}, &mockPreevValid{}, DefaultProviders)
 
 	// Test a NON accepted currency
 	_, _, rateErr := client.GetRate(123)
@@ -202,31 +202,31 @@ func TestClient_GetRateFailed(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error occurred: %s", err.Error())
 	} else if rate == 0 {
-		t.Fatalf("rate was 0 for provider: %s", provider.Name())
+		t.Fatalf("rate was 0 for provider: %s", provider.Names())
 	} else if !provider.IsValid() {
-		t.Fatalf("provider: %s was invalid", provider.Name())
+		t.Fatalf("provider: %s was invalid", provider.Names())
 	}
 
-	t.Logf("found rate: %f from provider: %s", rate, provider.Name())
+	t.Logf("found rate: %f from provider: %s", rate, provider.Names())
 }
 
 // TestClient_GetRateCustomProviders will test the method GetRate()
 func TestClient_GetRateCustomProviders(t *testing.T) {
 
 	// Set a valid client
-	client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{}, ProviderPreev, ProviderWhatsOnChain)
+	client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{}, ProviderPreev&ProviderWhatsOnChain)
 
 	// Test a valid response
 	rate, provider, err := client.GetRate(CurrencyDollars)
 	if err != nil {
 		t.Fatalf("error occurred: %s", err.Error())
 	} else if rate == 0 {
-		t.Fatalf("rate was 0 for provider: %s", provider.Name())
+		t.Fatalf("rate was 0 for provider: %s", provider.Names())
 	} else if !provider.IsValid() {
-		t.Fatalf("provider: %s was invalid", provider.Name())
+		t.Fatalf("provider: %s was invalid", provider.Names())
 	}
 
-	t.Logf("found rate: %f from provider: %s", rate, provider.Name())
+	t.Logf("found rate: %f from provider: %s", rate, provider.Names())
 }
 
 // todo: add a test where 2 providers fail

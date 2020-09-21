@@ -18,45 +18,47 @@ const (
 )
 
 var (
-	// defaultProviders (if no provider slice is set, use this as the default set)
-	defaultProviders = []Provider{ProviderCoinPaprika, ProviderWhatsOnChain, ProviderPreev}
+	// DefaultProviders uses all three (Coinpaprika, WhatsOnChain, and Preev) by default.
+	DefaultProviders = Providers(ProviderCoinPaprika | ProviderWhatsOnChain | ProviderPreev)
 )
 
-// Provider is a provider for rates or prices
-type Provider uint8
+// Providers is a provider for rates or prices
+type Providers uint8
 
-// Provider constants for the different available rate providers.
-// Leave the start and last constants in place
+// Providers bitstring for the different available rate providers.
 const (
-	_                    Provider = iota
-	ProviderWhatsOnChain          = 1
-	ProviderCoinPaprika           = 2
-	ProviderPreev                 = 3
+	ProviderWhatsOnChain Providers = 1 << iota // 1 << 0 (which is 00000001 = 1)
+	ProviderCoinPaprika                        // 1 << 1 (which is 00000010 = 2)
+	ProviderPreev                              // 1 << 2 (which is 00000100 = 4)
 
-	providerLast = iota
+	providerMask = (1 << iota) - 1 // will mask all used bits 00000111 (= 7)
 )
 
 // IsValid tests if the provider is valid or not
-func (p Provider) IsValid() bool {
-	return p >= ProviderWhatsOnChain && p < providerLast
+func (p Providers) IsValid() bool {
+	return p&providerMask != 0
 }
 
-// Name will return the display name for the given provider
-func (p Provider) Name() string {
-	switch p {
-	case ProviderWhatsOnChain:
-		return "WhatsOnChain"
-	case ProviderCoinPaprika:
-		return "CoinPaprika"
-	case ProviderPreev:
-		return "Preev"
+// Names will return the display name for the given provider
+func (p Providers) Names() []string {
+	names := []string{}
+
+	if p&ProviderWhatsOnChain != 0 {
+		names = append(names, "WhatsOnChain")
 	}
-	return ""
+	if p&ProviderCoinPaprika != 0 {
+		names = append(names, "CoinPaprika")
+	}
+	if p&ProviderPreev != 0 {
+		names = append(names, "Preev")
+	}
+
+	return names
 }
 
-// ProviderToName helper function to convert the provider value to it's associated name
-func ProviderToName(provider Provider) string {
-	return provider.Name()
+// ProviderToNames helper function to convert the provider value to it's associated name
+func ProviderToNames(provider Providers) []string {
+	return provider.Names()
 }
 
 // Currency is a valid currency for rates or prices
