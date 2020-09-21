@@ -12,9 +12,9 @@ import (
 func main() {
 
 	// Create a new client (all default providers)
-	client := bsvrates.NewClient(nil, nil)
+	client := bsvrates.NewClient(nil, nil, bsvrates.DefaultProviders)
 
 	// Get a conversion from $ to Sats
 	satoshis, provider, _ := client.GetConversion(bsvrates.CurrencyDollars, 0.01)
-	log.Printf("0.01 USD = satoshis: %d from provider: %s", satoshis, provider.Name())
+	log.Printf("0.01 USD = satoshis: %d from provider: %s", satoshis, provider.Names())
 }

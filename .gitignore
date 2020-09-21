@@ -21,6 +21,9 @@
 # Eclipse
 .project
 
+# VS Code
+.history
+
 # Notes
 todo.md
 

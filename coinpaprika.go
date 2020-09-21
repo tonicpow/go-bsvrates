@@ -3,9 +3,11 @@ package bsvrates
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"net"
 	"net/http"
-	"strconv"
+
+	"github.com/shopspring/decimal"
 
 	"github.com/gojektech/heimdall/v6"
 	"github.com/gojektech/heimdall/v6/httpclient"
@@ -107,25 +109,22 @@ var acceptedCurrenciesCoinPaprika = []string{
 	"zar",
 }
 
-// GetSatoshi will convert the price into Satoshi's (string value)
-func (p PriceConversionResponse) GetSatoshi() (satoshi string, err error) {
-	var amount Amount
-	if amount, err = NewAmount(p.Price); err != nil {
-		return
+// GetSatoshi will convert the price into Satoshi's (integer value)
+func (p PriceConversionResponse) GetSatoshi() (satoshi int64, err error) {
+
+	switch {
+	case math.IsNaN(p.Price):
+		fallthrough
+	case math.IsInf(p.Price, 1):
+		fallthrough
+	case math.IsInf(p.Price, -1):
+		return 0, fmt.Errorf("invalid price conversion")
 	}
 
-	satoshi = amount.ToSatoshi()
-	return
-}
+	satoshiDecimal := decimal.NewFromFloat(p.Price).Mul(decimal.NewFromInt(1e8))
 
-// GetSatoshiInt will convert the price into Satoshi's (integer value)
-func (p PriceConversionResponse) GetSatoshiInt() (satoshi int64, err error) {
-	var sats string
-	if sats, err = p.GetSatoshi(); err != nil {
-		return
-	}
-
-	satoshi, err = strconv.ParseInt(sats, 10, 64)
+	// there are no sub-Satoshis so get the ceiling so that you never underpay
+	satoshi = satoshiDecimal.Ceil().IntPart()
 	return
 }
 
