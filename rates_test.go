@@ -361,7 +361,7 @@ func TestClient_GetRateFailedAll(t *testing.T) {
 	if err == nil {
 		t.Fatalf("error expected but got nil")
 	} else if rate != 0 {
-		t.Fatalf("rate should be zero")
+		t.Fatalf("rate should be zero but was: %f", rate)
 	}
 }
 

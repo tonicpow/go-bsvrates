@@ -160,6 +160,28 @@ func TestClient_GetConversionFailedWhatsOnChain(t *testing.T) {
 	t.Logf("found satoshis: %d from provider: %s", satoshis, provider.Names())
 }
 
+// TestClient_GetConversionFailedAll will test the method GetConversion()
+func TestClient_GetConversionFailedAll(t *testing.T) {
+	t.Parallel()
+
+	// Set a valid client (1 valid, 2 invalid)
+	client := newMockClient(&mockWOCFailed{}, &mockPaprikaFailed{}, &mockPreevFailed{}, ProviderPreev&ProviderWhatsOnChain&ProviderCoinPaprika)
+
+	// Test a NON accepted currency
+	_, _, rateErr := client.GetConversion(123, 1)
+	if rateErr == nil {
+		t.Fatalf("expected an error to occur, currency %d is not accepted", 123)
+	}
+
+	// Test a valid response (after failing on the first provider)
+	satoshis, _, err := client.GetConversion(CurrencyDollars, 1)
+	if err == nil {
+		t.Fatalf("error was expected but got nil")
+	} else if satoshis != 0 {
+		t.Fatalf("satoshis should be zero but was %d", satoshis)
+	}
+}
+
 // TestClient_GetConversionCustomProviders will test the method GetConversion()
 func TestClient_GetConversionCustomProviders(t *testing.T) {
 	t.Parallel()
