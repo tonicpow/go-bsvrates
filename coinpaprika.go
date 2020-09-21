@@ -3,9 +3,11 @@ package bsvrates
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"net"
 	"net/http"
-	"strconv"
+
+	"github.com/shopspring/decimal"
 
 	"github.com/gojektech/heimdall/v6"
 	"github.com/gojektech/heimdall/v6/httpclient"
@@ -109,12 +111,20 @@ var acceptedCurrenciesCoinPaprika = []string{
 
 // GetSatoshi will convert the price into Satoshi's (integer value)
 func (p PriceConversionResponse) GetSatoshi() (satoshi int64, err error) {
-	amount, err := NewAmount(p.Price)
-	if err != nil {
-		return
+
+	switch {
+	case math.IsNaN(p.Price):
+		fallthrough
+	case math.IsInf(p.Price, 1):
+		fallthrough
+	case math.IsInf(p.Price, -1):
+		return 0, fmt.Errorf("invalid price conversion")
 	}
 
-	satoshi, err = strconv.ParseInt(amount.ToSatoshi(), 10, 64)
+	satoshiDecimal := decimal.NewFromFloat(p.Price).Mul(decimal.NewFromInt(1e8))
+
+	// there are no sub-Satoshis so get the ceiling so that you never underpay
+	satoshi = satoshiDecimal.Ceil().IntPart()
 	return
 }
 

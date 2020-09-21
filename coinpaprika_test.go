@@ -271,7 +271,7 @@ func TestPriceConversionResponse_GetSatoshi(t *testing.T) {
 		{PriceConversionResponse{Price: 0.000001}, 100, false},
 		{PriceConversionResponse{Price: 0.0000001}, 10, false},
 		{PriceConversionResponse{Price: 0.00000001}, 1, false},
-		{PriceConversionResponse{Price: 0.000000001}, 0, false},
+		{PriceConversionResponse{Price: 0.000000001}, 1, false},
 		{PriceConversionResponse{Price: 45627467}, 4562746700000000, false},
 		{PriceConversionResponse{Price: math.NaN()}, 0, true},
 		{PriceConversionResponse{Price: math.Inf(1)}, 0, true},
