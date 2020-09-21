@@ -141,3 +141,132 @@ func ExampleConvertPriceToSatoshis() {
 	fmt.Printf("%d", val)
 	// Output:666667
 }
+
+// TestFormatCentsToDollars will test the method FormatCentsToDollars()
+func TestFormatCentsToDollars(t *testing.T) {
+	t.Parallel()
+
+	// Create the list of tests
+	var tests = []struct {
+		integer  int
+		expected string
+	}{
+		{0, "0.00"},
+		{-1, "-0.01"},
+		{127, "1.27"},
+		{199276, "1992.76"},
+	}
+
+	// Test all
+	for _, test := range tests {
+		if output := FormatCentsToDollars(test.integer); output != test.expected {
+			t.Errorf("%s Failed: [%d] inputted and [%s] expected, received: [%s]", t.Name(), test.integer, test.expected, output)
+		}
+	}
+}
+
+// BenchmarkFormatCentsToDollars benchmarks the method FormatCentsToDollars()
+func BenchmarkFormatCentsToDollars(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = FormatCentsToDollars(1000)
+	}
+}
+
+// ExampleFormatCentsToDollars example using FormatCentsToDollars()
+func ExampleFormatCentsToDollars() {
+	val := FormatCentsToDollars(1000)
+	fmt.Printf("%s", val)
+	// Output:10.00
+}
+
+// TestTransformCurrencyToInt will test the method TransformCurrencyToInt()
+func TestTransformCurrencyToInt(t *testing.T) {
+	t.Parallel()
+
+	// Create the list of tests
+	var tests = []struct {
+		decimal       float64
+		currency      Currency
+		expected      int64
+		expectedError bool
+	}{
+		{0, CurrencyDollars, 0, false},
+		{1.27, CurrencyDollars, 127, false},
+		{01.27, CurrencyDollars, 127, false},
+		{199.272, CurrencyDollars, 19927, false},
+		{199.276, CurrencyDollars, 19928, false},
+		{0.00000010, CurrencyBitcoin, 10, false},
+		{0.000010, CurrencyBitcoin, 1000, false},
+		{0.0010, CurrencyBitcoin, 100000, false},
+		{0.10, CurrencyBitcoin, 10000000, false},
+		{1, CurrencyBitcoin, 100000000, false},
+		{0.00000010, 123, 0, true},
+	}
+
+	// todo: issue with negative floats (-1.27 = -126)
+
+	// Test all
+	for _, test := range tests {
+		if output, err := TransformCurrencyToInt(test.decimal, test.currency); err == nil && test.expectedError {
+			t.Errorf("%s Failed: expected to throw an error, no error [%f] inputted [%s] currency", t.Name(), test.decimal, test.currency.Name())
+		} else if err != nil && !test.expectedError {
+			t.Errorf("%s Failed: [%f] inputted, received: [%v] error [%s]", t.Name(), test.decimal, output, err.Error())
+		} else if output != test.expected && !test.expectedError {
+			t.Errorf("%s Failed: [%f] inputted and [%d] expected, received: [%d]", t.Name(), test.decimal, test.expected, output)
+		}
+	}
+}
+
+// BenchmarkTransformCurrencyToInt benchmarks the method TransformCurrencyToInt()
+func BenchmarkTransformCurrencyToInt(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = TransformCurrencyToInt(10.00, CurrencyDollars)
+	}
+}
+
+// ExampleTransformCurrencyToInt example using TransformCurrencyToInt()
+func ExampleTransformCurrencyToInt() {
+	val, _ := TransformCurrencyToInt(10.00, CurrencyDollars)
+	fmt.Printf("%d", val)
+	// Output:1000
+}
+
+// TestConvertFloatToIntBSV will test the method ConvertFloatToIntBSV()
+func TestConvertFloatToIntBSV(t *testing.T) {
+	t.Parallel()
+
+	// Create the list of tests
+	var tests = []struct {
+		float         float64
+		expected      int64
+		expectedError bool
+	}{
+		{0, 0, false},
+		{1.123456789, 112345679, false},
+		{0.00000001, 1, false},
+		{0.00000111, 111, false},
+		{-0.00000111, -111, false},
+		// {math.Inf(1), -111, true}, // This will produce a panic in decimal package
+	}
+
+	// Test all
+	for _, test := range tests {
+		if output := ConvertFloatToIntBSV(test.float); output != test.expected && !test.expectedError {
+			t.Errorf("%s Failed: [%f] inputted and [%d] expected, received: [%d]", t.Name(), test.float, test.expected, output)
+		}
+	}
+}
+
+// BenchmarkConvertFloatToIntBSV benchmarks the method ConvertFloatToIntBSV()
+func BenchmarkConvertFloatToIntBSV(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = ConvertFloatToIntBSV(10.00)
+	}
+}
+
+// ExampleConvertFloatToIntBSV example using ConvertFloatToIntBSV()
+func ExampleConvertFloatToIntBSV() {
+	val := ConvertFloatToIntBSV(10.01)
+	fmt.Printf("%d", val)
+	// Output:1001000000
+}

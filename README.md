@@ -41,8 +41,11 @@ View the generated [documentation](https://pkg.go.dev/github.com/tonicpow/go-bsv
 - Using default [heimdall http client](https://github.com/gojek/heimdall) with exponential backoff & more
 - Use your own HTTP client
 - Helpful currency conversion and formatting methods:
-    - [ConvertSatsToBSV()](currency.go)
+    - [ConvertFloatToIntBSV()](currency.go)
     - [ConvertPriceToSatoshis()](currency.go)
+    - [ConvertSatsToBSV()](currency.go)
+    - [FormatCentsToDollars()](currency.go)
+    - [TransformCurrencyToInt()](currency.go)
 - Supported Currencies:
     - USD
 - Supported Providers:
