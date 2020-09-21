@@ -112,7 +112,7 @@ func TestClient_GetConversionFailed(t *testing.T) {
 func TestClient_GetConversionFailedPreev(t *testing.T) {
 	t.Parallel()
 
-	// Set a valid client (2 valid, 1 invalid)
+	// Set a valid client (1 valid, 2 invalid)
 	client := newMockClient(&mockWOCValid{}, &mockPaprikaFailed{}, &mockPreevFailed{}, ProviderPreev&ProviderCoinPaprika&ProviderWhatsOnChain)
 
 	// Test a NON accepted currency
@@ -121,7 +121,7 @@ func TestClient_GetConversionFailedPreev(t *testing.T) {
 		t.Fatalf("expected an error to occur, currency %d is not accepted", 123)
 	}
 
-	// Test a valid response (after failing on the first provider)
+	// Test a valid response (after failing on the first providers)
 	satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
 	if err != nil {
 		t.Fatalf("error occurred: %s", err.Error())
@@ -138,7 +138,7 @@ func TestClient_GetConversionFailedPreev(t *testing.T) {
 func TestClient_GetConversionFailedWhatsOnChain(t *testing.T) {
 	t.Parallel()
 
-	// Set a valid client (2 valid, 1 invalid)
+	// Set a valid client (1 valid, 2 invalid)
 	client := newMockClient(&mockWOCFailed{}, &mockPaprikaValid{}, &mockPreevFailed{}, ProviderPreev&ProviderWhatsOnChain&ProviderCoinPaprika)
 
 	// Test a NON accepted currency

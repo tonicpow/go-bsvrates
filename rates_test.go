@@ -156,7 +156,7 @@ func (m *mockPaprikaFailed) GetBaseAmountAndCurrencyID(currency string, amount f
 // GetPriceConversion is a mock response
 func (m *mockPaprikaFailed) GetPriceConversion(baseCurrencyID, quoteCurrencyID string, amount float64) (response *PriceConversionResponse, err error) {
 
-	return
+	return nil, fmt.Errorf("some error occurred")
 }
 
 // IsAcceptedCurrency is a mock response
@@ -171,40 +171,25 @@ type mockPreevFailed struct{}
 // GetPair is a mock response
 func (m *mockPreevFailed) GetPair(pairID string) (pair *preev.Pair, err error) {
 
-	return
+	return nil, fmt.Errorf("some error occurred")
 }
 
 // GetTicker is a mock response
 func (m *mockPreevFailed) GetTicker(pairID string) (ticker *preev.Ticker, err error) {
 
-	ticker = &preev.Ticker{
-		ID:        pairID,
-		Timestamp: 1593628860,
-		Tx: &preev.Transaction{
-			Hash:      "175d87a3656a5d745af9fe9cee6afc0297a83fb317255962c40085eb31f06a4b",
-			Timestamp: 1593628871,
-		},
-		Prices: &preev.PriceSource{
-			Ppi: &preev.Price{
-				LastPrice: 159.17,
-				Volume:    935279,
-			},
-		},
-	}
-
-	return
+	return nil, fmt.Errorf("some error occurred")
 }
 
 // GetTickers is a mock response
 func (m *mockPreevFailed) GetTickers() (tickerList *preev.TickerList, err error) {
 
-	return
+	return nil, fmt.Errorf("some error occurred")
 }
 
 // GetPairs is a mock response
 func (m *mockPreevFailed) GetPairs() (pairList *preev.PairList, err error) {
 
-	return
+	return nil, fmt.Errorf("some error occurred")
 }
 
 // newMockClient returns a client for mocking
@@ -335,7 +320,7 @@ func TestClient_GetRateFailedPreev(t *testing.T) {
 func TestClient_GetRateFailedWhatsOnChain(t *testing.T) {
 	t.Parallel()
 
-	// Set a valid client (2 valid, 1 invalid)
+	// Set a valid client (1 valid, 2 invalid)
 	client := newMockClient(&mockWOCFailed{}, &mockPaprikaValid{}, &mockPreevFailed{}, ProviderPreev&ProviderWhatsOnChain&ProviderCoinPaprika)
 
 	// Test a NON accepted currency
@@ -355,6 +340,29 @@ func TestClient_GetRateFailedWhatsOnChain(t *testing.T) {
 	}
 
 	t.Logf("found rate: %f from provider: %s", rate, provider.Names())
+}
+
+// TestClient_GetRateFailedAll will test the method GetRate()
+// This tests for a provider failing on all providers
+func TestClient_GetRateFailedAll(t *testing.T) {
+	t.Parallel()
+
+	// Set a valid client (3 invalid)
+	client := newMockClient(&mockWOCFailed{}, &mockPaprikaFailed{}, &mockPreevFailed{}, ProviderPreev&ProviderWhatsOnChain&ProviderCoinPaprika)
+
+	// Test a NON accepted currency
+	_, _, rateErr := client.GetRate(123)
+	if rateErr == nil {
+		t.Fatalf("expected an error to occur, currency: %d is not accepted", 123)
+	}
+
+	// Test a valid response (after failing on the first provider)
+	rate, _, err := client.GetRate(CurrencyDollars)
+	if err == nil {
+		t.Fatalf("error expected but got nil")
+	} else if rate != 0 {
+		t.Fatalf("rate should be zero")
+	}
 }
 
 // TestClient_GetRateCustomProviders will test the method GetRate()

@@ -14,7 +14,7 @@ func (c *Client) GetConversion(currency Currency, amount float64) (int64, Provid
 		return 0, 0, fmt.Errorf("currency [%s] is not accepted by all providers at this time", currency.Name())
 	}
 
-	// todo: serial for now, later can become a go routine group with a race across all providers
+	// Provider: CoinPaprika
 	if c.Providers&ProviderCoinPaprika != 0 {
 		response, err := c.CoinPaprika.GetPriceConversion(USDCurrencyID, CoinPaprikaQuoteID, amount)
 		if response != nil && err == nil {
@@ -26,6 +26,7 @@ func (c *Client) GetConversion(currency Currency, amount float64) (int64, Provid
 		// todo: log the error for sanity in case the user want's to see the failure?
 	}
 
+	// Provider: WhatsOnChain
 	if c.Providers&ProviderWhatsOnChain != 0 {
 		response, err := c.WhatsOnChain.GetExchangeRate()
 		if response != nil && err == nil {
@@ -38,9 +39,9 @@ func (c *Client) GetConversion(currency Currency, amount float64) (int64, Provid
 			}
 		}
 		// todo: log the error for sanity in case the user want's to see the failure?
-
 	}
 
+	// Provider: Preev
 	if c.Providers&ProviderPreev != 0 {
 		response, err := c.Preev.GetTicker(PreevTickerID)
 		if response != nil && err == nil {
@@ -52,6 +53,7 @@ func (c *Client) GetConversion(currency Currency, amount float64) (int64, Provid
 		// todo: log the error for sanity in case the user want's to see the failure?
 	}
 
-	// TODO: average all received conversions?
 	return 0, 0, fmt.Errorf("unable to get conversion from providers: %s", c.Providers.Names())
 }
+
+// todo: create a new method to get all three and then average the results

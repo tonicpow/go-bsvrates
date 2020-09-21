@@ -17,7 +17,7 @@ func (c *Client) GetRate(currency Currency) (float64, Providers, error) {
 		return 0, 0, fmt.Errorf("currency [%s] is not accepted by all providers at this time", currency.Name())
 	}
 
-	// todo: serial for now, later can become a go routine group with a race across all providers
+	// Provider: CoinPaprika
 	if c.Providers&ProviderCoinPaprika != 0 {
 		response, err := c.CoinPaprika.GetMarketPrice(CoinPaprikaQuoteID)
 		if response != nil && err == nil {
@@ -27,19 +27,19 @@ func (c *Client) GetRate(currency Currency) (float64, Providers, error) {
 		// todo: log the error for sanity in case the user want's to see the failure?
 	}
 
+	// Provider: WhatsOnChain
 	if c.Providers&ProviderWhatsOnChain != 0 {
-		var err error
-
 		response, err := c.WhatsOnChain.GetExchangeRate()
 		if response != nil && err == nil {
-			rate, err := strconv.ParseFloat(response.Rate, 8)
-			if err == nil {
+			var rate float64
+			if rate, err = strconv.ParseFloat(response.Rate, 8); err == nil {
 				return rate, ProviderWhatsOnChain, err
 			}
 		}
 		// todo: log the error for sanity in case the user want's to see the failure?
 	}
 
+	// Provider: Preev
 	if c.Providers&ProviderPreev != 0 {
 		response, err := c.Preev.GetTicker(PreevTickerID)
 		if response != nil && err == nil {
@@ -49,7 +49,8 @@ func (c *Client) GetRate(currency Currency) (float64, Providers, error) {
 		// todo: log the error for sanity in case the user want's to see the failure?
 	}
 
-	// TODO: average all received rates?
+	// Return an error if all providers failed
 	return 0, 0, fmt.Errorf("unable to get rate from providers: %s", c.Providers.Names())
-
 }
+
+// todo: create a new method to get all three and then average the results
