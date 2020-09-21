@@ -107,25 +107,14 @@ var acceptedCurrenciesCoinPaprika = []string{
 	"zar",
 }
 
-// GetSatoshi will convert the price into Satoshi's (string value)
-func (p PriceConversionResponse) GetSatoshi() (satoshi string, err error) {
-	var amount Amount
-	if amount, err = NewAmount(p.Price); err != nil {
+// GetSatoshi will convert the price into Satoshi's (integer value)
+func (p PriceConversionResponse) GetSatoshi() (satoshi int64, err error) {
+	amount, err := NewAmount(p.Price)
+	if err != nil {
 		return
 	}
 
-	satoshi = amount.ToSatoshi()
-	return
-}
-
-// GetSatoshiInt will convert the price into Satoshi's (integer value)
-func (p PriceConversionResponse) GetSatoshiInt() (satoshi int64, err error) {
-	var sats string
-	if sats, err = p.GetSatoshi(); err != nil {
-		return
-	}
-
-	satoshi, err = strconv.ParseInt(sats, 10, 64)
+	satoshi, err = strconv.ParseInt(amount.ToSatoshi(), 10, 64)
 	return
 }
 

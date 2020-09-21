@@ -259,43 +259,6 @@ func TestPriceConversionResponse_GetSatoshi(t *testing.T) {
 	// Create the list of tests
 	var tests = []struct {
 		response      PriceConversionResponse
-		satoshi       string
-		expectedError bool
-	}{
-		{PriceConversionResponse{Price: 0}, "0", false},
-		{PriceConversionResponse{Price: 1}, "100000000", false},
-		{PriceConversionResponse{Price: 0.01}, "1000000", false},
-		{PriceConversionResponse{Price: 0.001}, "100000", false},
-		{PriceConversionResponse{Price: 0.0001}, "10000", false},
-		{PriceConversionResponse{Price: 0.00001}, "1000", false},
-		{PriceConversionResponse{Price: 0.000001}, "100", false},
-		{PriceConversionResponse{Price: 0.0000001}, "10", false},
-		{PriceConversionResponse{Price: 0.00000001}, "1", false},
-		{PriceConversionResponse{Price: 0.000000001}, "0", false},
-		{PriceConversionResponse{Price: 45627467}, "4562746700000000", false},
-		{PriceConversionResponse{Price: math.NaN()}, "", true},
-		{PriceConversionResponse{Price: math.Inf(1)}, "", true},
-	}
-
-	// Test all
-	for _, test := range tests {
-		if satoshi, err := test.response.GetSatoshi(); err == nil && test.expectedError {
-			t.Errorf("%s Failed: expected to throw an error, no error [%v] inputted", t.Name(), test.response)
-		} else if err != nil && !test.expectedError {
-			t.Errorf("%s Failed: [%f] inputted, received: [%s] error [%s]", t.Name(), test.response.Amount, satoshi, err.Error())
-		} else if satoshi != test.satoshi && !test.expectedError {
-			t.Errorf("%s Failed: [%f] inputted and [%s] expected, received: [%s]", t.Name(), test.response.Amount, test.satoshi, satoshi)
-		}
-	}
-}
-
-// TestPriceConversionResponse_GetSatoshiInt will test the method GetSatoshiInt()
-func TestPriceConversionResponse_GetSatoshiInt(t *testing.T) {
-	t.Parallel()
-
-	// Create the list of tests
-	var tests = []struct {
-		response      PriceConversionResponse
 		satoshi       int64
 		expectedError bool
 	}{
@@ -316,7 +279,7 @@ func TestPriceConversionResponse_GetSatoshiInt(t *testing.T) {
 
 	// Test all
 	for _, test := range tests {
-		if satoshi, err := test.response.GetSatoshiInt(); err == nil && test.expectedError {
+		if satoshi, err := test.response.GetSatoshi(); err == nil && test.expectedError {
 			t.Errorf("%s Failed: expected to throw an error, no error [%v] inputted", t.Name(), test.response)
 		} else if err != nil && !test.expectedError {
 			t.Errorf("%s Failed: [%f] inputted, received: [%d] error [%s]", t.Name(), test.response.Amount, satoshi, err.Error())

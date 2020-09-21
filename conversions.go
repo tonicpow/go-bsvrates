@@ -20,7 +20,7 @@ func (c *Client) GetConversion(currency Currency, amount float64) (int64, Provid
 
 		response, err := c.CoinPaprika.GetPriceConversion(USDCurrencyID, CoinPaprikaQuoteID, amount)
 		if response != nil && err == nil {
-			satoshis, err := response.GetSatoshiInt()
+			satoshis, err := response.GetSatoshi()
 			if err == nil {
 				return satoshis, ProviderCoinPaprika, nil
 			}
