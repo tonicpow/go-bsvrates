@@ -18,9 +18,9 @@ func main() {
 	options.TransportIdleTimeout = 30 * time.Second
 
 	// Create a new client (custom options & providers)
-	client := bsvrates.NewClient(options, nil, bsvrates.ProviderWhatsOnChain&bsvrates.ProviderCoinPaprika)
+	client := bsvrates.NewClient(options, nil, bsvrates.ProviderWhatsOnChain, bsvrates.ProviderCoinPaprika)
 
 	// Get rates
 	rate, provider, _ := client.GetRate(bsvrates.CurrencyDollars)
-	log.Printf("found rate: %v %s from provider: %s", rate, bsvrates.CurrencyToName(bsvrates.CurrencyDollars), provider.Names())
+	log.Printf("found rate: %v %s from provider: %s", rate, bsvrates.CurrencyToName(bsvrates.CurrencyDollars), provider.Name())
 }
