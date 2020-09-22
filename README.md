@@ -153,7 +153,7 @@ func main() {
     
 	// Get rates
 	rate, provider, _ := client.GetRate(bsvrates.CurrencyDollars)
-	log.Printf("found rate: %v %s from provider: %s", rate, bsvrates.CurrencyToName(bsvrates.CurrencyDollars), provider.Names())
+	log.Printf("found rate: %v %s from provider: %s", rate, bsvrates.CurrencyToName(bsvrates.CurrencyDollars), provider.Name())
 }
 ``` 
 
@@ -174,7 +174,7 @@ func main() {
     
 	// Get a conversion from $ to Sats
 	satoshis, provider, _ := client.GetConversion(bsvrates.CurrencyDollars, 0.01)
-	log.Printf("0.01 USD = satoshis: %d from provider: %s", satoshis, provider.Names())
+	log.Printf("0.01 USD = satoshis: %d from provider: %s", satoshis, provider.Name())
 }
 ```
  

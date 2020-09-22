@@ -22,7 +22,6 @@ func (c *Client) GetRate(currency Currency) (rate float64, providerUsed Provider
 	}
 
 	// Loop providers and get a rate
-	// todo: serial for now, later can become a go routine group with a race across all providers
 	for _, provider := range c.Providers {
 		providerUsed = provider
 		switch provider {

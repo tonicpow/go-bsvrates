@@ -5,7 +5,7 @@ import "strings"
 const (
 
 	// version is the current package version
-	version = "v0.0.1"
+	version = "v0.1.4"
 
 	// defaultUserAgent is the default user agent for all requests
 	defaultUserAgent string = "go-bsvrates: " + version
@@ -79,10 +79,7 @@ func (c Currency) IsValid() bool {
 
 // IsAccepted tests if the currency is accepted by all providers
 func (c Currency) IsAccepted() bool {
-	if c == CurrencyDollars {
-		return true
-	}
-	return false
+	return c == CurrencyDollars
 }
 
 // Name will return the display name for the given currency

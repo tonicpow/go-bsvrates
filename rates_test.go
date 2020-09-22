@@ -384,5 +384,3 @@ func TestClient_GetRateCustomProviders(t *testing.T) {
 
 	t.Logf("found rate: %f from provider: %s", rate, provider.Name())
 }
-
-// todo: add a test where all 3 providers fail

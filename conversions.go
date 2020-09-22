@@ -19,7 +19,6 @@ func (c *Client) GetConversion(currency Currency, amount float64) (satoshis int6
 	}
 
 	// Loop providers and get a conversion value
-	// todo: serial for now, later can become a go routine group with a race across all providers
 	for _, provider := range c.Providers {
 		providerUsed = provider
 		switch provider {

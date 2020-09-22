@@ -120,7 +120,6 @@ func NewClient(clientOptions *ClientOptions, customHTTPClient *http.Client, prov
 	client = new(Client)
 
 	// No providers? (Use the default set for now)
-	// todo: return an error or warning to the user?
 	if len(providers) == 0 {
 		client.Providers = defaultProviders
 	} else {
