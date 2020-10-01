@@ -194,7 +194,7 @@ View the [contributing guidelines](CONTRIBUTING.md) and please follow the [code 
 All kinds of contributions are welcome :raised_hands:! 
 The most basic way to show your support is to star :star2: the project, or to raise issues :speech_balloon:. 
 You can also support this project by [becoming a sponsor on GitHub](https://github.com/sponsors/mrz1836) :clap: 
-or by making a [**bitcoin donation**](https://mrz1818.com/?tab=tips&af=go-bsvrates) to ensure this journey continues indefinitely! :rocket:
+or by making a [**bitcoin donation**](https://tonicpow.com/?af=go-bsvrates) to ensure this journey continues indefinitely! :rocket:
 
 
 ### Credits
