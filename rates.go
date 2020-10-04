@@ -40,6 +40,9 @@ func (c *Client) GetRate(currency Currency) (rate float64, providerUsed Provider
 			if response, err = c.Preev.GetTicker(PreevTickerID); err == nil && response != nil {
 				rate = response.Prices.Ppi.LastPrice
 			}
+		case providerLast:
+			err = fmt.Errorf("provider unknown")
+			return
 		}
 
 		// todo: log the error for sanity in case the user want's to see the failure?

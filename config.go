@@ -5,7 +5,7 @@ import "strings"
 const (
 
 	// version is the current package version
-	version = "v0.1.4"
+	version = "v0.1.5"
 
 	// defaultUserAgent is the default user agent for all requests
 	defaultUserAgent string = "go-bsvrates: " + version
@@ -50,8 +50,11 @@ func (p Provider) Name() string {
 		return "CoinPaprika"
 	case ProviderPreev:
 		return "Preev"
+	case providerLast:
+		return ""
+	default:
+		return ""
 	}
-	return ""
 }
 
 // ProviderToName helper function to convert the provider value to it's associated name
@@ -86,7 +89,7 @@ func (c Currency) IsAccepted() bool {
 func (c Currency) Name() string {
 	switch c {
 	case CurrencyDollars:
-		return "usd"
+		return usd
 	case CurrencyBitcoin:
 		return "bsv"
 	default:
@@ -102,7 +105,7 @@ func CurrencyToName(currency Currency) string {
 // CurrencyFromName helper function to convert the name into it's Currency type
 func CurrencyFromName(name string) Currency {
 	switch strings.ToLower(name) {
-	case "usd":
+	case usd:
 		return CurrencyDollars
 	case "bsv":
 		return CurrencyBitcoin

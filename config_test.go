@@ -124,10 +124,10 @@ func TestCurrency_Name(t *testing.T) {
 		expected string
 	}{
 		{0, ""},
-		{1, "usd"},
+		{1, usd},
 		{2, "bsv"},
 		{3, ""},
-		{CurrencyDollars, "usd"},
+		{CurrencyDollars, usd},
 		{CurrencyBitcoin, "bsv"},
 		{currencyLast, ""},
 	}
@@ -150,10 +150,10 @@ func TestCurrencyToName(t *testing.T) {
 		expected string
 	}{
 		{0, ""},
-		{1, "usd"},
+		{1, usd},
 		{2, "bsv"},
 		{3, ""},
-		{CurrencyDollars, "usd"},
+		{CurrencyDollars, usd},
 		{CurrencyBitcoin, "bsv"},
 		{currencyLast, ""},
 	}
@@ -176,7 +176,7 @@ func TestCurrencyFromName(t *testing.T) {
 		expected Currency
 	}{
 		{"", CurrencyDollars},
-		{"usd", CurrencyDollars},
+		{usd, CurrencyDollars},
 		{"bsv", CurrencyBitcoin},
 		{"bogus", CurrencyDollars},
 	}

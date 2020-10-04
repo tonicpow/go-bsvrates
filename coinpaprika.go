@@ -1,16 +1,16 @@
 package bsvrates
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"math"
 	"net"
 	"net/http"
 
-	"github.com/shopspring/decimal"
-
 	"github.com/gojektech/heimdall/v6"
 	"github.com/gojektech/heimdall/v6/httpclient"
+	"github.com/shopspring/decimal"
 )
 
 // todo: Use the official CoinPaprika package when:
@@ -19,6 +19,9 @@ import (
 
 // coinPaprikaBaseURL is the main url for the service
 const coinPaprikaBaseURL = "https://api.coinpaprika.com/v1/"
+
+// usd is a const for the dollar
+const usd = "usd"
 
 // List of accepted known currencies (works for CoinPaprika only)
 const (
@@ -39,7 +42,7 @@ const (
 	SEKCurrencyID = "sek-swedish-krona"
 	TRYCurrencyID = "try-turkish-lira"
 	TWDCurrencyID = "twd-taiwan-new-dollar"
-	USDCurrencyID = "usd-us-dollars"
+	USDCurrencyID = usd + "-us-dollars"
 	ZARCurrencyID = "zar-south-african-rand"
 )
 
@@ -105,7 +108,7 @@ var acceptedCurrenciesCoinPaprika = []string{
 	"sek",
 	"try",
 	"twd",
-	"usd",
+	usd,
 	"zar",
 }
 
@@ -223,7 +226,7 @@ func (p *PaprikaClient) GetBaseAmountAndCurrencyID(currency string, amount float
 		return BRLCurrencyID, amount
 	case "cad":
 		return CADCurrencyID, amount
-	case "usd":
+	case usd:
 		return USDCurrencyID, amount
 	case "eur":
 		return EURCurrencyID, amount
@@ -275,7 +278,7 @@ func (p *PaprikaClient) GetPriceConversion(baseCurrencyID, quoteCurrencyID strin
 
 	// Start the request
 	var req *http.Request
-	if req, err = http.NewRequest(http.MethodGet, reqURL, nil); err != nil {
+	if req, err = http.NewRequestWithContext(context.Background(), http.MethodGet, reqURL, nil); err != nil {
 		return
 	}
 
@@ -328,7 +331,7 @@ func (p *PaprikaClient) GetMarketPrice(coinID string) (response *TickerResponse,
 
 	// Start the request
 	var req *http.Request
-	if req, err = http.NewRequest(http.MethodGet, reqURL, nil); err != nil {
+	if req, err = http.NewRequestWithContext(context.Background(), http.MethodGet, reqURL, nil); err != nil {
 		return
 	}
 

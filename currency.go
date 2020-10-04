@@ -12,7 +12,7 @@ import (
 const SatoshisPerBitcoin = 1e8
 
 // Regex for formatting commas
-var commaRegEx = regexp.MustCompile("(\\d+)(\\d{3})")
+var commaRegEx = regexp.MustCompile(`(\d+)(\d{3})`)
 
 // FormatCommas formats the integer with strings
 func FormatCommas(num int) string {

@@ -121,8 +121,8 @@ func TestPaprikaClient_GetBaseAmountAndCurrencyID(t *testing.T) {
 		{"sek", 0.01, SEKCurrencyID, 0.01},
 		{"try", 0.01, TRYCurrencyID, 0.01},
 		{"twd", 0.01, TWDCurrencyID, 0.01},
-		{"usd", 0, USDCurrencyID, 0.01},
-		{"usd", 0.01, USDCurrencyID, 0.01},
+		{usd, 0, USDCurrencyID, 0.01},
+		{usd, 0.01, USDCurrencyID, 0.01},
 		{"zar", 0.01, ZARCurrencyID, 0.01},
 	}
 
@@ -236,7 +236,7 @@ func TestPaprikaClient_IsAcceptedCurrency(t *testing.T) {
 		{"sek", true},
 		{"try", true},
 		{"twd", true},
-		{"usd", true},
+		{usd, true},
 		{"zar", true},
 		{"www", false},
 		{"xxx", false},

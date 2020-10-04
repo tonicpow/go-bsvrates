@@ -40,6 +40,9 @@ func (c *Client) GetConversion(currency Currency, amount float64) (satoshis int6
 			if response, err = c.Preev.GetTicker(PreevTickerID); err == nil && response != nil {
 				satoshis, err = ConvertPriceToSatoshis(response.Prices.Ppi.LastPrice, amount)
 			}
+		case providerLast:
+			err = fmt.Errorf("provider unknown")
+			return
 		}
 
 		// todo: log the error for sanity in case the user want's to see the failure?
