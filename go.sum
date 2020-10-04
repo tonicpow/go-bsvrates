@@ -13,10 +13,10 @@ github.com/gojektech/valkyrie v0.0.0-20190210220504-8f62c1e7ba45/go.mod h1:tDYRk
 github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e/go.mod h1:wJfORRmW1u3UXTncJ5qlYoELFm8eSnnEO6hX4iZ3EWY=
 github.com/jtolds/gls v4.2.1+incompatible/go.mod h1:QJZ7F/aHp+rZTRtaJ1ow/lLfFfVYBRgL+9YlvaHOwJU=
 github.com/mattn/goveralls v0.0.6/go.mod h1:h8b4ow6FxSPMQHF6o2ve3qsclnffZjYTNEKmLesRwqw=
-github.com/mrz1836/go-preev v0.2.0 h1:gLlbObLBcRkVCJQeSmB1afxC6s1BUr+Bf7K1VbcjK3c=
-github.com/mrz1836/go-preev v0.2.0/go.mod h1:pjGAONoKEUeWwBImINgjwaTCpiOkSvZnX7q8woHO/4U=
-github.com/mrz1836/go-whatsonchain v0.6.1 h1:7BrlA3nrzF4z0isA/PixmMUMw0C/lMYUmmNkAGzeWVU=
-github.com/mrz1836/go-whatsonchain v0.6.1/go.mod h1:Du1W2luxTPPxf9n9eA/atPIWNqkYmkkznWg08y6tC/U=
+github.com/mrz1836/go-preev v0.2.1 h1:+kLH9+/3f7DMgZyHKDOsuM9ODZDwgsjRAa47WR2nULs=
+github.com/mrz1836/go-preev v0.2.1/go.mod h1:pjGAONoKEUeWwBImINgjwaTCpiOkSvZnX7q8woHO/4U=
+github.com/mrz1836/go-whatsonchain v0.6.2 h1:mP7e8ThALWOmDRpDUXBGNwr8mMP2Y9i9PsMRvjcaDcI=
+github.com/mrz1836/go-whatsonchain v0.6.2/go.mod h1:Du1W2luxTPPxf9n9eA/atPIWNqkYmkkznWg08y6tC/U=
 github.com/pkg/errors v0.8.0 h1:WdK/asTD0HN+q6hsWO3/vpuAkAr+tw6aNJNDFFf0+qw=
 github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
