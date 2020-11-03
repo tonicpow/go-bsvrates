@@ -2,33 +2,34 @@ package bsvrates
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 // TestProvider_IsValid will test the method IsValid()
 func TestProvider_IsValid(t *testing.T) {
 	t.Parallel()
 
-	// Create the list of tests
 	var tests = []struct {
-		input    Provider
-		expected bool
+		testCase      string
+		provider      Provider
+		expectedValid bool
 	}{
-		{0, false},
-		{1, true},
-		{2, true},
-		{3, true},
-		{4, false},
-		{ProviderWhatsOnChain, true},
-		{ProviderCoinPaprika, true},
-		{ProviderPreev, true},
-		{providerLast, false},
+		{"provider 0", 0, false},
+		{"provider 1", 1, true},
+		{"provider 2", 2, true},
+		{"provider 3", 3, true},
+		{"provider 4", 4, false},
+		{"ProviderWhatsOnChain", ProviderWhatsOnChain, true},
+		{"ProviderCoinPaprika", ProviderCoinPaprika, true},
+		{"ProviderPreev", ProviderPreev, true},
+		{"providerLast", providerLast, false},
 	}
-
-	// Test all
 	for _, test := range tests {
-		if isValid := test.input.IsValid(); isValid != test.expected {
-			t.Errorf("%s Failed: IsValid returned a unexpected result: %v", t.Name(), isValid)
-		}
+		t.Run(test.testCase, func(t *testing.T) {
+			isValid := test.provider.IsValid()
+			assert.Equal(t, test.expectedValid, isValid)
+		})
 	}
 }
 
@@ -36,27 +37,26 @@ func TestProvider_IsValid(t *testing.T) {
 func TestProvider_Name(t *testing.T) {
 	t.Parallel()
 
-	// Create the list of tests
 	var tests = []struct {
-		input    Provider
-		expected string
+		testCase     string
+		provider     Provider
+		expectedName string
 	}{
-		{0, ""},
-		{1, "WhatsOnChain"},
-		{2, "CoinPaprika"},
-		{3, "Preev"},
-		{4, ""},
-		{ProviderWhatsOnChain, "WhatsOnChain"},
-		{ProviderCoinPaprika, "CoinPaprika"},
-		{ProviderPreev, "Preev"},
-		{providerLast, ""},
+		{"provider 0", 0, ""},
+		{"provider 1", 1, "WhatsOnChain"},
+		{"provider 2", 2, "CoinPaprika"},
+		{"provider 3", 3, "Preev"},
+		{"provider 4", 4, ""},
+		{"ProviderWhatsOnChain", ProviderWhatsOnChain, "WhatsOnChain"},
+		{"ProviderCoinPaprika", ProviderCoinPaprika, "CoinPaprika"},
+		{"ProviderPreev", ProviderPreev, "Preev"},
+		{"providerLast", providerLast, ""},
 	}
-
-	// Test all
 	for _, test := range tests {
-		if name := test.input.Name(); name != test.expected {
-			t.Errorf("%s Failed: Name returned a unexpected result: %s", t.Name(), name)
-		}
+		t.Run(test.testCase, func(t *testing.T) {
+			name := test.provider.Name()
+			assert.Equal(t, test.expectedName, name)
+		})
 	}
 }
 
@@ -64,27 +64,26 @@ func TestProvider_Name(t *testing.T) {
 func TestProviderToName(t *testing.T) {
 	t.Parallel()
 
-	// Create the list of tests
 	var tests = []struct {
-		input    Provider
-		expected string
+		testCase     string
+		provider     Provider
+		expectedName string
 	}{
-		{0, ""},
-		{1, "WhatsOnChain"},
-		{2, "CoinPaprika"},
-		{3, "Preev"},
-		{4, ""},
-		{ProviderWhatsOnChain, "WhatsOnChain"},
-		{ProviderCoinPaprika, "CoinPaprika"},
-		{ProviderPreev, "Preev"},
-		{providerLast, ""},
+		{"provider 0", 0, ""},
+		{"provider 1", 1, "WhatsOnChain"},
+		{"provider 2", 2, "CoinPaprika"},
+		{"provider 3", 3, "Preev"},
+		{"provider 4", 4, ""},
+		{"ProviderWhatsOnChain", ProviderWhatsOnChain, "WhatsOnChain"},
+		{"ProviderCoinPaprika", ProviderCoinPaprika, "CoinPaprika"},
+		{"ProviderPreev", ProviderPreev, "Preev"},
+		{"providerLast", providerLast, ""},
 	}
-
-	// Test all
 	for _, test := range tests {
-		if name := ProviderToName(test.input); name != test.expected {
-			t.Errorf("%s Failed: Name returned a unexpected result: %s", t.Name(), name)
-		}
+		t.Run(test.testCase, func(t *testing.T) {
+			name := ProviderToName(test.provider)
+			assert.Equal(t, test.expectedName, name)
+		})
 	}
 }
 
@@ -94,23 +93,23 @@ func TestCurrency_IsValid(t *testing.T) {
 
 	// Create the list of tests
 	var tests = []struct {
-		input    Currency
-		expected bool
+		testCase      string
+		currency      Currency
+		expectedValid bool
 	}{
-		{0, false},
-		{1, true},
-		{2, true},
-		{3, false},
-		{CurrencyDollars, true},
-		{CurrencyBitcoin, true},
-		{currencyLast, false},
+		{"currency 0", 0, false},
+		{"currency 1", 1, true},
+		{"currency 2", 2, true},
+		{"currency 3", 3, false},
+		{"CurrencyDollars", CurrencyDollars, true},
+		{"CurrencyBitcoin", CurrencyBitcoin, true},
+		{"currencyLast", currencyLast, false},
 	}
-
-	// Test all
 	for _, test := range tests {
-		if isValid := test.input.IsValid(); isValid != test.expected {
-			t.Errorf("%s Failed: IsValid returned a unexpected result: %v", t.Name(), isValid)
-		}
+		t.Run(test.testCase, func(t *testing.T) {
+			isValid := test.currency.IsValid()
+			assert.Equal(t, test.expectedValid, isValid)
+		})
 	}
 }
 
@@ -120,23 +119,23 @@ func TestCurrency_Name(t *testing.T) {
 
 	// Create the list of tests
 	var tests = []struct {
-		input    Currency
-		expected string
+		testCase     string
+		currency     Currency
+		expectedName string
 	}{
-		{0, ""},
-		{1, usd},
-		{2, "bsv"},
-		{3, ""},
-		{CurrencyDollars, usd},
-		{CurrencyBitcoin, "bsv"},
-		{currencyLast, ""},
+		{"currency 0", 0, ""},
+		{"currency 1", 1, usd},
+		{"currency 2", 2, "bsv"},
+		{"currency 3", 3, ""},
+		{"CurrencyDollars", CurrencyDollars, usd},
+		{"CurrencyBitcoin", CurrencyBitcoin, "bsv"},
+		{"currencyLast", currencyLast, ""},
 	}
-
-	// Test all
 	for _, test := range tests {
-		if name := test.input.Name(); name != test.expected {
-			t.Errorf("%s Failed: Name returned a unexpected result: %s", t.Name(), name)
-		}
+		t.Run(test.testCase, func(t *testing.T) {
+			name := test.currency.Name()
+			assert.Equal(t, test.expectedName, name)
+		})
 	}
 }
 
@@ -146,23 +145,23 @@ func TestCurrencyToName(t *testing.T) {
 
 	// Create the list of tests
 	var tests = []struct {
-		input    Currency
-		expected string
+		testCase     string
+		currency     Currency
+		expectedName string
 	}{
-		{0, ""},
-		{1, usd},
-		{2, "bsv"},
-		{3, ""},
-		{CurrencyDollars, usd},
-		{CurrencyBitcoin, "bsv"},
-		{currencyLast, ""},
+		{"currency 0", 0, ""},
+		{"currency 1", 1, usd},
+		{"currency 2", 2, "bsv"},
+		{"currency 3", 3, ""},
+		{"CurrencyDollars", CurrencyDollars, usd},
+		{"CurrencyBitcoin", CurrencyBitcoin, "bsv"},
+		{"currencyLast", currencyLast, ""},
 	}
-
-	// Test all
 	for _, test := range tests {
-		if name := CurrencyToName(test.input); name != test.expected {
-			t.Errorf("%s Failed: Name returned a unexpected result: %s", t.Name(), name)
-		}
+		t.Run(test.testCase, func(t *testing.T) {
+			name := CurrencyToName(test.currency)
+			assert.Equal(t, test.expectedName, name)
+		})
 	}
 }
 
@@ -170,22 +169,21 @@ func TestCurrencyToName(t *testing.T) {
 func TestCurrencyFromName(t *testing.T) {
 	t.Parallel()
 
-	// Create the list of tests
 	var tests = []struct {
-		input    string
-		expected Currency
+		testCase         string
+		currency         string
+		expectedCurrency Currency
 	}{
-		{"", CurrencyDollars},
-		{usd, CurrencyDollars},
-		{"bsv", CurrencyBitcoin},
-		{"bogus", CurrencyDollars},
+		{"", "", CurrencyDollars},
+		{usd, usd, CurrencyDollars},
+		{"bsv", "bsv", CurrencyBitcoin},
+		{"bogus", "bogus", CurrencyDollars},
 	}
-
-	// Test all
 	for _, test := range tests {
-		if currency := CurrencyFromName(test.input); currency != test.expected {
-			t.Errorf("%s Failed: Currency returned a unexpected result: %d", t.Name(), currency)
-		}
+		t.Run(test.testCase, func(t *testing.T) {
+			currency := CurrencyFromName(test.currency)
+			assert.Equal(t, test.expectedCurrency, currency)
+		})
 	}
 }
 
@@ -193,24 +191,23 @@ func TestCurrencyFromName(t *testing.T) {
 func TestCurrency_IsAccepted(t *testing.T) {
 	t.Parallel()
 
-	// Create the list of tests
 	var tests = []struct {
-		input    Currency
-		expected bool
+		testCase      string
+		currency      Currency
+		expectedValid bool
 	}{
-		{0, false},
-		{1, true},
-		{2, false},
-		{3, false},
-		{CurrencyDollars, true},
-		{CurrencyBitcoin, false},
-		{currencyLast, false},
+		{"currency 0", 0, false},
+		{"currency 1", 1, true},
+		{"currency 2", 2, false},
+		{"currency 3", 3, false},
+		{"CurrencyDollars", CurrencyDollars, true},
+		{"CurrencyBitcoin", CurrencyBitcoin, false},
+		{"currencyLast", currencyLast, false},
 	}
-
-	// Test all
 	for _, test := range tests {
-		if isValid := test.input.IsAccepted(); isValid != test.expected {
-			t.Errorf("%s Failed: IsAccepted returned a unexpected result: %v", t.Name(), isValid)
-		}
+		t.Run(test.testCase, func(t *testing.T) {
+			isValid := test.currency.IsAccepted()
+			assert.Equal(t, test.expectedValid, isValid)
+		})
 	}
 }

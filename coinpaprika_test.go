@@ -7,6 +7,8 @@ import (
 	"math"
 	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 // mockHTTPPaprika for mocking requests
@@ -96,43 +98,41 @@ func TestPaprikaClient_GetBaseAmountAndCurrencyID(t *testing.T) {
 	// New mock client
 	client := newMockPaprikaClient(&mockHTTPPaprika{})
 
-	// Create the list of tests
 	var tests = []struct {
+		testCase         string
 		currency         string
 		amount           float64
 		expectedCurrency string
 		expectedAmount   float64
 	}{
-		{"aud", 0.01, AUDCurrencyID, 0.01},
-		{"bogus", 0, "", 0},
-		{"brl", 0.01, BRLCurrencyID, 0.01},
-		{"cad", 0.01, CADCurrencyID, 0.01},
-		{"chf", 0.01, CHFCurrencyID, 0.01},
-		{"cny", 0.01, CNYCurrencyID, 0.01},
-		{"eur", 0.01, EURCurrencyID, 0.01},
-		{"gbp", 0.01, GBPCurrencyID, 0.01},
-		{"jpy", 0.01, JPYCurrencyID, 1},
-		{"krw", 0.01, KRWCurrencyID, 1},
-		{"mxn", 0.01, MXNCurrencyID, 0.01},
-		{"new", 0.01, NEWCurrencyID, 0.01},
-		{"nok", 0.01, NOKCurrencyID, 0.01},
-		{"pln", 0.01, PLNCurrencyID, 0.01},
-		{"rub", 0.01, RUBCurrencyID, 0.01},
-		{"sek", 0.01, SEKCurrencyID, 0.01},
-		{"try", 0.01, TRYCurrencyID, 0.01},
-		{"twd", 0.01, TWDCurrencyID, 0.01},
-		{usd, 0, USDCurrencyID, 0.01},
-		{usd, 0.01, USDCurrencyID, 0.01},
-		{"zar", 0.01, ZARCurrencyID, 0.01},
+		{"aud", "aud", 0.01, AUDCurrencyID, 0.01},
+		{"unknown currency", "bogus", 0, "", 0},
+		{"brl", "brl", 0.01, BRLCurrencyID, 0.01},
+		{"cad", "cad", 0.01, CADCurrencyID, 0.01},
+		{"chf", "chf", 0.01, CHFCurrencyID, 0.01},
+		{"cny", "cny", 0.01, CNYCurrencyID, 0.01},
+		{"eur", "eur", 0.01, EURCurrencyID, 0.01},
+		{"gbp", "gbp", 0.01, GBPCurrencyID, 0.01},
+		{"jpy", "jpy", 0.01, JPYCurrencyID, 1},
+		{"krw", "krw", 0.01, KRWCurrencyID, 1},
+		{"mxn", "mxn", 0.01, MXNCurrencyID, 0.01},
+		{"new", "new", 0.01, NEWCurrencyID, 0.01},
+		{"nok", "nok", 0.01, NOKCurrencyID, 0.01},
+		{"pln", "pln", 0.01, PLNCurrencyID, 0.01},
+		{"rub", "rub", 0.01, RUBCurrencyID, 0.01},
+		{"sek", "sek", 0.01, SEKCurrencyID, 0.01},
+		{"try", "try", 0.01, TRYCurrencyID, 0.01},
+		{"twd", "twd", 0.01, TWDCurrencyID, 0.01},
+		{"usd zero", usd, 0, USDCurrencyID, 0.01},
+		{"usd penny", usd, 0.01, USDCurrencyID, 0.01},
+		{"zar", "zar", 0.01, ZARCurrencyID, 0.01},
 	}
-
-	// Test all
 	for _, test := range tests {
-		if currency, amount := client.CoinPaprika.GetBaseAmountAndCurrencyID(test.currency, test.amount); currency != test.expectedCurrency {
-			t.Errorf("%s Failed: [%s] inputted currency, got [%s] but expected [%s]", t.Name(), test.currency, currency, test.expectedCurrency)
-		} else if amount != test.expectedAmount {
-			t.Errorf("%s Failed: [%f] inputted amount, got [%f] but expected [%f]", t.Name(), test.amount, amount, test.expectedAmount)
-		}
+		t.Run(test.testCase, func(t *testing.T) {
+			currencyName, amount := client.CoinPaprika.GetBaseAmountAndCurrencyID(test.currency, test.amount)
+			assert.Equal(t, test.expectedAmount, amount)
+			assert.Equal(t, test.expectedCurrency, currencyName)
+		})
 	}
 }
 
@@ -143,35 +143,83 @@ func TestPaprikaClient_GetPriceConversion(t *testing.T) {
 	// New mock client
 	client := newMockPaprikaClient(&mockHTTPPaprika{})
 
-	// Create the list of tests
-	var tests = []struct {
-		baseCurrency  string
-		quoteCurrency string
-		amount        float64
-		expectedPrice float64
-		expectedError bool
-		statusCode    int
-	}{
-		{USDCurrencyID, CoinPaprikaQuoteID, 0.01, 0.000062865274346746, false, http.StatusOK},
-		{USDCurrencyID, CoinPaprikaQuoteID, 1, 0.006277681354322026, false, http.StatusOK},
-		{USDCurrencyID, CoinPaprikaQuoteID, 501, 0, true, http.StatusBadRequest},
-		{USDCurrencyID, CoinPaprikaQuoteID, 502, 0, true, http.StatusBadGateway},
-		{JPYCurrencyID, CoinPaprikaQuoteID, 1, 0.00005857139480395992, false, http.StatusOK},
-	}
-
-	// Test all
-	for _, test := range tests {
-		if output, err := client.CoinPaprika.GetPriceConversion(test.baseCurrency, test.quoteCurrency, test.amount); err == nil && test.expectedError {
-			t.Errorf("%s Failed: expected to throw an error, no error [%s] [%s] [%f] inputted", t.Name(), test.baseCurrency, test.quoteCurrency, test.amount)
-		} else if err != nil && !test.expectedError {
-			t.Errorf("%s Failed: [%s] [%s] [%f] inputted, received: [%v] error [%s]", t.Name(), test.baseCurrency, test.quoteCurrency, test.amount, output, err.Error())
-		} else if output != nil && output.Price != test.expectedPrice && !test.expectedError {
-			t.Errorf("%s Failed: [%s] [%s] [%f] inputted and [%f] expected, received: [%f]", t.Name(), test.baseCurrency, test.quoteCurrency, test.amount, test.expectedPrice, output.Price)
-		} else if output != nil && output.LastRequest.StatusCode != test.statusCode {
-			t.Errorf("%s Expected status code to be %d, got %d, [%s] [%s] [%f] inputted", t.Name(), test.statusCode, output.LastRequest.StatusCode, test.baseCurrency, test.quoteCurrency, test.amount)
+	t.Run("test valid cases", func(t *testing.T) {
+		var tests = []struct {
+			testCase           string
+			baseCurrency       string
+			quoteCurrency      string
+			amount             float64
+			expectedPrice      float64
+			expectedStatusCode int
+		}{
+			{
+				"valid usd penny",
+				USDCurrencyID,
+				CoinPaprikaQuoteID,
+				0.01,
+				0.000062865274346746,
+				http.StatusOK,
+			},
+			{
+				"valid usd dollar",
+				USDCurrencyID,
+				CoinPaprikaQuoteID,
+				1,
+				0.006277681354322026,
+				http.StatusOK,
+			},
+			{
+				"valid jpy",
+				JPYCurrencyID,
+				CoinPaprikaQuoteID,
+				1,
+				0.00005857139480395992,
+				http.StatusOK,
+			},
 		}
-	}
+		for _, test := range tests {
+			t.Run(test.testCase, func(t *testing.T) {
+				output, err := client.CoinPaprika.GetPriceConversion(test.baseCurrency, test.quoteCurrency, test.amount)
+				assert.NoError(t, err)
+				assert.NotNil(t, output)
+				assert.Equal(t, test.expectedPrice, output.Price)
+				assert.Equal(t, test.expectedStatusCode, output.LastRequest.StatusCode)
+			})
+		}
+	})
 
+	t.Run("invalid cases", func(t *testing.T) {
+		var tests = []struct {
+			testCase           string
+			baseCurrency       string
+			quoteCurrency      string
+			amount             float64
+			expectedStatusCode int
+		}{
+			{
+				"bad request response",
+				USDCurrencyID,
+				CoinPaprikaQuoteID,
+				501,
+				http.StatusBadRequest,
+			},
+			{
+				"bad gateway response",
+				USDCurrencyID,
+				CoinPaprikaQuoteID,
+				502,
+				http.StatusBadGateway,
+			},
+		}
+		for _, test := range tests {
+			t.Run(test.testCase, func(t *testing.T) {
+				output, err := client.CoinPaprika.GetPriceConversion(test.baseCurrency, test.quoteCurrency, test.amount)
+				assert.Error(t, err)
+				assert.NotNil(t, output)
+				assert.Equal(t, test.expectedStatusCode, output.LastRequest.StatusCode)
+			})
+		}
+	})
 }
 
 // TestPaprikaClient_GetMarketPrice will test the method GetMarketPrice()
@@ -181,30 +229,57 @@ func TestPaprikaClient_GetMarketPrice(t *testing.T) {
 	// New mock client
 	client := newMockPaprikaClient(&mockHTTPPaprika{})
 
-	// Create the list of tests
-	var tests = []struct {
-		coinID        string
-		expectedPrice float64
-		expectedError bool
-		statusCode    int
-	}{
-		{CoinPaprikaQuoteID, 159.190332, false, http.StatusOK},
-		{"unknown", 0, true, http.StatusNotFound},
-		{"error", 0, true, http.StatusBadGateway},
-	}
-
-	// Test all
-	for _, test := range tests {
-		if output, err := client.CoinPaprika.GetMarketPrice(test.coinID); err == nil && test.expectedError {
-			t.Errorf("%s Failed: expected to throw an error, no error [%s] inputted", t.Name(), test.coinID)
-		} else if err != nil && !test.expectedError {
-			t.Errorf("%s Failed: [%s] inputted, received: [%v] error [%s]", t.Name(), test.coinID, output, err.Error())
-		} else if output != nil && output.Quotes != nil && output.Quotes.USD.Price != test.expectedPrice && !test.expectedError {
-			t.Errorf("%s Failed: [%s] inputted and [%f] expected, received: [%f]", t.Name(), test.coinID, test.expectedPrice, output.Quotes.USD.Price)
-		} else if output != nil && output.LastRequest.StatusCode != test.statusCode {
-			t.Errorf("%s Expected status code to be %d, got %d, [%s] inputted", t.Name(), test.statusCode, output.LastRequest.StatusCode, test.coinID)
+	t.Run("test valid cases", func(t *testing.T) {
+		var tests = []struct {
+			testCase           string
+			coinID             string
+			expectedPrice      float64
+			expectedStatusCode int
+		}{
+			{
+				"valid quote",
+				CoinPaprikaQuoteID,
+				159.190332,
+				http.StatusOK,
+			},
 		}
-	}
+		for _, test := range tests {
+			t.Run(test.testCase, func(t *testing.T) {
+				output, err := client.CoinPaprika.GetMarketPrice(test.coinID)
+				assert.NoError(t, err)
+				assert.NotNil(t, output)
+				assert.Equal(t, test.expectedPrice, output.Quotes.USD.Price)
+				assert.Equal(t, test.expectedStatusCode, output.LastRequest.StatusCode)
+			})
+		}
+	})
+
+	t.Run("test invalid cases", func(t *testing.T) {
+		var tests = []struct {
+			testCase           string
+			coinID             string
+			expectedStatusCode int
+		}{
+			{
+				"unknown coin id",
+				"unknown",
+				http.StatusNotFound,
+			},
+			{
+				"bad gateway response",
+				"error",
+				http.StatusBadGateway,
+			},
+		}
+		for _, test := range tests {
+			t.Run(test.testCase, func(t *testing.T) {
+				output, err := client.CoinPaprika.GetMarketPrice(test.coinID)
+				assert.Error(t, err)
+				assert.NotNil(t, output)
+				assert.Equal(t, test.expectedStatusCode, output.LastRequest.StatusCode)
+			})
+		}
+	})
 }
 
 // TestPaprikaClient_IsAcceptedCurrency will test the method IsAcceptedCurrency()
@@ -214,41 +289,42 @@ func TestPaprikaClient_IsAcceptedCurrency(t *testing.T) {
 	// New mock client
 	client := newMockPaprikaClient(&mockHTTPPaprika{})
 
-	// Create the list of tests
 	var tests = []struct {
-		currency string
-		found    bool
+		testCase      string
+		currency      string
+		expectedFound bool
 	}{
-		{"aud", true},
-		{"brl", true},
-		{"cad", true},
-		{"chf", true},
-		{"cny", true},
-		{"eur", true},
-		{"gbp", true},
-		{"jpy", true},
-		{"krw", true},
-		{"mxn", true},
-		{"new", true},
-		{"nok", true},
-		{"pln", true},
-		{"rub", true},
-		{"sek", true},
-		{"try", true},
-		{"twd", true},
-		{usd, true},
-		{"zar", true},
-		{"www", false},
-		{"xxx", false},
-		{"usa", false},
-		{"", false},
+		{"aud", "aud", true},
+		{"brl", "brl", true},
+		{"cad", "cad", true},
+		{"chf", "chf", true},
+		{"cny", "cny", true},
+		{"eur", "eur", true},
+		{"gbp", "gbp", true},
+		{"jpy", "jpy", true},
+		{"krw", "krw", true},
+		{"mxn", "mxn", true},
+		{"new", "new", true},
+		{"nok", "nok", true},
+		{"pln", "pln", true},
+		{"rub", "rub", true},
+		{"sek", "sek", true},
+		{"try", "try", true},
+		{"twd", "twd", true},
+		{"usd", usd, true},
+		{"USD", "USD", true},
+		{"zar", "zar", true},
+		{"www", "www", false},
+		{"xxx", "xxx", false},
+		{"usa", "usa", false},
+		{"no currency", "", false},
+		{"unknown currency", "unknown", false},
 	}
-
-	// Test all
 	for _, test := range tests {
-		if found := client.CoinPaprika.IsAcceptedCurrency(test.currency); found != test.found {
-			t.Errorf("%s Failed: [%s] inputted currency, found did not match expected value", t.Name(), test.currency)
-		}
+		t.Run(test.testCase, func(t *testing.T) {
+			found := client.CoinPaprika.IsAcceptedCurrency(test.currency)
+			assert.Equal(t, test.expectedFound, found)
+		})
 	}
 }
 
@@ -256,35 +332,49 @@ func TestPaprikaClient_IsAcceptedCurrency(t *testing.T) {
 func TestPriceConversionResponse_GetSatoshi(t *testing.T) {
 	t.Parallel()
 
-	// Create the list of tests
-	var tests = []struct {
-		response      PriceConversionResponse
-		satoshi       int64
-		expectedError bool
-	}{
-		{PriceConversionResponse{Price: 0}, 0, false},
-		{PriceConversionResponse{Price: 1}, 100000000, false},
-		{PriceConversionResponse{Price: 0.01}, 1000000, false},
-		{PriceConversionResponse{Price: 0.001}, 100000, false},
-		{PriceConversionResponse{Price: 0.0001}, 10000, false},
-		{PriceConversionResponse{Price: 0.00001}, 1000, false},
-		{PriceConversionResponse{Price: 0.000001}, 100, false},
-		{PriceConversionResponse{Price: 0.0000001}, 10, false},
-		{PriceConversionResponse{Price: 0.00000001}, 1, false},
-		{PriceConversionResponse{Price: 0.000000001}, 1, false},
-		{PriceConversionResponse{Price: 45627467}, 4562746700000000, false},
-		{PriceConversionResponse{Price: math.NaN()}, 0, true},
-		{PriceConversionResponse{Price: math.Inf(1)}, 0, true},
-	}
-
-	// Test all
-	for _, test := range tests {
-		if satoshi, err := test.response.GetSatoshi(); err == nil && test.expectedError {
-			t.Errorf("%s Failed: expected to throw an error, no error [%v] inputted", t.Name(), test.response)
-		} else if err != nil && !test.expectedError {
-			t.Errorf("%s Failed: [%f] inputted, received: [%d] error [%s]", t.Name(), test.response.Amount, satoshi, err.Error())
-		} else if satoshi != test.satoshi && !test.expectedError {
-			t.Errorf("%s Failed: [%f] inputted and [%d] expected, received: [%d]", t.Name(), test.response.Amount, test.satoshi, satoshi)
+	t.Run("test valid cases", func(t *testing.T) {
+		var tests = []struct {
+			testCase        string
+			response        PriceConversionResponse
+			expectedSatoshi int64
+		}{
+			{"zero", PriceConversionResponse{Price: 0}, 0},
+			{"1", PriceConversionResponse{Price: 1}, 100000000},
+			{"one decimal place", PriceConversionResponse{Price: 0.1}, 10000000},
+			{"two decimal places", PriceConversionResponse{Price: 0.01}, 1000000},
+			{"three decimal places", PriceConversionResponse{Price: 0.001}, 100000},
+			{"four decimal places", PriceConversionResponse{Price: 0.0001}, 10000},
+			{"five decimal places", PriceConversionResponse{Price: 0.00001}, 1000},
+			{"six decimal places", PriceConversionResponse{Price: 0.000001}, 100},
+			{"seven decimal places", PriceConversionResponse{Price: 0.0000001}, 10},
+			{"eight decimal places", PriceConversionResponse{Price: 0.00000001}, 1},
+			{"nine decimal places", PriceConversionResponse{Price: 0.000000001}, 1},
+			{"random digits", PriceConversionResponse{Price: 45627467}, 4562746700000000},
 		}
-	}
+		for _, test := range tests {
+			t.Run(test.testCase, func(t *testing.T) {
+				satoshi, err := test.response.GetSatoshi()
+				assert.NoError(t, err)
+				assert.Equal(t, test.expectedSatoshi, satoshi)
+			})
+		}
+	})
+
+	t.Run("test invalid cases", func(t *testing.T) {
+		var tests = []struct {
+			testCase        string
+			response        PriceConversionResponse
+			expectedSatoshi int64
+		}{
+			{"price is nan", PriceConversionResponse{Price: math.NaN()}, 0},
+			{"price is inf", PriceConversionResponse{Price: math.Inf(1)}, 0},
+		}
+		for _, test := range tests {
+			t.Run(test.testCase, func(t *testing.T) {
+				satoshi, err := test.response.GetSatoshi()
+				assert.Error(t, err)
+				assert.Equal(t, test.expectedSatoshi, satoshi)
+			})
+		}
+	})
 }

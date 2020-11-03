@@ -4,29 +4,32 @@ import (
 	"fmt"
 	"math"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 // TestFormatCommas will test the method FormatCommas()
 func TestFormatCommas(t *testing.T) {
 	t.Parallel()
 
-	// Create the list of tests
 	var tests = []struct {
-		integer  int
-		expected string
+		testCase       string
+		integer        int
+		expectedString string
 	}{
-		{0, "0"},
-		{123, "123"},
-		{1234, "1,234"},
-		{127127, "127,127"},
-		{1271271271271, "1,271,271,271,271"},
+		{"zero", 0, "0"},
+		{"one", 1, "1"},
+		{"no comma", 123, "123"},
+		{"thousand", 1234, "1,234"},
+		{"ten thousand", 12345, "12,345"},
+		{"hundred thousand", 127127, "127,127"},
+		{"trillion", 1271271271271, "1,271,271,271,271"},
 	}
-
-	// Test all
 	for _, test := range tests {
-		if output := FormatCommas(test.integer); output != test.expected {
-			t.Errorf("%s Failed: [%d] inputted and [%s] expected, received: [%s]", t.Name(), test.integer, test.expected, output)
-		}
+		t.Run(test.testCase, func(t *testing.T) {
+			output := FormatCommas(test.integer)
+			assert.Equal(t, test.expectedString, output)
+		})
 	}
 }
 
@@ -48,27 +51,28 @@ func ExampleFormatCommas() {
 func TestConvertSatsToBSV(t *testing.T) {
 	t.Parallel()
 
-	// Create the list of tests
 	var tests = []struct {
-		integer  int
-		expected float64
+		testCase     string
+		integer      int
+		expectedSats float64
 	}{
-		{1, 0.00000001},
-		{100, 0.00000100},
-		{1000, 0.0000100},
-		{10000, 0.000100},
-		{100000, 0.00100},
-		{1000000, 0.0100},
-		{10000000, 0.100},
-		{100000000, 1.0},
-		{12345678912, 123.45678912},
+		{"negative 1", -1, -1e-08},
+		{"one", 1, 0.00000001},
+		{"hundred", 100, 0.00000100},
+		{"thousand", 1000, 0.0000100},
+		{"ten thousand", 10000, 0.000100},
+		{"hundred thousand", 100000, 0.00100},
+		{"million", 1000000, 0.0100},
+		{"ten million", 10000000, 0.100},
+		{"hundred million", 100000000, 1.0},
+		{"billion", 1000000000, 10},
+		{"random amount", 12345678912, 123.45678912},
 	}
-
-	// Test all
 	for _, test := range tests {
-		if output := ConvertSatsToBSV(test.integer); output != test.expected {
-			t.Errorf("%s Failed: [%d] inputted and [%f] expected, received: [%f]", t.Name(), test.integer, test.expected, output)
-		}
+		t.Run(test.testCase, func(t *testing.T) {
+			output := ConvertSatsToBSV(test.integer)
+			assert.Equal(t, test.expectedSats, output)
+		})
 	}
 }
 
@@ -90,42 +94,56 @@ func ExampleConvertSatsToBSV() {
 func TestConvertPriceToSatoshis(t *testing.T) {
 	t.Parallel()
 
-	// Create the list of tests
-	var tests = []struct {
-		currentRate   float64
-		amount        float64
-		expectedSats  int64
-		expectedError bool
-	}{
-		{157.93895102, 0.01, 6332, false},
-		{158.18989656, 10, 6321517, false},
-		{158.18989656, 1, 632152, false},
-		{158.38610459, 1, 631369, false},
-		{158.38610459, 0.01, 6314, false},
-		{100, 1, 1000000, false},
-		{100, 0.10, 100000, false},
-		{100, 0.01, 10000, false},
-		{100, 150, 150000000, false},
-		{100, 100, 100000000, false},
-		{1000, 1, 100000, false},
-		{10000, 1, 10000, false},
-		{100000, 1, 1000, false},
-		{1000000, 1, 100, false},
-		{0, 1, 0, true},
-		{1, 0, 0, true},
-		{math.Inf(1), 0, 0, true},
-	}
-
-	// Test all
-	for _, test := range tests {
-		if output, err := ConvertPriceToSatoshis(test.currentRate, test.amount); err == nil && test.expectedError {
-			t.Errorf("%s Failed: expected to throw an error, no error [%f] [%f] inputted", t.Name(), test.currentRate, test.amount)
-		} else if err != nil && !test.expectedError {
-			t.Errorf("%s Failed: [%f] [%f] inputted, received: [%d] error [%s]", t.Name(), test.currentRate, test.amount, output, err.Error())
-		} else if output != test.expectedSats && !test.expectedError {
-			t.Errorf("%s Failed: [%f] [%f] inputted and [%d] expected, received: [%d]", t.Name(), test.currentRate, test.amount, test.expectedSats, output)
+	t.Run("valid cases", func(t *testing.T) {
+		var tests = []struct {
+			testCase     string
+			currentRate  float64
+			amount       float64
+			expectedSats int64
+		}{
+			{"penny", 157.93895102, 0.01, 6332},
+			{"ten", 158.18989656, 10, 6321517},
+			{"one", 158.18989656, 1, 632152},
+			{"one (different rate)", 158.38610459, 1, 631369},
+			{"penny (different rate)", 158.38610459, 0.01, 6314},
+			{"rate 1 dollar", 100, 1, 1000000},
+			{"rate 100 ten cents", 100, 0.10, 100000},
+			{"rate 100 one penny", 100, 0.01, 10000},
+			{"rate 100 one hundred fifty", 100, 150, 150000000},
+			{"rate 100 one hundred", 100, 100, 100000000},
+			{"rate 1000", 1000, 1, 100000},
+			{"rate 10000", 10000, 1, 10000},
+			{"rate 100000", 100000, 1, 1000},
+			{"rate 1000000", 1000000, 1, 100},
 		}
-	}
+		for _, test := range tests {
+			t.Run(test.testCase, func(t *testing.T) {
+				output, err := ConvertPriceToSatoshis(test.currentRate, test.amount)
+				assert.NoError(t, err)
+				assert.Equal(t, test.expectedSats, output)
+			})
+		}
+	})
+
+	t.Run("invalid cases", func(t *testing.T) {
+		var tests = []struct {
+			testCase     string
+			currentRate  float64
+			amount       float64
+			expectedSats int64
+		}{
+			{"rate zero", 0, 1, 0},
+			{"amount zero", 1, 0, 0},
+			{"math inf", math.Inf(1), 0, 0},
+		}
+		for _, test := range tests {
+			t.Run(test.testCase, func(t *testing.T) {
+				output, err := ConvertPriceToSatoshis(test.currentRate, test.amount)
+				assert.Error(t, err)
+				assert.Equal(t, test.expectedSats, output)
+			})
+		}
+	})
 }
 
 // BenchmarkConvertPriceToSatoshis benchmarks the method ConvertPriceToSatoshis()
@@ -146,22 +164,21 @@ func ExampleConvertPriceToSatoshis() {
 func TestFormatCentsToDollars(t *testing.T) {
 	t.Parallel()
 
-	// Create the list of tests
 	var tests = []struct {
-		integer  int
-		expected string
+		testCase       string
+		integer        int
+		expectedString string
 	}{
-		{0, "0.00"},
-		{-1, "-0.01"},
-		{127, "1.27"},
-		{199276, "1992.76"},
+		{"zero", 0, "0.00"},
+		{"negative", -1, "-0.01"},
+		{"dollar twenty seven", 127, "1.27"},
+		{"random number", 199276, "1992.76"},
 	}
-
-	// Test all
 	for _, test := range tests {
-		if output := FormatCentsToDollars(test.integer); output != test.expected {
-			t.Errorf("%s Failed: [%d] inputted and [%s] expected, received: [%s]", t.Name(), test.integer, test.expected, output)
-		}
+		t.Run(test.testCase, func(t *testing.T) {
+			output := FormatCentsToDollars(test.integer)
+			assert.Equal(t, test.expectedString, output)
+		})
 	}
 }
 
@@ -183,38 +200,52 @@ func ExampleFormatCentsToDollars() {
 func TestTransformCurrencyToInt(t *testing.T) {
 	t.Parallel()
 
-	// Create the list of tests
-	var tests = []struct {
-		decimal       float64
-		currency      Currency
-		expected      int64
-		expectedError bool
-	}{
-		{0, CurrencyDollars, 0, false},
-		{1.27, CurrencyDollars, 127, false},
-		{01.27, CurrencyDollars, 127, false},
-		{199.272, CurrencyDollars, 19927, false},
-		{199.276, CurrencyDollars, 19928, false},
-		{0.00000010, CurrencyBitcoin, 10, false},
-		{0.000010, CurrencyBitcoin, 1000, false},
-		{0.0010, CurrencyBitcoin, 100000, false},
-		{0.10, CurrencyBitcoin, 10000000, false},
-		{1, CurrencyBitcoin, 100000000, false},
-		{0.00000010, 123, 0, true},
-	}
-
-	// todo: issue with negative floats (-1.27 = -126)
-
-	// Test all
-	for _, test := range tests {
-		if output, err := TransformCurrencyToInt(test.decimal, test.currency); err == nil && test.expectedError {
-			t.Errorf("%s Failed: expected to throw an error, no error [%f] inputted [%s] currency", t.Name(), test.decimal, test.currency.Name())
-		} else if err != nil && !test.expectedError {
-			t.Errorf("%s Failed: [%f] inputted, received: [%v] error [%s]", t.Name(), test.decimal, output, err.Error())
-		} else if output != test.expected && !test.expectedError {
-			t.Errorf("%s Failed: [%f] inputted and [%d] expected, received: [%d]", t.Name(), test.decimal, test.expected, output)
+	t.Run("valid cases", func(t *testing.T) {
+		var tests = []struct {
+			testCase    string
+			decimal     float64
+			currency    Currency
+			expectedInt int64
+		}{
+			{"zero", 0, CurrencyDollars, 0},
+			{"dollar and change", 1.27, CurrencyDollars, 127},
+			{"leading zero", 01.27, CurrencyDollars, 127},
+			{"three decimals", 199.272, CurrencyDollars, 19927},
+			{"third decimal greater than 5", 199.276, CurrencyDollars, 19928},
+			{"ten sats", 0.00000010, CurrencyBitcoin, 10},
+			{"thousand sats", 0.000010, CurrencyBitcoin, 1000},
+			{"hundred thousand sats", 0.0010, CurrencyBitcoin, 100000},
+			{"ten million", 0.10, CurrencyBitcoin, 10000000},
+			{"one bitcoin", 1, CurrencyBitcoin, 100000000},
 		}
-	}
+		for _, test := range tests {
+			t.Run(test.testCase, func(t *testing.T) {
+				output, err := TransformCurrencyToInt(test.decimal, test.currency)
+				assert.NoError(t, err)
+				assert.Equal(t, test.expectedInt, output)
+			})
+		}
+	})
+
+	t.Run("invalid cases", func(t *testing.T) {
+		var tests = []struct {
+			testCase    string
+			decimal     float64
+			currency    Currency
+			expectedInt int64
+		}{
+			{"invalid currency", 0.00000010, 123, 0},
+		}
+		for _, test := range tests {
+			t.Run(test.testCase, func(t *testing.T) {
+				output, err := TransformCurrencyToInt(test.decimal, test.currency)
+				assert.Error(t, err)
+				assert.Equal(t, test.expectedInt, output)
+			})
+		}
+
+		// todo: issue with negative floats (-1.27 = -126)
+	})
 }
 
 // BenchmarkTransformCurrencyToInt benchmarks the method TransformCurrencyToInt()
@@ -235,25 +266,23 @@ func ExampleTransformCurrencyToInt() {
 func TestConvertFloatToIntBSV(t *testing.T) {
 	t.Parallel()
 
-	// Create the list of tests
 	var tests = []struct {
-		float         float64
-		expected      int64
-		expectedError bool
+		testCase    string
+		float       float64
+		expectedInt int64
 	}{
-		{0, 0, false},
-		{1.123456789, 112345679, false},
-		{0.00000001, 1, false},
-		{0.00000111, 111, false},
-		{-0.00000111, -111, false},
-		// {math.Inf(1), -111, true}, // This will produce a panic in decimal package
+		{"zero", 0, 0},
+		{"all decimal places", 1.123456789, 112345679},
+		{"one sat", 0.00000001, 1},
+		{"111 sats", 0.00000111, 111},
+		{"negative sats", -0.00000111, -111},
+		// {math.Inf(1), -111}, // This will produce a panic in decimal package
 	}
-
-	// Test all
 	for _, test := range tests {
-		if output := ConvertFloatToIntBSV(test.float); output != test.expected && !test.expectedError {
-			t.Errorf("%s Failed: [%f] inputted and [%d] expected, received: [%d]", t.Name(), test.float, test.expected, output)
-		}
+		t.Run(test.testCase, func(t *testing.T) {
+			output := ConvertFloatToIntBSV(test.float)
+			assert.Equal(t, test.expectedInt, output)
+		})
 	}
 }
 
@@ -275,34 +304,48 @@ func ExampleConvertFloatToIntBSV() {
 func TestTransformIntToCurrency(t *testing.T) {
 	t.Parallel()
 
-	// Create the list of tests
-	var tests = []struct {
-		integer       int
-		currency      Currency
-		expected      string
-		expectedError bool
-	}{
-		{0, CurrencyDollars, "0.00", false},
-		{-1, CurrencyDollars, "-0.01", false},
-		{127, CurrencyDollars, "1.27", false},
-		{1274, CurrencyDollars, "12.74", false},
-		{1276, CurrencyDollars, "12.76", false},
-		{1270000, CurrencyDollars, "12700.00", false},
-		{127, CurrencyBitcoin, "0.00000127", false},
-		{123456789123, CurrencyBitcoin, "1234.56789123", false},
-		{111, 123, "", true},
-	}
-
-	// Test all
-	for _, test := range tests {
-		if output, err := TransformIntToCurrency(test.integer, test.currency); err == nil && test.expectedError {
-			t.Errorf("%s Failed: expected to throw an error, no error [%d] inputted [%s] currency", t.Name(), test.integer, test.currency.Name())
-		} else if err != nil && !test.expectedError {
-			t.Errorf("%s Failed: [%d] inputted, received: [%s] error [%s]", t.Name(), test.integer, output, err.Error())
-		} else if output != test.expected && !test.expectedError {
-			t.Errorf("%s Failed: [%d] inputted and [%s] expected, received: [%s]", t.Name(), test.integer, test.expected, output)
+	t.Run("valid cases", func(t *testing.T) {
+		var tests = []struct {
+			testCase       string
+			integer        int
+			currency       Currency
+			expectedString string
+		}{
+			{"zero", 0, CurrencyDollars, "0.00"},
+			{"negative", -1, CurrencyDollars, "-0.01"},
+			{"dollar and change", 127, CurrencyDollars, "1.27"},
+			{"less than 5", 1274, CurrencyDollars, "12.74"},
+			{"more than 5", 1276, CurrencyDollars, "12.76"},
+			{"large number", 1270000, CurrencyDollars, "12700.00"},
+			{"127 sats", 127, CurrencyBitcoin, "0.00000127"},
+			{"random number", 123456789123, CurrencyBitcoin, "1234.56789123"},
 		}
-	}
+		for _, test := range tests {
+			t.Run(test.testCase, func(t *testing.T) {
+				output, err := TransformIntToCurrency(test.integer, test.currency)
+				assert.NoError(t, err)
+				assert.Equal(t, test.expectedString, output)
+			})
+		}
+	})
+
+	t.Run("invalid cases", func(t *testing.T) {
+		var tests = []struct {
+			testCase       string
+			integer        int
+			currency       Currency
+			expectedString string
+		}{
+			{"invalid currency", 111, 123, ""},
+		}
+		for _, test := range tests {
+			t.Run(test.testCase, func(t *testing.T) {
+				output, err := TransformIntToCurrency(test.integer, test.currency)
+				assert.Error(t, err)
+				assert.Equal(t, test.expectedString, output)
+			})
+		}
+	})
 }
 
 // BenchmarkTransformIntToCurrency benchmarks the method TransformIntToCurrency()
@@ -323,27 +366,25 @@ func ExampleTransformIntToCurrency() {
 func TestConvertIntToFloatUSD(t *testing.T) {
 	t.Parallel()
 
-	// Create the list of tests
 	var tests = []struct {
-		integer  uint64
-		expected float64
+		testCase      string
+		integer       uint64
+		expectedFloat float64
 	}{
-		{0, 0.00},
-		{1, 0.010000},
-		{10, 0.10000},
-		{100, 1.0},
-		{1000, 10.0},
-		{10000, 100.0},
-		{10001, 100.01},
-		{10099, 100.99},
-		{10999, 109.99},
+		{"zero", 0, 0.00},
+		{"one", 1, 0.010000},
+		{"ten", 10, 0.10000},
+		{"hundred", 100, 1.0},
+		{"thousand", 1000, 10.0},
+		{"ten thousand", 10000, 100.0},
+		{"penny", 10001, 100.01},
+		{"ninety nine", 10099, 100.99},
 	}
-
-	// Test all
 	for _, test := range tests {
-		if output := ConvertIntToFloatUSD(test.integer); output != test.expected {
-			t.Errorf("%s Failed: [%d] inputted and [%f] expected, received: [%f]", t.Name(), test.integer, test.expected, output)
-		}
+		t.Run(test.testCase, func(t *testing.T) {
+			output := ConvertIntToFloatUSD(test.integer)
+			assert.Equal(t, test.expectedFloat, output)
+		})
 	}
 }
 

@@ -1,203 +1,117 @@
 package bsvrates
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 // TestClient_GetConversion will test the method GetConversion()
 func TestClient_GetConversion(t *testing.T) {
 	t.Parallel()
 
-	// Set a valid client
-	client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{})
+	t.Run("valid get conversion - default", func(t *testing.T) {
+		client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{})
+		assert.NotNil(t, client)
 
-	// Test a valid response
-	satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
-	if err != nil {
-		t.Fatalf("error occurred: %s", err.Error())
-	} else if satoshis == 0 {
-		t.Fatalf("satoshis was 0 for provider: %s", provider.Name())
-	} else if !provider.IsValid() {
-		t.Fatalf("provider: %s was invalid", provider.Name())
-	}
+		satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
+		assert.NoError(t, err)
+		assert.Equal(t, int64(633157), satoshis)
+		assert.Equal(t, true, provider.IsValid())
+		assert.Equal(t, "CoinPaprika", provider.Name())
+	})
 
-	t.Logf("found satoshis: %d from provider: %s", satoshis, provider.Name())
-}
+	t.Run("valid get conversion - preev", func(t *testing.T) {
+		client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{}, ProviderPreev)
+		assert.NotNil(t, client)
 
-// TestClient_GetConversionPreev will test the method GetConversion()
-func TestClient_GetConversionPreev(t *testing.T) {
-	t.Parallel()
+		satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
+		assert.NoError(t, err)
+		assert.Equal(t, int64(628260), satoshis)
+		assert.Equal(t, true, provider.IsValid())
+		assert.Equal(t, "Preev", provider.Name())
+	})
 
-	// Set a valid client
-	client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{}, ProviderPreev)
+	t.Run("valid get conversion - whats on chain", func(t *testing.T) {
+		client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{}, ProviderWhatsOnChain)
+		assert.NotNil(t, client)
 
-	// Test a valid response
-	satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
-	if err != nil {
-		t.Fatalf("error occurred: %s", err.Error())
-	} else if satoshis == 0 {
-		t.Fatalf("satoshis was 0 for provider: %s", provider.Name())
-	} else if !provider.IsValid() {
-		t.Fatalf("provider: %s was invalid", provider.Name())
-	}
+		satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
+		assert.NoError(t, err)
+		assert.Equal(t, int64(628892), satoshis)
+		assert.Equal(t, true, provider.IsValid())
+		assert.Equal(t, "WhatsOnChain", provider.Name())
+	})
 
-	t.Logf("found satoshis: %d from provider: %s", satoshis, provider.Name())
-}
+	t.Run("valid get conversion - coin paprika", func(t *testing.T) {
+		client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{}, ProviderCoinPaprika)
+		assert.NotNil(t, client)
 
-// TestClient_GetConversionWhatsOnChain will test the method GetConversion()
-func TestClient_GetConversionWhatsOnChain(t *testing.T) {
-	t.Parallel()
+		satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
+		assert.NoError(t, err)
+		assert.Equal(t, int64(633157), satoshis)
+		assert.Equal(t, true, provider.IsValid())
+		assert.Equal(t, "CoinPaprika", provider.Name())
+	})
 
-	// Set a valid client
-	client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{}, ProviderWhatsOnChain)
+	t.Run("valid get conversion - custom provider list", func(t *testing.T) {
+		client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{}, ProviderPreev, ProviderWhatsOnChain)
+		assert.NotNil(t, client)
 
-	// Test a valid response
-	satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
-	if err != nil {
-		t.Fatalf("error occurred: %s", err.Error())
-	} else if satoshis == 0 {
-		t.Fatalf("satoshis was 0 for provider: %s", provider.Name())
-	} else if !provider.IsValid() {
-		t.Fatalf("provider: %s was invalid", provider.Name())
-	}
+		satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
+		assert.NoError(t, err)
+		assert.NotEqual(t, 633157, satoshis)
+		assert.Equal(t, true, provider.IsValid())
+		assert.Equal(t, "Preev", provider.Name())
+	})
 
-	t.Logf("found satoshis: %d from provider: %s", satoshis, provider.Name())
-}
+	t.Run("non accepted currency", func(t *testing.T) {
+		client := newMockClient(&mockWOCValid{}, &mockPaprikaFailed{}, &mockPreevValid{})
+		assert.NotNil(t, client)
 
-// TestClient_GetConversionCoinPaprika will test the method GetConversion()
-func TestClient_GetConversionCoinPaprika(t *testing.T) {
-	t.Parallel()
+		_, _, rateErr := client.GetConversion(123, 1)
+		assert.Error(t, rateErr)
+	})
 
-	// Set a valid client
-	client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{}, ProviderCoinPaprika)
+	t.Run("failed conversion - default", func(t *testing.T) {
+		client := newMockClient(&mockWOCValid{}, &mockPaprikaFailed{}, &mockPreevValid{})
+		assert.NotNil(t, client)
 
-	// Test a valid response
-	satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
-	if err != nil {
-		t.Fatalf("error occurred: %s", err.Error())
-	} else if satoshis == 0 {
-		t.Fatalf("satoshis was 0 for provider: %s", provider.Name())
-	} else if !provider.IsValid() {
-		t.Fatalf("provider: %s was invalid", provider.Name())
-	}
+		satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
+		assert.NoError(t, err)
+		assert.Equal(t, int64(628892), satoshis)
+		assert.Equal(t, true, provider.IsValid())
+		assert.Equal(t, "WhatsOnChain", provider.Name())
+	})
 
-	t.Logf("found satoshis: %d from provider: %s", satoshis, provider.Name())
-}
+	t.Run("failed conversion - preev", func(t *testing.T) {
+		client := newMockClient(&mockWOCValid{}, &mockPaprikaFailed{}, &mockPreevFailed{})
+		assert.NotNil(t, client)
 
-// TestClient_GetConversionFailed will test the method GetConversion()
-func TestClient_GetConversionFailed(t *testing.T) {
-	t.Parallel()
+		satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
+		assert.NoError(t, err)
+		assert.Equal(t, int64(628892), satoshis)
+		assert.Equal(t, true, provider.IsValid())
+		assert.Equal(t, "WhatsOnChain", provider.Name())
+	})
 
-	// Set a valid client (2 valid, 1 invalid)
-	client := newMockClient(&mockWOCValid{}, &mockPaprikaFailed{}, &mockPreevValid{})
+	t.Run("failed conversion - whats on chain", func(t *testing.T) {
+		client := newMockClient(&mockWOCFailed{}, &mockPaprikaValid{}, &mockPreevFailed{})
+		assert.NotNil(t, client)
 
-	// Test a NON accepted currency
-	_, _, rateErr := client.GetConversion(123, 1)
-	if rateErr == nil {
-		t.Fatalf("expected an error to occur, currency %d is not accepted", 123)
-	}
+		satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
+		assert.NoError(t, err)
+		assert.Equal(t, int64(633157), satoshis)
+		assert.Equal(t, true, provider.IsValid())
+		assert.Equal(t, "CoinPaprika", provider.Name())
+	})
 
-	// Test a valid response (after failing on the first provider)
-	satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
-	if err != nil {
-		t.Fatalf("error occurred: %s", err.Error())
-	} else if satoshis == 0 {
-		t.Fatalf("satoshis was 0 for provider: %s", provider.Name())
-	} else if !provider.IsValid() {
-		t.Fatalf("provider: %s was invalid", provider.Name())
-	}
+	t.Run("failed conversion - all providers", func(t *testing.T) {
+		client := newMockClient(&mockWOCFailed{}, &mockPaprikaFailed{}, &mockPreevFailed{})
+		assert.NotNil(t, client)
 
-	t.Logf("found satoshis: %d from provider: %s", satoshis, provider.Name())
-}
-
-// TestClient_GetConversionFailedPreev will test the method GetConversion()
-func TestClient_GetConversionFailedPreev(t *testing.T) {
-	t.Parallel()
-
-	// Set a valid client (1 valid, 2 invalid)
-	client := newMockClient(&mockWOCValid{}, &mockPaprikaFailed{}, &mockPreevFailed{})
-
-	// Test a NON accepted currency
-	_, _, rateErr := client.GetConversion(123, 1)
-	if rateErr == nil {
-		t.Fatalf("expected an error to occur, currency %d is not accepted", 123)
-	}
-
-	// Test a valid response (after failing on the first providers)
-	satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
-	if err != nil {
-		t.Fatalf("error occurred: %s", err.Error())
-	} else if satoshis == 0 {
-		t.Fatalf("satoshis was 0 for provider: %s", provider.Name())
-	} else if !provider.IsValid() {
-		t.Fatalf("provider: %s was invalid", provider.Name())
-	}
-
-	t.Logf("found satoshis: %d from provider: %s", satoshis, provider.Name())
-}
-
-// TestClient_GetConversionFailedWhatsOnChain will test the method GetConversion()
-func TestClient_GetConversionFailedWhatsOnChain(t *testing.T) {
-	t.Parallel()
-
-	// Set a valid client (1 valid, 2 invalid)
-	client := newMockClient(&mockWOCFailed{}, &mockPaprikaValid{}, &mockPreevFailed{})
-
-	// Test a NON accepted currency
-	_, _, rateErr := client.GetConversion(123, 1)
-	if rateErr == nil {
-		t.Fatalf("expected an error to occur, currency %d is not accepted", 123)
-	}
-
-	// Test a valid response (after failing on the first provider)
-	satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
-	if err != nil {
-		t.Fatalf("error occurred: %s", err.Error())
-	} else if satoshis == 0 {
-		t.Fatalf("satoshis was 0 for provider: %s", provider.Name())
-	} else if !provider.IsValid() {
-		t.Fatalf("provider: %s was invalid", provider.Name())
-	}
-
-	t.Logf("found satoshis: %d from provider: %s", satoshis, provider.Name())
-}
-
-// TestClient_GetConversionFailedAll will test the method GetConversion()
-func TestClient_GetConversionFailedAll(t *testing.T) {
-	t.Parallel()
-
-	// Set a valid client (1 valid, 2 invalid)
-	client := newMockClient(&mockWOCFailed{}, &mockPaprikaFailed{}, &mockPreevFailed{})
-
-	// Test a NON accepted currency
-	_, _, rateErr := client.GetConversion(123, 1)
-	if rateErr == nil {
-		t.Fatalf("expected an error to occur, currency %d is not accepted", 123)
-	}
-
-	// Test a valid response (after failing on the first provider)
-	satoshis, _, err := client.GetConversion(CurrencyDollars, 1)
-	if err == nil {
-		t.Fatalf("error was expected but got nil")
-	} else if satoshis != 0 {
-		t.Fatalf("satoshis should be zero but was %d", satoshis)
-	}
-}
-
-// TestClient_GetConversionCustomProviders will test the method GetConversion()
-func TestClient_GetConversionCustomProviders(t *testing.T) {
-	t.Parallel()
-
-	// Set a valid client
-	client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{}, ProviderPreev, ProviderWhatsOnChain)
-
-	// Test a valid response
-	satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
-	if err != nil {
-		t.Fatalf("error occurred: %s", err.Error())
-	} else if satoshis == 0 {
-		t.Fatalf("satoshis was 0 for provider: %s", provider.Name())
-	} else if !provider.IsValid() {
-		t.Fatalf("provider: %s was invalid", provider.Name())
-	}
-
-	t.Logf("found satoshis: %d from provider: %s", satoshis, provider.Name())
+		satoshis, _, err := client.GetConversion(CurrencyDollars, 1)
+		assert.Error(t, err)
+		assert.Equal(t, int64(0), satoshis)
+	})
 }
