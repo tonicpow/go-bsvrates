@@ -62,6 +62,7 @@ type ClientOptions struct {
 // ToPreevOptions will convert the current options to Preev Options
 func (c *ClientOptions) ToPreevOptions() (options *preev.Options) {
 	options = preev.ClientDefaultOptions()
+	options.UserAgent = c.UserAgent + " using " + options.UserAgent
 	options.BackOffExponentFactor = c.BackOffExponentFactor
 	options.BackOffInitialTimeout = c.BackOffInitialTimeout
 	options.BackOffMaximumJitterInterval = c.BackOffMaximumJitterInterval
@@ -80,6 +81,7 @@ func (c *ClientOptions) ToPreevOptions() (options *preev.Options) {
 // ToWhatsOnChainOptions will convert the current options to WOC Options
 func (c *ClientOptions) ToWhatsOnChainOptions() (options *whatsonchain.Options) {
 	options = whatsonchain.ClientDefaultOptions()
+	options.UserAgent = c.UserAgent + " using " + options.UserAgent
 	options.BackOffExponentFactor = c.BackOffExponentFactor
 	options.BackOffInitialTimeout = c.BackOffInitialTimeout
 	options.BackOffMaximumJitterInterval = c.BackOffMaximumJitterInterval
