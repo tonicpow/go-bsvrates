@@ -7,6 +7,7 @@ import (
 	"math"
 	"net"
 	"net/http"
+	"strings"
 
 	"github.com/gojektech/heimdall/v6"
 	"github.com/gojektech/heimdall/v6/httpclient"
@@ -378,7 +379,7 @@ func (p *PaprikaClient) GetMarketPrice(coinID string) (response *TickerResponse,
 // IsAcceptedCurrency checks if the currency is accepted or not
 func (p *PaprikaClient) IsAcceptedCurrency(currency string) bool {
 	for _, val := range acceptedCurrenciesCoinPaprika {
-		if currency == val {
+		if strings.EqualFold(currency, val) {
 			return true
 		}
 	}
