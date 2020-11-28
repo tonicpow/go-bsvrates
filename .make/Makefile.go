@@ -62,19 +62,19 @@ test-short: ## Runs vet, lint and tests (excludes integration tests)
 	@echo "running tests (short)..."
 	@go test ./... -v -test.short
 
-test-travis: ## Runs all tests via Travis (also exports coverage)
+test-ci: ## Runs all tests via CI (exports coverage)
 	@$(MAKE) lint
-	@echo "running tests (travis)..."
+	@echo "running tests (CI)..."
 	@go test ./... -race -coverprofile=coverage.txt -covermode=atomic
 
-test-travis-no-race: ## Runs all tests (no race) (also exports coverage)
+test-ci-no-race: ## Runs all tests via CI (no race) (exports coverage)
 	@$(MAKE) lint
-	@echo "running tests (no race)..."
+	@echo "running tests (CI - no race)..."
 	@go test ./... -coverprofile=coverage.txt -covermode=atomic
 
-test-travis-short: ## Runs unit tests via Travis (also exports coverage)
+test-ci-short: ## Runs unit tests via CI (exports coverage)
 	@$(MAKE) lint
-	@echo "running tests (short & travis)..."
+	@echo "running tests (CI - unit tests only)..."
 	@go test ./... -test.short -race -coverprofile=coverage.txt -covermode=atomic
 
 uninstall: ## Uninstall the application (and remove files)
