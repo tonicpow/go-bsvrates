@@ -18,7 +18,8 @@ jobs:
     strategy:
       matrix:
         go-version: [ 1.14.x, 1.15.x ]
-        os: [ ubuntu-latest, macos-latest ]
+        os: [ ubuntu-latest ]
+        #os: [ ubuntu-latest, macos-latest ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Install Go
@@ -27,10 +28,9 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - name: Install golangci-lint
         uses: actions-contrib/golangci-lint@v1
-      - uses: actions/checkout@master
-        with:
-          fetch-depth: 1
-      - name: Run Lint and Tests
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run lint and tests
         run: make test-travis
       - name: Update code coverage
         run: bash <(curl -s https://codecov.io/bash)
