@@ -28,8 +28,8 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Run linter
-        uses: golangci/golangci-lint-action@v2
+      #- name: Run linter
+      #  uses: golangci/golangci-lint-action@v2
       - name: Run tests
         run: make test-travis
       - name: Update code coverage
