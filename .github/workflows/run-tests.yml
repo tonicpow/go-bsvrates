@@ -38,7 +38,7 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-      - name: Run tests
-        run: make test-github
+      - name: Run linter and tests
+        run: make test-ci
       - name: Update code coverage
         run: bash <(curl -s https://codecov.io/bash)
