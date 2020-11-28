@@ -1,11 +1,11 @@
 # go-bsvrates
 > Get the current exchange rate of BSV and other helpful currency conversions
 
-[![Release](https://img.shields.io/github/release-pre/tonicpow/go-bsvrates.svg?logo=github&style=flat&v=2)](https://github.com/tonicpow/go-bsvrates/releases)
-[![Build Status](https://travis-ci.com/tonicpow/go-bsvrates.svg?branch=master&v=2)](https://travis-ci.com/tonicpow/go-bsvrates)
-[![Report](https://goreportcard.com/badge/github.com/tonicpow/go-bsvrates?style=flat&v=2)](https://goreportcard.com/report/github.com/tonicpow/go-bsvrates)
-[![codecov](https://codecov.io/gh/tonicpow/go-bsvrates/branch/master/graph/badge.svg?v=2)](https://codecov.io/gh/tonicpow/go-bsvrates)
-[![Go](https://img.shields.io/github/go-mod/go-version/tonicpow/go-bsvrates?v=2)](https://golang.org/)
+[![Release](https://img.shields.io/github/release-pre/tonicpow/go-bsvrates.svg?logo=github&style=flat&v=3)](https://github.com/tonicpow/go-bsvrates/releases)
+[![Build Status](https://img.shields.io/github/workflow/status/tonicpow/go-bsvrates/run-go-tests?logo=github&v=3)](https://github.com/tonicpow/go-bsvrates/actions)
+[![Report](https://goreportcard.com/badge/github.com/tonicpow/go-bsvrates?style=flat&v=3)](https://goreportcard.com/report/github.com/tonicpow/go-bsvrates)
+[![codecov](https://codecov.io/gh/tonicpow/go-bsvrates/branch/master/graph/badge.svg?v=3)](https://codecov.io/gh/tonicpow/go-bsvrates)
+[![Go](https://img.shields.io/github/go-mod/go-version/tonicpow/go-bsvrates?v=3)](https://golang.org/)
 
 <br/>
 
@@ -77,38 +77,39 @@ make help
 
 List of all current commands:
 ```text
-all                    Runs lint, test and vet
-clean                  Remove previous builds and any test cache data
-clean-mods             Remove all the Go mod cache
-coverage               Shows the test coverage
-godocs                 Sync the latest tag with GoDocs
-help                   Show this help message
-install                Install the application
-install-go             Install the application (Using Native Go)
-lint                   Run the golangci-lint application (install if not found)
-release                Full production release (creates release in Github)
-release                Runs common.release then runs godocs
-release-snap           Test the full release (build binaries)
-release-test           Full production test release (everything except deploy)
-replace-version        Replaces the version in HTML/JS (pre-deploy)
-run-examples           Runs the basic example
-tag                    Generate a new tag and push (tag version=0.0.0)
-tag-remove             Remove a tag if found (tag-remove version=0.0.0)
-tag-update             Update an existing tag to current commit (tag-update version=0.0.0)
-test                   Runs vet, lint and ALL tests
-test-short             Runs vet, lint and tests (excludes integration tests)
-test-travis            Runs all tests via Travis (also exports coverage)
-test-travis-short      Runs unit tests via Travis (also exports coverage)
-uninstall              Uninstall the application (and remove files)
-update-linter          Update the golangci-lint package (macOS only)
-vet                    Run the Go vet application
+all                  Runs lint, test and vet
+clean                Remove previous builds and any test cache data
+clean-mods           Remove all the Go mod cache
+coverage             Shows the test coverage
+godocs               Sync the latest tag with GoDocs
+help                 Show this help message
+install              Install the application
+install-go           Install the application (Using Native Go)
+lint                 Run the golangci-lint application (install if not found)
+release              Full production release (creates release in Github)
+release              Runs common.release then runs godocs
+release-snap         Test the full release (build binaries)
+release-test         Full production test release (everything except deploy)
+replace-version      Replaces the version in HTML/JS (pre-deploy)
+run-examples         Runs the basic example
+tag                  Generate a new tag and push (tag version=0.0.0)
+tag-remove           Remove a tag if found (tag-remove version=0.0.0)
+tag-update           Update an existing tag to current commit (tag-update version=0.0.0)
+test                 Runs vet, lint and ALL tests
+test-ci              Runs all tests via CI (exports coverage)
+test-ci-no-race      Runs all tests via CI (no race) (exports coverage)
+test-ci-short        Runs unit tests via CI (exports coverage)
+test-short           Runs vet, lint and tests (excludes integration tests)
+uninstall            Uninstall the application (and remove files)
+update-linter        Update the golangci-lint package (macOS only)
+vet                  Run the Go vet application
 ```
 </details>
 
 <br/>
 
 ## Examples & Tests
-All unit tests and [examples](examples) run via [Travis CI](https://travis-ci.org/tonicpow/go-bsvrates) and uses [Go version 1.15.x](https://golang.org/doc/go1.15). View the [deployment configuration file](.travis.yml).
+All unit tests and [examples](examples) run via [Github Actions](https://github.com/tonicpow/go-bsvrates/actions) and uses [Go version 1.15.x](https://golang.org/doc/go1.15). View the [deployment configuration file](.travis.yml).
 
 Run all tests (including integration tests)
 ```shell script
@@ -209,4 +210,4 @@ or by making a [**bitcoin donation**](https://tonicpow.com/?af=go-bsvrates) to e
 
 ## License
 
-![License](https://img.shields.io/github/license/tonicpow/go-bsvrates.svg?style=flat&v=2)
+![License](https://img.shields.io/github/license/tonicpow/go-bsvrates.svg?style=flat&v=3)
