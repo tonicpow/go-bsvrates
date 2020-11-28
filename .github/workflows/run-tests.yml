@@ -26,11 +26,11 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go-version }}
-      - name: Get linter
-        uses: golangci/golangci-lint-action@v2
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Run lint and tests
+      - name: Run linter
+        uses: golangci/golangci-lint-action@v2
+      - name: Run tests
         run: make test-travis
       - name: Update code coverage
         run: bash <(curl -s https://codecov.io/bash)
