@@ -350,14 +350,9 @@ linters:
     - goconst
   disable:
     - gocritic # use this for very opinionated linting
-    - gochecknoglobals
     - whitespace
     - wsl
-    - dupl
-    - goerr113
     - godot
-    - testpackage
-    - nestif
     - nlreturn
   disable-all: false
   presets:
