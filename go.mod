@@ -7,5 +7,5 @@ require (
 	github.com/mrz1836/go-preev v0.2.2
 	github.com/mrz1836/go-whatsonchain v0.6.4
 	github.com/shopspring/decimal v1.2.0
-	github.com/stretchr/testify v1.6.1
+	github.com/stretchr/testify v1.7.0
 )
