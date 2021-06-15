@@ -336,9 +336,8 @@ linters:
     - govet
     - gosec
     - bodyclose
-    - golint
+    - revive
     - unconvert
-    - maligned
     - misspell
     - dogsled
     - prealloc
