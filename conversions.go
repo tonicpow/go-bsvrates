@@ -24,14 +24,16 @@ func (c *Client) GetConversion(currency Currency, amount float64) (satoshis int6
 		switch provider {
 		case ProviderCoinPaprika:
 			var response *PriceConversionResponse
-			if response, err = c.CoinPaprika.GetPriceConversion(USDCurrencyID, CoinPaprikaQuoteID, amount); err == nil && response != nil {
+			if response, err = c.CoinPaprika.GetPriceConversion(
+				USDCurrencyID, CoinPaprikaQuoteID, amount,
+			); err == nil && response != nil {
 				satoshis, err = response.GetSatoshi()
 			}
 		case ProviderWhatsOnChain:
 			var response *whatsonchain.ExchangeRate
 			if response, err = c.WhatsOnChain.GetExchangeRate(); err == nil && response != nil {
 				var rate float64
-				if rate, err = strconv.ParseFloat(response.Rate, 8); err == nil {
+				if rate, err = strconv.ParseFloat(response.Rate, 64); err == nil {
 					satoshis, err = ConvertPriceToSatoshis(rate, amount)
 				}
 			}
@@ -47,7 +49,7 @@ func (c *Client) GetConversion(currency Currency, amount float64) (satoshis int6
 
 		// todo: log the error for sanity in case the user want's to see the failure?
 
-		// Did we get a satoshi value? Otherwise keep looping
+		// Did we get a satoshi value? Otherwise, keep looping
 		if satoshis > 0 {
 			return
 		}

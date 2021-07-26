@@ -33,7 +33,7 @@ func (c *Client) GetRate(currency Currency) (rate float64, providerUsed Provider
 		case ProviderWhatsOnChain:
 			var response *whatsonchain.ExchangeRate
 			if response, err = c.WhatsOnChain.GetExchangeRate(); err == nil && response != nil {
-				rate, err = strconv.ParseFloat(response.Rate, 8)
+				rate, err = strconv.ParseFloat(response.Rate, 64)
 			}
 		case ProviderPreev:
 			var response *preev.Ticker
@@ -47,7 +47,7 @@ func (c *Client) GetRate(currency Currency) (rate float64, providerUsed Provider
 
 		// todo: log the error for sanity in case the user want's to see the failure?
 
-		// Did we get a rate? Otherwise keep looping
+		// Did we get a rate? Otherwise, keep looping
 		if rate > 0 {
 			return
 		}
