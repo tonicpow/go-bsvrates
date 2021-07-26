@@ -73,7 +73,7 @@ func TransformCurrencyToInt(decimalValue float64, currency Currency) (int64, err
 }
 
 // TransformIntToCurrency will take the int and return a float value.
-// Currently only supports USD and BSV
+// Currently, only supports USD and BSV
 func TransformIntToCurrency(intValue int, currency Currency) (string, error) {
 	if currency == CurrencyDollars {
 		return FormatCentsToDollars(intValue), nil

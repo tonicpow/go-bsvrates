@@ -39,7 +39,7 @@ type Client struct {
 	CoinPaprika  coinPaprikaInterface  // Coin Paprika client
 	Preev        preevInterface        // Preev Client
 	Providers    []Provider            // List of providers to use (in order for fail-over)
-	WhatsOnChain whatsOnChainInterface // Whats On Chain client
+	WhatsOnChain whatsOnChainInterface // WhatsOnChain client
 }
 
 // ClientOptions holds all the configuration for connection, dialer and transport
@@ -97,7 +97,7 @@ func (c *ClientOptions) ToWhatsOnChainOptions() (options *whatsonchain.Options) 
 	return
 }
 
-// DefaultClientOptions will return an Options struct with the default settings.
+// DefaultClientOptions will return a clientOptions struct with the default settings.
 // Useful for starting with the default and then modifying as needed
 func DefaultClientOptions() (clientOptions *ClientOptions) {
 	return &ClientOptions{
@@ -139,7 +139,7 @@ func NewClient(clientOptions *ClientOptions, customHTTPClient *http.Client, prov
 	// Create a client for Preev
 	client.Preev = preev.NewClient(clientOptions.ToPreevOptions(), customHTTPClient)
 
-	// Create a client for Whats On Chain
+	// Create a client for WhatsOnChain
 	client.WhatsOnChain = whatsonchain.NewClient(whatsonchain.NetworkMain, clientOptions.ToWhatsOnChainOptions(), customHTTPClient)
 
 	return

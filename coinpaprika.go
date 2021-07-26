@@ -211,7 +211,7 @@ func createPaprikaClient(options *ClientOptions, customHTTPClient *http.Client) 
 	return
 }
 
-// GetBaseAmountAndCurrencyID will return a ID and default amount
+// GetBaseAmountAndCurrencyID will return an ID and default amount
 func (p *PaprikaClient) GetBaseAmountAndCurrencyID(currency string, amount float64) (string, float64) {
 
 	// Most are two decimal places
