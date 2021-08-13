@@ -401,3 +401,105 @@ func ExampleConvertIntToFloatUSD() {
 	fmt.Printf("%f", val)
 	// Output:10000.000000
 }
+
+// TestGetDollarsFromSatoshis will test the method GetDollarsFromSatoshis()
+func TestGetDollarsFromSatoshis(t *testing.T) {
+	t.Parallel()
+
+	t.Run("valid cases", func(t *testing.T) {
+		var tests = []struct {
+			testCase        string
+			currentRate     float64
+			sats            int64
+			expectedDollars float64
+		}{
+			{"zero rate", 0, 10000, 0},
+			{"zero sats", 100, 0, 0},
+			{"rate 1 penny", 100, 10000, 0.01},
+			{"rate 99 pennies", 100, 10000 * 99, 0.99},
+			{"rate 1 dollar", 100, 10000 * 100, 1.00},
+			{"rate 10 dollars", 100, 10000 * 100 * 10, 10.00},
+			{"rate 100 dollars", 100, 10000 * 100 * 100, 100.00},
+			{"rate 1k dollars", 100, 10000 * 100 * 100 * 10, 1000.00},
+			{"rate 2 pennies", 100, 20000, 0.02},
+			{"rate 1/2 penny", 100, 5000, 0.005},
+		}
+		for _, test := range tests {
+			t.Run(test.testCase, func(t *testing.T) {
+				output := GetDollarsFromSatoshis(test.currentRate, test.sats)
+				assert.Equal(t, test.expectedDollars, output)
+			})
+		}
+	})
+
+	t.Run("invalid infinite case", func(t *testing.T) {
+		assert.Panics(t, func() {
+			_ = GetDollarsFromSatoshis(math.Inf(1), 0)
+		})
+	})
+}
+
+// ExampleGetDollarsFromSatoshis example using GetDollarsFromSatoshis()
+func ExampleGetDollarsFromSatoshis() {
+	dollars := GetDollarsFromSatoshis(100, 10000)
+	fmt.Printf("%f", dollars)
+	// Output:0.010000
+}
+
+// BenchmarkGetDollarsFromSatoshis benchmarks the method GetDollarsFromSatoshis()
+func BenchmarkGetDollarsFromSatoshis(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = GetDollarsFromSatoshis(100, 10000)
+	}
+}
+
+// TestGetCentsFromSatoshis will test the method GetCentsFromSatoshis()
+func TestGetCentsFromSatoshis(t *testing.T) {
+	t.Parallel()
+
+	t.Run("valid cases", func(t *testing.T) {
+		var tests = []struct {
+			testCase      string
+			currentRate   float64
+			sats          int64
+			expectedCents int64
+		}{
+			{"zero rate", 0, 10000, 0},
+			{"zero sats", 100, 0, 0},
+			{"rate 1 penny", 100, 10000, 1},
+			{"rate 99 pennies", 100, 10000 * 99, 99},
+			{"rate 1 dollar", 100, 10000 * 100, 100},
+			{"rate 10 dollars", 100, 10000 * 100 * 10, 1000},
+			{"rate 100 dollars", 100, 10000 * 100 * 100, 10000},
+			{"rate 1k dollars", 100, 10000 * 100 * 100 * 10, 100000},
+			{"rate 2 pennies", 100, 20000, 2},
+			{"rate 1/2 penny", 100, 5000, 0},
+		}
+		for _, test := range tests {
+			t.Run(test.testCase, func(t *testing.T) {
+				output := GetCentsFromSatoshis(test.currentRate, test.sats)
+				assert.Equal(t, test.expectedCents, output)
+			})
+		}
+	})
+
+	t.Run("invalid infinite case", func(t *testing.T) {
+		assert.Panics(t, func() {
+			_ = GetCentsFromSatoshis(math.Inf(1), 0)
+		})
+	})
+}
+
+// ExampleGetCentsFromSatoshis example using GetCentsFromSatoshis()
+func ExampleGetCentsFromSatoshis() {
+	cents := GetCentsFromSatoshis(100, 20000)
+	fmt.Printf("%d", cents)
+	// Output:2
+}
+
+// BenchmarkGetCentsFromSatoshis benchmarks the method GetCentsFromSatoshis()
+func BenchmarkGetCentsFromSatoshis(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = GetCentsFromSatoshis(100, 10000)
+	}
+}

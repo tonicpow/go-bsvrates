@@ -51,6 +51,23 @@ func ConvertPriceToSatoshis(currentRate float64, amount float64) (int64, error) 
 	return satoshisDecimal.Ceil().IntPart(), nil
 }
 
+// GetDollarsFromSatoshis will return the dollars (USD) of the given amount of satoshis
+// IE: Current rate is $100 per 1 BSV... Supplying 1000000 sats should produce 1 dollar
+func GetDollarsFromSatoshis(currentBSVRate float64, sats int64) (dollars float64) {
+	dollars, _ = decimal.NewFromFloat(currentBSVRate).Div(
+		decimal.NewFromInt(100000000),
+	).Mul(decimal.NewFromInt(sats)).Float64()
+	return
+}
+
+// GetCentsFromSatoshis will return the cents (USD) of the given amount of satoshis
+// IE: Current rate is $100 per 1 BSV... Supplying 1000000 sats should produce 100 cents
+func GetCentsFromSatoshis(currentBSVRate float64, sats int64) int64 {
+	return decimal.NewFromFloat(
+		GetDollarsFromSatoshis(currentBSVRate, sats),
+	).Mul(decimal.NewFromInt(100)).IntPart()
+}
+
 // FormatCentsToDollars formats the integer for currency in USD (cents to dollars)
 func FormatCentsToDollars(cents int) string {
 	return strconv.FormatFloat(float64(cents)/100.0, 'f', 2, 64)
