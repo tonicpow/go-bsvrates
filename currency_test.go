@@ -115,6 +115,8 @@ func TestConvertPriceToSatoshis(t *testing.T) {
 			{"rate 10000", 10000, 1, 10000},
 			{"rate 100000", 100000, 1, 1000},
 			{"rate 1000000", 1000000, 1, 100},
+			{"rate 159.703", 159.70371368849, 0.01, 6262},
+			{"rate 159.6089", 159.6089, 0.01, 6266},
 		}
 		for _, test := range tests {
 			t.Run(test.testCase, func(t *testing.T) {
