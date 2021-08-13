@@ -428,6 +428,9 @@ func TestGetDollarsFromSatoshis(t *testing.T) {
 			{"rate ~3 pennies - 170", 170, 20000, 0.034},
 			{"rate ~4 pennies - 210", 210, 20000, 0.042},
 			{"rate ~1 pennies - 99", 99, 20000, 0.0198},
+			{"rate ~1 pennies - 99.99", 99.99, 20000, 0.019998},
+			{"rate ~2 pennies - 217.67", 217.67, 10000, 0.021767},
+			{"rate ~1 pennies - 313.33", 313.33, 4333, 0.0135765889},
 		}
 		for _, test := range tests {
 			t.Run(test.testCase, func(t *testing.T) {
@@ -481,11 +484,14 @@ func TestGetCentsFromSatoshis(t *testing.T) {
 			{"rate 1/2 penny - 100", 100, 5000, 0},
 			{"rate 4/10 penny - 100", 100, 4000, 0},
 			{"rate 1 penny - 99", 99, 10000, 1},
+			{"rate 1 penny - 99.99", 99.99, 10000, 1},
+			{"rate 1 penny - 98.10", 98.10, 10000, 1},
 			{"rate 1 penny - 150", 150, 10000, 1},
 			{"rate 1 penny - 160", 160, 10000, 1},
 			{"rate 1 penny - 170", 170, 10000, 1},
-			{"rate 1 penny - 200", 200, 10000, 2},
-			{"rate 1 penny - 500", 500, 10000, 5},
+			{"rate 2 pennies - 200", 200, 10000, 2},
+			{"rate 5 pennies - 500", 500, 10000, 5},
+			{"rate 3 pennies - 333.33", 333.33, 10000, 3},
 		}
 		for _, test := range tests {
 			t.Run(test.testCase, func(t *testing.T) {
