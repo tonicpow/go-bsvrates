@@ -339,7 +339,7 @@ func TestPriceConversionResponse_GetSatoshi(t *testing.T) {
 			expectedSatoshi int64
 		}{
 			{"zero", PriceConversionResponse{Price: 0}, 0},
-			{"1", PriceConversionResponse{Price: 1}, 100000000},
+			{"1", PriceConversionResponse{Price: 1}, SatoshisPerBitcoin},
 			{"one decimal place", PriceConversionResponse{Price: 0.1}, 10000000},
 			{"two decimal places", PriceConversionResponse{Price: 0.01}, 1000000},
 			{"three decimal places", PriceConversionResponse{Price: 0.001}, 100000},
