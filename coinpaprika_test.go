@@ -2,11 +2,13 @@ package bsvrates
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io/ioutil"
 	"math"
 	"net/http"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -78,6 +80,35 @@ func (m *mockHTTPPaprika) Do(req *http.Request) (*http.Response, error) {
 		return resp, fmt.Errorf(`http bad gateway`)
 	}
 
+	//
+	// Get Historical Tickers
+	//
+
+	// Valid
+	if req.URL.String() == coinPaprikaBaseURL+"tickers/"+CoinPaprikaQuoteID+"/historical?start=1609462861&end=1609549261&limit=100&quote=usd&interval=1h" {
+		resp.StatusCode = http.StatusOK
+		resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`[{"timestamp":"2019-12-01T00:00:00Z","price":107.61,"volume_24h":391994346,"market_cap":1921331956},{"timestamp":"2019-12-01T01:00:00Z","price":106.23,"volume_24h":391502460,"market_cap":1896816006},{"timestamp":"2019-12-01T02:00:00Z","price":105.75,"volume_24h":399294959,"market_cap":1888145508},{"timestamp":"2019-12-01T03:00:00Z","price":105.76,"volume_24h":408282579,"market_cap":1888316124},{"timestamp":"2019-12-01T04:00:00Z","price":106.03,"volume_24h":411284398,"market_cap":1893147926},{"timestamp":"2019-12-01T05:00:00Z","price":105.79,"volume_24h":415984489,"market_cap":1888937035},{"timestamp":"2019-12-01T06:00:00Z","price":105.85,"volume_24h":427183172,"market_cap":1889872222},{"timestamp":"2019-12-01T07:00:00Z","price":105.81,"volume_24h":430688561,"market_cap":1889315145},{"timestamp":"2019-12-01T08:00:00Z","price":105.17,"volume_24h":437371729,"market_cap":1877744729},{"timestamp":"2019-12-01T09:00:00Z","price":103.17,"volume_24h":434868348,"market_cap":1842092626},{"timestamp":"2019-12-01T10:00:00Z","price":103.53,"volume_24h":439972988,"market_cap":1848463087},{"timestamp":"2019-12-01T11:00:00Z","price":103.76,"volume_24h":437877628,"market_cap":1852666089},{"timestamp":"2019-12-01T12:00:00Z","price":103.71,"volume_24h":435537959,"market_cap":1851675768},{"timestamp":"2019-12-01T13:00:00Z","price":104.81,"volume_24h":441052072,"market_cap":1871339753},{"timestamp":"2019-12-01T14:00:00Z","price":105.91,"volume_24h":421172758,"market_cap":1891100421},{"timestamp":"2019-12-01T15:00:00Z","price":104.68,"volume_24h":424535666,"market_cap":1869069520},{"timestamp":"2019-12-01T16:00:00Z","price":103.83,"volume_24h":429568755,"market_cap":1853871606},{"timestamp":"2019-12-01T17:00:00Z","price":103.67,"volume_24h":428990464,"market_cap":1851009247},{"timestamp":"2019-12-01T18:00:00Z","price":103.77,"volume_24h":433650056,"market_cap":1852826878},{"timestamp":"2019-12-01T19:00:00Z","price":103.59,"volume_24h":425039830,"market_cap":1849540042},{"timestamp":"2019-12-01T20:00:00Z","price":103.99,"volume_24h":426537531,"market_cap":1856719316},{"timestamp":"2019-12-01T21:00:00Z","price":104.34,"volume_24h":425841882,"market_cap":1863063563},{"timestamp":"2019-12-01T22:00:00Z","price":104.89,"volume_24h":427942602,"market_cap":1872896148},{"timestamp":"2019-12-01T23:00:00Z","price":105.08,"volume_24h":433765269,"market_cap":1876286108}]`)))
+	}
+
+	// Valid
+	if req.URL.String() == coinPaprikaBaseURL+"tickers/"+CoinPaprikaQuoteID+"/historical?start=1609462861&end=1609549261&limit=5000&quote=usd&interval=1h" {
+		resp.StatusCode = http.StatusOK
+		resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`[{"timestamp":"2019-12-01T00:00:00Z","price":107.61,"volume_24h":391994346,"market_cap":1921331956},{"timestamp":"2019-12-01T01:00:00Z","price":106.23,"volume_24h":391502460,"market_cap":1896816006},{"timestamp":"2019-12-01T02:00:00Z","price":105.75,"volume_24h":399294959,"market_cap":1888145508},{"timestamp":"2019-12-01T03:00:00Z","price":105.76,"volume_24h":408282579,"market_cap":1888316124},{"timestamp":"2019-12-01T04:00:00Z","price":106.03,"volume_24h":411284398,"market_cap":1893147926},{"timestamp":"2019-12-01T05:00:00Z","price":105.79,"volume_24h":415984489,"market_cap":1888937035},{"timestamp":"2019-12-01T06:00:00Z","price":105.85,"volume_24h":427183172,"market_cap":1889872222},{"timestamp":"2019-12-01T07:00:00Z","price":105.81,"volume_24h":430688561,"market_cap":1889315145},{"timestamp":"2019-12-01T08:00:00Z","price":105.17,"volume_24h":437371729,"market_cap":1877744729},{"timestamp":"2019-12-01T09:00:00Z","price":103.17,"volume_24h":434868348,"market_cap":1842092626},{"timestamp":"2019-12-01T10:00:00Z","price":103.53,"volume_24h":439972988,"market_cap":1848463087},{"timestamp":"2019-12-01T11:00:00Z","price":103.76,"volume_24h":437877628,"market_cap":1852666089},{"timestamp":"2019-12-01T12:00:00Z","price":103.71,"volume_24h":435537959,"market_cap":1851675768},{"timestamp":"2019-12-01T13:00:00Z","price":104.81,"volume_24h":441052072,"market_cap":1871339753},{"timestamp":"2019-12-01T14:00:00Z","price":105.91,"volume_24h":421172758,"market_cap":1891100421},{"timestamp":"2019-12-01T15:00:00Z","price":104.68,"volume_24h":424535666,"market_cap":1869069520},{"timestamp":"2019-12-01T16:00:00Z","price":103.83,"volume_24h":429568755,"market_cap":1853871606},{"timestamp":"2019-12-01T17:00:00Z","price":103.67,"volume_24h":428990464,"market_cap":1851009247},{"timestamp":"2019-12-01T18:00:00Z","price":103.77,"volume_24h":433650056,"market_cap":1852826878},{"timestamp":"2019-12-01T19:00:00Z","price":103.59,"volume_24h":425039830,"market_cap":1849540042},{"timestamp":"2019-12-01T20:00:00Z","price":103.99,"volume_24h":426537531,"market_cap":1856719316},{"timestamp":"2019-12-01T21:00:00Z","price":104.34,"volume_24h":425841882,"market_cap":1863063563},{"timestamp":"2019-12-01T22:00:00Z","price":104.89,"volume_24h":427942602,"market_cap":1872896148},{"timestamp":"2019-12-01T23:00:00Z","price":105.08,"volume_24h":433765269,"market_cap":1876286108}]`)))
+	}
+
+	// Invalid
+	if req.URL.String() == coinPaprikaBaseURL+"tickers/unknown/historical?start=1609462861&end=1609549261&limit=5000&quote=usd&interval=1h" {
+		resp.StatusCode = http.StatusNotFound
+		resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(`{"error":"id not found"}`)))
+	}
+
+	// Invalid
+	if req.URL.String() == coinPaprikaBaseURL+"tickers/error/historical?start=1609462861&end=1609549261&limit=5000&quote=usd&interval=1h" {
+		resp.StatusCode = http.StatusBadGateway
+		resp.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(``)))
+		return resp, fmt.Errorf(`http bad gateway`)
+	}
+
 	// Default is valid
 	return resp, nil
 }
@@ -91,9 +122,44 @@ func newMockPaprikaClient(httpClient httpInterface) *Client {
 	return client
 }
 
+// TestTickerQuote_String will test the method String()
+func TestTickerQuote_String(t *testing.T) {
+	t.Parallel()
+
+	t.Run("test to string", func(t *testing.T) {
+		assert.Equal(t, "usd", TickerQuoteUSD.String())
+		assert.Equal(t, "btc", TickerQuoteBTC.String())
+	})
+}
+
+// TestTickerInterval_String will test the method String()
+func TestTickerInterval_String(t *testing.T) {
+	t.Parallel()
+
+	t.Run("test to string", func(t *testing.T) {
+		assert.Equal(t, "5m", TickerInterval5m.String())
+		assert.Equal(t, "10m", TickerInterval10m.String())
+		assert.Equal(t, "15m", TickerInterval15m.String())
+		assert.Equal(t, "30m", TickerInterval30m.String())
+		assert.Equal(t, "45m", TickerInterval45m.String())
+		assert.Equal(t, "1h", TickerInterval1h.String())
+		assert.Equal(t, "2h", TickerInterval2h.String())
+		assert.Equal(t, "3h", TickerInterval3h.String())
+		assert.Equal(t, "6h", TickerInterval6h.String())
+		assert.Equal(t, "12h", TickerInterval12h.String())
+		assert.Equal(t, "24h", TickerInterval24h.String())
+		assert.Equal(t, "1d", TickerInterval1d.String())
+		assert.Equal(t, "7d", TickerInterval7d.String())
+		assert.Equal(t, "14d", TickerInterval14d.String())
+		assert.Equal(t, "30d", TickerInterval30d.String())
+		assert.Equal(t, "90d", TickerInterval90d.String())
+		assert.Equal(t, "365d", TickerInterval365d.String())
+	})
+}
+
 // TestPaprikaClient_GetBaseAmountAndCurrencyID will test the method GetBaseAmountAndCurrencyID()
 func TestPaprikaClient_GetBaseAmountAndCurrencyID(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 
 	// New mock client
 	client := newMockPaprikaClient(&mockHTTPPaprika{})
@@ -138,7 +204,7 @@ func TestPaprikaClient_GetBaseAmountAndCurrencyID(t *testing.T) {
 
 // TestPaprikaClient_GetPriceConversion will test the method GetPriceConversion()
 func TestPaprikaClient_GetPriceConversion(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 
 	// New mock client
 	client := newMockPaprikaClient(&mockHTTPPaprika{})
@@ -179,7 +245,7 @@ func TestPaprikaClient_GetPriceConversion(t *testing.T) {
 		}
 		for _, test := range tests {
 			t.Run(test.testCase, func(t *testing.T) {
-				output, err := client.CoinPaprika.GetPriceConversion(test.baseCurrency, test.quoteCurrency, test.amount)
+				output, err := client.CoinPaprika.GetPriceConversion(context.Background(), test.baseCurrency, test.quoteCurrency, test.amount)
 				assert.NoError(t, err)
 				assert.NotNil(t, output)
 				assert.Equal(t, test.expectedPrice, output.Price)
@@ -213,7 +279,7 @@ func TestPaprikaClient_GetPriceConversion(t *testing.T) {
 		}
 		for _, test := range tests {
 			t.Run(test.testCase, func(t *testing.T) {
-				output, err := client.CoinPaprika.GetPriceConversion(test.baseCurrency, test.quoteCurrency, test.amount)
+				output, err := client.CoinPaprika.GetPriceConversion(context.Background(), test.baseCurrency, test.quoteCurrency, test.amount)
 				assert.Error(t, err)
 				assert.NotNil(t, output)
 				assert.Equal(t, test.expectedStatusCode, output.LastRequest.StatusCode)
@@ -224,7 +290,7 @@ func TestPaprikaClient_GetPriceConversion(t *testing.T) {
 
 // TestPaprikaClient_GetMarketPrice will test the method GetMarketPrice()
 func TestPaprikaClient_GetMarketPrice(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 
 	// New mock client
 	client := newMockPaprikaClient(&mockHTTPPaprika{})
@@ -245,7 +311,7 @@ func TestPaprikaClient_GetMarketPrice(t *testing.T) {
 		}
 		for _, test := range tests {
 			t.Run(test.testCase, func(t *testing.T) {
-				output, err := client.CoinPaprika.GetMarketPrice(test.coinID)
+				output, err := client.CoinPaprika.GetMarketPrice(context.Background(), test.coinID)
 				assert.NoError(t, err)
 				assert.NotNil(t, output)
 				assert.Equal(t, test.expectedPrice, output.Quotes.USD.Price)
@@ -273,7 +339,7 @@ func TestPaprikaClient_GetMarketPrice(t *testing.T) {
 		}
 		for _, test := range tests {
 			t.Run(test.testCase, func(t *testing.T) {
-				output, err := client.CoinPaprika.GetMarketPrice(test.coinID)
+				output, err := client.CoinPaprika.GetMarketPrice(context.Background(), test.coinID)
 				assert.Error(t, err)
 				assert.NotNil(t, output)
 				assert.Equal(t, test.expectedStatusCode, output.LastRequest.StatusCode)
@@ -284,7 +350,7 @@ func TestPaprikaClient_GetMarketPrice(t *testing.T) {
 
 // TestPaprikaClient_IsAcceptedCurrency will test the method IsAcceptedCurrency()
 func TestPaprikaClient_IsAcceptedCurrency(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 
 	// New mock client
 	client := newMockPaprikaClient(&mockHTTPPaprika{})
@@ -330,7 +396,7 @@ func TestPaprikaClient_IsAcceptedCurrency(t *testing.T) {
 
 // TestPriceConversionResponse_GetSatoshi will test the method GetSatoshi()
 func TestPriceConversionResponse_GetSatoshi(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 
 	t.Run("test valid cases", func(t *testing.T) {
 		var tests = []struct {
@@ -376,5 +442,125 @@ func TestPriceConversionResponse_GetSatoshi(t *testing.T) {
 				assert.Equal(t, test.expectedSatoshi, satoshi)
 			})
 		}
+	})
+}
+
+// TestPaprikaClient_GetHistoricalTickers will test the method GetHistoricalTickers()
+func TestPaprikaClient_GetHistoricalTickers(t *testing.T) {
+	// t.Parallel()
+
+	// New mock client
+	client := newMockPaprikaClient(&mockHTTPPaprika{})
+
+	t.Run("test valid cases", func(t *testing.T) {
+		var tests = []struct {
+			testCase           string
+			coinID             string
+			start              time.Time
+			end                time.Time
+			limit              int
+			quote              tickerQuote
+			interval           tickerInterval
+			expectedStatusCode int
+		}{
+			{
+				"valid quote",
+				CoinPaprikaQuoteID,
+				time.Date(2021, 1, 1, 1, 1, 1, 1, time.UTC),
+				time.Date(2021, 1, 2, 1, 1, 1, 1, time.UTC),
+				100,
+				TickerQuoteUSD,
+				TickerInterval1h,
+				http.StatusOK,
+			},
+		}
+		for _, test := range tests {
+			t.Run(test.testCase, func(t *testing.T) {
+				output, err := client.CoinPaprika.GetHistoricalTickers(
+					context.Background(), test.coinID, test.start, test.end, test.limit, test.quote, test.interval,
+				)
+				assert.NoError(t, err)
+				assert.NotNil(t, output)
+				assert.NotNil(t, output.LastRequest)
+				assert.NotNil(t, output.Results)
+				assert.Equal(t, 24, len(output.Results))
+			})
+		}
+	})
+
+	t.Run("invalid start time", func(t *testing.T) {
+		output, err := client.CoinPaprika.GetHistoricalTickers(
+			context.Background(), CoinPaprikaQuoteID, time.Time{}, time.Time{}, 100, TickerQuoteUSD, TickerInterval1h,
+		)
+		assert.Error(t, err)
+		assert.EqualError(t, err, "start time cannot be zero")
+		assert.Nil(t, output)
+	})
+
+	t.Run("empty end time, bad start time", func(t *testing.T) {
+		output, err := client.CoinPaprika.GetHistoricalTickers(
+			context.Background(), CoinPaprikaQuoteID, time.Now().UTC().Add(2*time.Hour), time.Time{}, 100, TickerQuoteUSD, TickerInterval1h,
+		)
+		assert.Error(t, err)
+		assert.EqualError(t, err, "start time must be before end time")
+		assert.Nil(t, output)
+	})
+
+	t.Run("same times", func(t *testing.T) {
+		output, err := client.CoinPaprika.GetHistoricalTickers(
+			context.Background(), CoinPaprikaQuoteID, time.Now().UTC(), time.Now().UTC(), 100, TickerQuoteUSD, TickerInterval1h,
+		)
+		assert.Error(t, err)
+		assert.EqualError(t, err, "start time must be before end time")
+		assert.Nil(t, output)
+	})
+
+	t.Run("over the limit", func(t *testing.T) {
+		output, err := client.CoinPaprika.GetHistoricalTickers(
+			context.Background(), CoinPaprikaQuoteID,
+			time.Date(2021, 1, 1, 1, 1, 1, 1, time.UTC),
+			time.Date(2021, 1, 2, 1, 1, 1, 1, time.UTC),
+			maxHistoricalLimit+1, TickerQuoteUSD, TickerInterval1h,
+		)
+		assert.NoError(t, err)
+		assert.NotNil(t, output)
+		assert.Equal(t, 24, len(output.Results))
+	})
+
+	t.Run("invalid ticker", func(t *testing.T) {
+		output, err := client.CoinPaprika.GetHistoricalTickers(
+			context.Background(), "unknown",
+			time.Date(2021, 1, 1, 1, 1, 1, 1, time.UTC),
+			time.Date(2021, 1, 2, 1, 1, 1, 1, time.UTC),
+			maxHistoricalLimit+1, TickerQuoteUSD, TickerInterval1h,
+		)
+		assert.Error(t, err)
+		assert.NotNil(t, output)
+		assert.Equal(t, http.StatusNotFound, output.LastRequest.StatusCode)
+		assert.Equal(t, http.MethodGet, output.LastRequest.Method)
+	})
+
+	t.Run("error response", func(t *testing.T) {
+		output, err := client.CoinPaprika.GetHistoricalTickers(
+			context.Background(), "error",
+			time.Date(2021, 1, 1, 1, 1, 1, 1, time.UTC),
+			time.Date(2021, 1, 2, 1, 1, 1, 1, time.UTC),
+			maxHistoricalLimit+1, TickerQuoteUSD, TickerInterval1h,
+		)
+		assert.Error(t, err)
+		assert.NotNil(t, output)
+		assert.Equal(t, http.StatusBadGateway, output.LastRequest.StatusCode)
+		assert.Equal(t, http.MethodGet, output.LastRequest.Method)
+	})
+
+	t.Run("invalid response", func(t *testing.T) {
+		client = newMockClient(&mockWOCValid{}, &mockPaprikaFailed{}, &mockPreevValid{})
+		assert.NotNil(t, client)
+
+		resp, rateErr := client.CoinPaprika.GetHistoricalTickers(
+			context.Background(), CoinPaprikaQuoteID, time.Now().UTC().Add(-1*time.Hour), time.Now().UTC(), maxHistoricalLimit+1, TickerQuoteUSD, TickerInterval1h,
+		)
+		assert.Error(t, rateErr)
+		assert.Nil(t, resp)
 	})
 }
