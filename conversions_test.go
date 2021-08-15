@@ -1,6 +1,7 @@
 package bsvrates
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -14,7 +15,7 @@ func TestClient_GetConversion(t *testing.T) {
 		client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{})
 		assert.NotNil(t, client)
 
-		satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
+		satoshis, provider, err := client.GetConversion(context.Background(), CurrencyDollars, 1)
 		assert.NoError(t, err)
 		assert.Equal(t, int64(633157), satoshis)
 		assert.Equal(t, true, provider.IsValid())
@@ -25,7 +26,7 @@ func TestClient_GetConversion(t *testing.T) {
 		client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{}, ProviderPreev)
 		assert.NotNil(t, client)
 
-		satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
+		satoshis, provider, err := client.GetConversion(context.Background(), CurrencyDollars, 1)
 		assert.NoError(t, err)
 		assert.Equal(t, int64(628260), satoshis)
 		assert.Equal(t, true, provider.IsValid())
@@ -36,7 +37,7 @@ func TestClient_GetConversion(t *testing.T) {
 		client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{}, ProviderWhatsOnChain)
 		assert.NotNil(t, client)
 
-		satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
+		satoshis, provider, err := client.GetConversion(context.Background(), CurrencyDollars, 1)
 		assert.NoError(t, err)
 		assert.Equal(t, int64(628892), satoshis)
 		assert.Equal(t, true, provider.IsValid())
@@ -47,7 +48,7 @@ func TestClient_GetConversion(t *testing.T) {
 		client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{}, ProviderCoinPaprika)
 		assert.NotNil(t, client)
 
-		satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
+		satoshis, provider, err := client.GetConversion(context.Background(), CurrencyDollars, 1)
 		assert.NoError(t, err)
 		assert.Equal(t, int64(633157), satoshis)
 		assert.Equal(t, true, provider.IsValid())
@@ -58,7 +59,7 @@ func TestClient_GetConversion(t *testing.T) {
 		client := newMockClient(&mockWOCValid{}, &mockPaprikaValid{}, &mockPreevValid{}, ProviderPreev, ProviderWhatsOnChain)
 		assert.NotNil(t, client)
 
-		satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
+		satoshis, provider, err := client.GetConversion(context.Background(), CurrencyDollars, 1)
 		assert.NoError(t, err)
 		assert.NotEqual(t, 633157, satoshis)
 		assert.Equal(t, true, provider.IsValid())
@@ -69,7 +70,7 @@ func TestClient_GetConversion(t *testing.T) {
 		client := newMockClient(&mockWOCValid{}, &mockPaprikaFailed{}, &mockPreevValid{})
 		assert.NotNil(t, client)
 
-		_, _, rateErr := client.GetConversion(123, 1)
+		_, _, rateErr := client.GetConversion(context.Background(), 123, 1)
 		assert.Error(t, rateErr)
 	})
 
@@ -77,7 +78,7 @@ func TestClient_GetConversion(t *testing.T) {
 		client := newMockClient(&mockWOCValid{}, &mockPaprikaFailed{}, &mockPreevValid{})
 		assert.NotNil(t, client)
 
-		satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
+		satoshis, provider, err := client.GetConversion(context.Background(), CurrencyDollars, 1)
 		assert.NoError(t, err)
 		assert.Equal(t, int64(628892), satoshis)
 		assert.Equal(t, true, provider.IsValid())
@@ -88,7 +89,7 @@ func TestClient_GetConversion(t *testing.T) {
 		client := newMockClient(&mockWOCValid{}, &mockPaprikaFailed{}, &mockPreevFailed{})
 		assert.NotNil(t, client)
 
-		satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
+		satoshis, provider, err := client.GetConversion(context.Background(), CurrencyDollars, 1)
 		assert.NoError(t, err)
 		assert.Equal(t, int64(628892), satoshis)
 		assert.Equal(t, true, provider.IsValid())
@@ -99,7 +100,7 @@ func TestClient_GetConversion(t *testing.T) {
 		client := newMockClient(&mockWOCFailed{}, &mockPaprikaValid{}, &mockPreevFailed{})
 		assert.NotNil(t, client)
 
-		satoshis, provider, err := client.GetConversion(CurrencyDollars, 1)
+		satoshis, provider, err := client.GetConversion(context.Background(), CurrencyDollars, 1)
 		assert.NoError(t, err)
 		assert.Equal(t, int64(633157), satoshis)
 		assert.Equal(t, true, provider.IsValid())
@@ -110,7 +111,7 @@ func TestClient_GetConversion(t *testing.T) {
 		client := newMockClient(&mockWOCFailed{}, &mockPaprikaFailed{}, &mockPreevFailed{})
 		assert.NotNil(t, client)
 
-		satoshis, _, err := client.GetConversion(CurrencyDollars, 1)
+		satoshis, _, err := client.GetConversion(context.Background(), CurrencyDollars, 1)
 		assert.Error(t, err)
 		assert.Equal(t, int64(0), satoshis)
 	})

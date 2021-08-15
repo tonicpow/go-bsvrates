@@ -1,6 +1,7 @@
 package bsvrates
 
 import (
+	"context"
 	"net/http"
 	"time"
 
@@ -15,10 +16,10 @@ type httpInterface interface {
 
 // preevInterface is an interface for the Preev Client
 type preevInterface interface {
-	GetPair(pairID string) (pair *preev.Pair, err error)
-	GetPairs() (pairList *preev.PairList, err error)
-	GetTicker(pairID string) (ticker *preev.Ticker, err error)
-	GetTickers() (tickerList *preev.TickerList, err error)
+	GetPair(ctx context.Context, pairID string) (pair *preev.Pair, err error)
+	GetPairs(ctx context.Context) (pairList *preev.PairList, err error)
+	GetTicker(ctx context.Context, pairID string) (ticker *preev.Ticker, err error)
+	GetTickers(ctx context.Context) (tickerList *preev.TickerList, err error)
 }
 
 // whatsOnChainInterface is an interface for the WOC Client
@@ -29,9 +30,10 @@ type whatsOnChainInterface interface {
 // coinPaprikaInterface is an interface for the Coin Paprika Client
 type coinPaprikaInterface interface {
 	GetBaseAmountAndCurrencyID(currency string, amount float64) (string, float64)
-	GetMarketPrice(coinID string) (response *TickerResponse, err error)
-	GetPriceConversion(baseCurrencyID, quoteCurrencyID string, amount float64) (response *PriceConversionResponse, err error)
+	GetMarketPrice(ctx context.Context, coinID string) (response *TickerResponse, err error)
+	GetPriceConversion(ctx context.Context, baseCurrencyID, quoteCurrencyID string, amount float64) (response *PriceConversionResponse, err error)
 	IsAcceptedCurrency(currency string) bool
+	GetHistoricalTickers(ctx context.Context, coinID string, start, end time.Time, limit int, quote tickerQuote, interval tickerInterval) (response *HistoricalResponse, err error)
 }
 
 // Client is the parent struct that contains the provider clients and list of providers to use

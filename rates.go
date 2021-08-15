@@ -4,6 +4,7 @@ Package bsvrates brings multiple providers into one place to obtain the current 
 package bsvrates
 
 import (
+	"context"
 	"fmt"
 	"strconv"
 
@@ -13,7 +14,7 @@ import (
 
 // GetRate will get a BSV->Currency rate from the list of providers.
 // The first provider that succeeds is the rate that is returned
-func (c *Client) GetRate(currency Currency) (rate float64, providerUsed Provider, err error) {
+func (c *Client) GetRate(ctx context.Context, currency Currency) (rate float64, providerUsed Provider, err error) {
 
 	// Check if currency is accepted across all providers
 	if !currency.IsAccepted() {
@@ -27,7 +28,7 @@ func (c *Client) GetRate(currency Currency) (rate float64, providerUsed Provider
 		switch provider {
 		case ProviderCoinPaprika:
 			var response *TickerResponse
-			if response, err = c.CoinPaprika.GetMarketPrice(CoinPaprikaQuoteID); err == nil && response != nil {
+			if response, err = c.CoinPaprika.GetMarketPrice(ctx, CoinPaprikaQuoteID); err == nil && response != nil {
 				rate = response.Quotes.USD.Price
 			}
 		case ProviderWhatsOnChain:
@@ -37,7 +38,7 @@ func (c *Client) GetRate(currency Currency) (rate float64, providerUsed Provider
 			}
 		case ProviderPreev:
 			var response *preev.Ticker
-			if response, err = c.Preev.GetTicker(PreevTickerID); err == nil && response != nil {
+			if response, err = c.Preev.GetTicker(ctx, PreevTickerID); err == nil && response != nil {
 				rate = response.Prices.Ppi.LastPrice
 			}
 		case providerLast:

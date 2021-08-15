@@ -1,6 +1,7 @@
 package bsvrates
 
 import (
+	"context"
 	"fmt"
 	"strconv"
 
@@ -10,7 +11,7 @@ import (
 
 // GetConversion will get the satoshi amount for the given currency + amount provided.
 // The first provider that succeeds is the conversion that is returned
-func (c *Client) GetConversion(currency Currency, amount float64) (satoshis int64, providerUsed Provider, err error) {
+func (c *Client) GetConversion(ctx context.Context, currency Currency, amount float64) (satoshis int64, providerUsed Provider, err error) {
 
 	// Check if currency is accepted across all providers
 	if !currency.IsAccepted() {
@@ -25,7 +26,7 @@ func (c *Client) GetConversion(currency Currency, amount float64) (satoshis int6
 		case ProviderCoinPaprika:
 			var response *PriceConversionResponse
 			if response, err = c.CoinPaprika.GetPriceConversion(
-				USDCurrencyID, CoinPaprikaQuoteID, amount,
+				ctx, USDCurrencyID, CoinPaprikaQuoteID, amount,
 			); err == nil && response != nil {
 				satoshis, err = response.GetSatoshi()
 			}
@@ -39,7 +40,9 @@ func (c *Client) GetConversion(currency Currency, amount float64) (satoshis int6
 			}
 		case ProviderPreev:
 			var response *preev.Ticker
-			if response, err = c.Preev.GetTicker(PreevTickerID); err == nil && response != nil {
+			if response, err = c.Preev.GetTicker(
+				ctx, PreevTickerID,
+			); err == nil && response != nil {
 				satoshis, err = ConvertPriceToSatoshis(response.Prices.Ppi.LastPrice, amount)
 			}
 		case providerLast:

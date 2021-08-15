@@ -4,6 +4,7 @@ Package main is an example of using the go-bsvrates package using custom provide
 package main
 
 import (
+	"context"
 	"log"
 
 	"github.com/tonicpow/go-bsvrates"
@@ -15,6 +16,6 @@ func main() {
 	client := bsvrates.NewClient(nil, nil, bsvrates.ProviderWhatsOnChain, bsvrates.ProviderCoinPaprika)
 
 	// Get rates
-	rate, provider, _ := client.GetRate(bsvrates.CurrencyDollars)
+	rate, provider, _ := client.GetRate(context.Background(), bsvrates.CurrencyDollars)
 	log.Printf("found rate: %v %s from provider: %s", rate, bsvrates.CurrencyToName(bsvrates.CurrencyDollars), provider.Name())
 }
