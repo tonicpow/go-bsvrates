@@ -508,7 +508,10 @@ func TestPaprikaClient_GetHistoricalTickers(t *testing.T) {
 
 	t.Run("same times", func(t *testing.T) {
 		output, err := client.CoinPaprika.GetHistoricalTickers(
-			context.Background(), CoinPaprikaQuoteID, time.Now().UTC(), time.Now().UTC(), 100, TickerQuoteUSD, TickerInterval1h,
+			context.Background(), CoinPaprikaQuoteID,
+			time.Date(2021, 1, 1, 1, 1, 1, 1, time.UTC),
+			time.Date(2021, 1, 1, 1, 1, 1, 1, time.UTC),
+			100, TickerQuoteUSD, TickerInterval1h,
 		)
 		assert.Error(t, err)
 		assert.EqualError(t, err, "start time must be before end time")
