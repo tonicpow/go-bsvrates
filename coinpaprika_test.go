@@ -530,6 +530,18 @@ func TestPaprikaClient_GetHistoricalTickers(t *testing.T) {
 		assert.Equal(t, 24, len(output.Results))
 	})
 
+	t.Run("no limit set - use default", func(t *testing.T) {
+		output, err := client.CoinPaprika.GetHistoricalTickers(
+			context.Background(), CoinPaprikaQuoteID,
+			time.Date(2021, 1, 1, 1, 1, 1, 1, time.UTC),
+			time.Date(2021, 1, 2, 1, 1, 1, 1, time.UTC),
+			0, TickerQuoteUSD, TickerInterval1h,
+		)
+		assert.NoError(t, err)
+		assert.NotNil(t, output)
+		assert.Equal(t, 24, len(output.Results))
+	})
+
 	t.Run("invalid ticker", func(t *testing.T) {
 		output, err := client.CoinPaprika.GetHistoricalTickers(
 			context.Background(), "unknown",

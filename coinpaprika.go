@@ -477,8 +477,10 @@ func (p *PaprikaClient) GetHistoricalTickers(ctx context.Context, coinID string,
 		return
 	}
 
-	// Check limit for max
+	// Check for "max" limit (set default if not set)
 	if limit > maxHistoricalLimit {
+		limit = maxHistoricalLimit
+	} else if limit <= 0 {
 		limit = maxHistoricalLimit
 	}
 
