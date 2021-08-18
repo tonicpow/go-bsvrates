@@ -37,9 +37,9 @@ View the generated [documentation](https://pkg.go.dev/github.com/tonicpow/go-bsv
 [![GoDoc](https://godoc.org/github.com/tonicpow/go-bsvrates?status.svg&style=flat)](https://pkg.go.dev/github.com/tonicpow/go-bsvrates)
 
 ### Features
-- [Client](client.go) is completely configurable
+- [BSV Rates Client](client.go) is completely configurable
 - Using default [heimdall http client](https://github.com/gojek/heimdall) with exponential backoff & more
-- Use your own HTTP client
+- Use your own [HTTP client](client.go)
 - Helpful currency conversion and formatting methods:
     - [ConvertFloatToIntBSV()](currency.go)
     - [ConvertIntToFloatUSD()](currency.go)
@@ -50,12 +50,22 @@ View the generated [documentation](https://pkg.go.dev/github.com/tonicpow/go-bsv
     - [GetDollarsFromSatoshis()](currency.go)
     - [TransformCurrencyToInt()](currency.go)
     - [TransformIntToCurrency()](currency.go)
-- Supported Currencies:
+- Supported Fiat Currencies:
     - USD
 - Supported Providers:
-    - [Coin Paprika](https://api.coinpaprika.com/)
-    - [What's On Chain](https://developers.whatsonchain.com/)
-    - [Preev](https://preev.pro/api/)
+    - **[Coin Paprika](https://api.coinpaprika.com/)**
+      - [GetBaseAmountAndCurrencyID()](coinpaprika.go)
+      - [GetMarketPrice()](coinpaprika.go)
+      - [GetPriceConversion()](coinpaprika.go)
+      - [IsAcceptedCurrency()](coinpaprika.go)
+      - [GetHistoricalTickers()](coinpaprika.go)
+    - **[What's On Chain](https://developers.whatsonchain.com/)**
+      - [GetExchangeRate()](https://github.com/mrz1836/go-whatsonchain)
+    - **[Preev](https://preev.pro/api/)**
+      - [GetPair()](https://github.com/mrz1836/go-preev)
+      - [GetPairs()](https://github.com/mrz1836/go-preev)
+      - [GetTicker()](https://github.com/mrz1836/go-preev)
+      - [GetTickers()](https://github.com/mrz1836/go-preev)
 
 <details>
 <summary><strong><code>Library Deployment</code></strong></summary>
@@ -144,23 +154,25 @@ Read more about this Go project's [code standards](CODE_STANDARDS.md).
 View the [examples](examples)
 
 Basic exchange rate implementation:
+
 ```go
 package main
 
 import (
-	"log"
+  "context"
+  "log"
 
-	"github.com/tonicpow/go-bsvrates"
+  "github.com/tonicpow/go-bsvrates"
 )
 
 func main() {
 
-	// Create a new client (all default providers)
-	client := bsvrates.NewClient(nil, nil)
-    
-	// Get rates
-	rate, provider, _ := client.GetRate(bsvrates.CurrencyDollars)
-	log.Printf("found rate: %v %s from provider: %s", rate, bsvrates.CurrencyToName(bsvrates.CurrencyDollars), provider.Name())
+  // Create a new client (all default providers)
+  client := bsvrates.NewClient(nil, nil)
+
+  // Get rates
+  rate, provider, _ := client.GetRate(context.Background(), bsvrates.CurrencyDollars)
+  log.Printf("found rate: %v %s from provider: %s", rate, bsvrates.CurrencyToName(bsvrates.CurrencyDollars), provider.Name())
 }
 ``` 
 
@@ -169,7 +181,8 @@ Basic price conversion implementation:
 package main
 
 import (
-	"log"
+    "context"
+    "log"
 
 	"github.com/tonicpow/go-bsvrates"
 )
@@ -180,7 +193,7 @@ func main() {
 	client := bsvrates.NewClient(nil, nil)
     
 	// Get a conversion from $ to Sats
-	satoshis, provider, _ := client.GetConversion(bsvrates.CurrencyDollars, 0.01)
+	satoshis, provider, _ := client.GetConversion(context.Background(),bsvrates.CurrencyDollars, 0.01)
 	log.Printf("0.01 USD = satoshis: %d from provider: %s", satoshis, provider.Name())
 }
 ```
