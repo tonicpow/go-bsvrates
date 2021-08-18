@@ -1,11 +1,12 @@
 # go-bsvrates
-> Get the current exchange rate of BSV and other helpful currency conversions
+> Real-time exchange rates for BitcoinSV using multiple providers with failover support
 
 [![Release](https://img.shields.io/github/release-pre/tonicpow/go-bsvrates.svg?logo=github&style=flat&v=3)](https://github.com/tonicpow/go-bsvrates/releases)
 [![Build Status](https://img.shields.io/github/workflow/status/tonicpow/go-bsvrates/run-go-tests?logo=github&v=3)](https://github.com/tonicpow/go-bsvrates/actions)
 [![Report](https://goreportcard.com/badge/github.com/tonicpow/go-bsvrates?style=flat&v=3)](https://goreportcard.com/report/github.com/tonicpow/go-bsvrates)
 [![codecov](https://codecov.io/gh/tonicpow/go-bsvrates/branch/master/graph/badge.svg?v=3)](https://codecov.io/gh/tonicpow/go-bsvrates)
 [![Go](https://img.shields.io/github/go-mod/go-version/tonicpow/go-bsvrates?v=3)](https://golang.org/)
+[![Mergify Status](https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/tonicpow/go-bsvrates&style=flat&)](https://mergify.io)
 
 <br/>
 
