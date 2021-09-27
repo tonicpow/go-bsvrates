@@ -6,7 +6,7 @@
 [![Report](https://goreportcard.com/badge/github.com/tonicpow/go-bsvrates?style=flat&v=3)](https://goreportcard.com/report/github.com/tonicpow/go-bsvrates)
 [![codecov](https://codecov.io/gh/tonicpow/go-bsvrates/branch/master/graph/badge.svg?v=3)](https://codecov.io/gh/tonicpow/go-bsvrates)
 [![Go](https://img.shields.io/github/go-mod/go-version/tonicpow/go-bsvrates?v=3)](https://golang.org/)
-[![Mergify Status](https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/tonicpow/go-bsvrates&style=flat&)](https://mergify.io)
+[![Mergify Status](https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/tonicpow/go-bsvrates&style=flat&v=3)](https://mergify.io)
 
 <br/>
 
@@ -147,7 +147,7 @@ make bench
 <br/>
 
 ## Code Standards
-Read more about this Go project's [code standards](CODE_STANDARDS.md).
+Read more about this Go project's [code standards](.github/CODE_STANDARDS.md).
 
 <br/>
 
@@ -209,7 +209,7 @@ func main() {
 <br/>
 
 ## Contributing
-View the [contributing guidelines](CONTRIBUTING.md) and please follow the [code of conduct](CODE_OF_CONDUCT.md).
+View the [contributing guidelines](.github/CONTRIBUTING.md) and please follow the [code of conduct](.github/CODE_OF_CONDUCT.md).
 
 ### How can I help?
 All kinds of contributions are welcome :raised_hands:! 
@@ -232,4 +232,4 @@ or by making a [**bitcoin donation**](https://tonicpow.com/?utm_source=github&ut
 
 ## License
 
-![License](https://img.shields.io/github/license/tonicpow/go-bsvrates.svg?style=flat&v=3)
+[![License](https://img.shields.io/github/license/tonicpow/go-bsvrates.svg?style=flat&v=3)](LICENSE)
