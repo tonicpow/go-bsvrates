@@ -6,7 +6,9 @@
 [![Report](https://goreportcard.com/badge/github.com/tonicpow/go-bsvrates?style=flat&v=3)](https://goreportcard.com/report/github.com/tonicpow/go-bsvrates)
 [![codecov](https://codecov.io/gh/tonicpow/go-bsvrates/branch/master/graph/badge.svg?v=3)](https://codecov.io/gh/tonicpow/go-bsvrates)
 [![Go](https://img.shields.io/github/go-mod/go-version/tonicpow/go-bsvrates?v=3)](https://golang.org/)
+<br>
 [![Mergify Status](https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/tonicpow/go-bsvrates&style=flat&v=3)](https://mergify.io)
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/tonicpow/go-bsvrates)
 
 <br/>
 
