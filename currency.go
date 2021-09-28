@@ -26,9 +26,9 @@ func FormatCommas(num int) string {
 	}
 }
 
-// ConvertSatsToBSV converts sats to bsv
-func ConvertSatsToBSV(sats int) float64 {
-	return float64(sats) * 0.00000001
+// ConvertSatsToBSV converts satoshis to bsv
+func ConvertSatsToBSV(satoshis int) float64 {
+	return float64(satoshis) * 0.00000001
 }
 
 // ConvertPriceToSatoshis will get the satoshis (amount) from the current rate.
@@ -52,19 +52,19 @@ func ConvertPriceToSatoshis(currentRate float64, amount float64) (int64, error) 
 }
 
 // GetDollarsFromSatoshis will return the dollars (USD) of the given amount of satoshis
-// IE: Current rate is $100 per 1 BSV... Supplying 100000000 sats should produce 1 dollar
-func GetDollarsFromSatoshis(currentBSVRate float64, sats int64) (dollars float64) {
+// IE: Current rate is $100 per 1 BSV... Supplying 100000000 satoshis should produce 1 dollar
+func GetDollarsFromSatoshis(currentBSVRate float64, satoshis int64) (dollars float64) {
 	dollars, _ = decimal.NewFromFloat(currentBSVRate).Div(
 		decimal.NewFromInt(SatoshisPerBitcoin),
-	).Mul(decimal.NewFromInt(sats)).Float64()
+	).Mul(decimal.NewFromInt(satoshis)).Float64()
 	return
 }
 
 // GetCentsFromSatoshis will return the cents (USD) of the given amount of satoshis
-// IE: Current rate is $100 per 1 BSV... Supplying 1000000 sats should produce 100 cents
-func GetCentsFromSatoshis(currentBSVRate float64, sats int64) int64 {
+// IE: Current rate is $100 per 1 BSV... Supplying 1000000 satoshis should produce 100 cents
+func GetCentsFromSatoshis(currentBSVRate float64, satoshis int64) int64 {
 	return decimal.NewFromFloat(
-		GetDollarsFromSatoshis(currentBSVRate, sats),
+		GetDollarsFromSatoshis(currentBSVRate, satoshis),
 	).Mul(decimal.NewFromInt(100)).Round(1).IntPart()
 }
 
@@ -100,7 +100,7 @@ func TransformIntToCurrency(intValue int, currency Currency) (string, error) {
 	return "", fmt.Errorf("currency %s cannot be transformed", currency.Name())
 }
 
-// ConvertFloatToIntBSV converts the BSV float value to the sats int value
+// ConvertFloatToIntBSV converts the BSV float value to the satoshis int value
 func ConvertFloatToIntBSV(floatValue float64) int64 {
 
 	// Do conversion to satoshis (percentage) using decimal package to avoid float issues
