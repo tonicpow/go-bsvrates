@@ -5,7 +5,7 @@ import "strings"
 const (
 
 	// version is the current package version
-	version = "v0.1.14"
+	version = "v0.1.15"
 
 	// defaultUserAgent is the default user agent for all requests
 	defaultUserAgent string = "go-bsvrates: " + version
