@@ -24,7 +24,7 @@ type preevInterface interface {
 
 // whatsOnChainInterface is an interface for the WOC Client
 type whatsOnChainInterface interface {
-	GetExchangeRate() (rate *whatsonchain.ExchangeRate, err error)
+	GetExchangeRate(ctx context.Context) (rate *whatsonchain.ExchangeRate, err error)
 }
 
 // coinPaprikaInterface is an interface for the Coin Paprika Client

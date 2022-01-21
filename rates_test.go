@@ -16,7 +16,7 @@ import (
 type mockWOCValid struct{}
 
 // GetExchangeRate is a mock response
-func (m *mockWOCValid) GetExchangeRate() (rate *whatsonchain.ExchangeRate, err error) {
+func (m *mockWOCValid) GetExchangeRate(_ context.Context) (rate *whatsonchain.ExchangeRate, err error) {
 
 	rate = &whatsonchain.ExchangeRate{
 		Rate:     "159.01",
@@ -30,7 +30,7 @@ func (m *mockWOCValid) GetExchangeRate() (rate *whatsonchain.ExchangeRate, err e
 type mockWOCFailed struct{}
 
 // GetExchangeRate is a mock response
-func (m *mockWOCFailed) GetExchangeRate() (rate *whatsonchain.ExchangeRate, err error) {
+func (m *mockWOCFailed) GetExchangeRate(_ context.Context) (rate *whatsonchain.ExchangeRate, err error) {
 
 	return
 }
@@ -39,7 +39,7 @@ func (m *mockWOCFailed) GetExchangeRate() (rate *whatsonchain.ExchangeRate, err 
 type mockPaprikaValid struct{}
 
 // GetMarketPrice is a mock response
-func (m *mockPaprikaValid) GetMarketPrice(ctx context.Context, coinID string) (response *TickerResponse, err error) {
+func (m *mockPaprikaValid) GetMarketPrice(_ context.Context, coinID string) (response *TickerResponse, err error) {
 
 	response = &TickerResponse{
 		BetaValue:         1.39789,
@@ -67,7 +67,7 @@ func (m *mockPaprikaValid) GetMarketPrice(ctx context.Context, coinID string) (r
 }
 
 // GetBaseAmountAndCurrencyID is a mock response
-func (m *mockPaprikaValid) GetBaseAmountAndCurrencyID(currency string, amount float64) (string, float64) {
+func (m *mockPaprikaValid) GetBaseAmountAndCurrencyID(currency string, _ float64) (string, float64) {
 
 	// This is just a mock request
 
@@ -75,7 +75,7 @@ func (m *mockPaprikaValid) GetBaseAmountAndCurrencyID(currency string, amount fl
 }
 
 // GetPriceConversion is a mock response
-func (m *mockPaprikaValid) GetPriceConversion(ctx context.Context, baseCurrencyID, quoteCurrencyID string, amount float64) (response *PriceConversionResponse, err error) {
+func (m *mockPaprikaValid) GetPriceConversion(_ context.Context, baseCurrencyID, quoteCurrencyID string, amount float64) (response *PriceConversionResponse, err error) {
 
 	response = &PriceConversionResponse{
 		Amount:                amount,
@@ -92,8 +92,8 @@ func (m *mockPaprikaValid) GetPriceConversion(ctx context.Context, baseCurrencyI
 }
 
 // GetHistoricalTickers is a mock response
-func (m *mockPaprikaValid) GetHistoricalTickers(ctx context.Context, coinID string, start, end time.Time, limit int,
-	quote tickerQuote, interval tickerInterval) (response *HistoricalResponse, err error) {
+func (m *mockPaprikaValid) GetHistoricalTickers(_ context.Context, _ string, _, _ time.Time, _ int,
+	_ tickerQuote, _ tickerInterval) (response *HistoricalResponse, err error) {
 
 	// This is just a mock response
 
@@ -101,7 +101,7 @@ func (m *mockPaprikaValid) GetHistoricalTickers(ctx context.Context, coinID stri
 }
 
 // IsAcceptedCurrency is a mock response
-func (m *mockPaprikaValid) IsAcceptedCurrency(currency string) bool {
+func (m *mockPaprikaValid) IsAcceptedCurrency(_ string) bool {
 
 	// This is just a mock response
 
@@ -112,7 +112,7 @@ func (m *mockPaprikaValid) IsAcceptedCurrency(currency string) bool {
 type mockPreevValid struct{}
 
 // GetTicker is a mock response
-func (m *mockPreevValid) GetTicker(ctx context.Context, pairID string) (ticker *preev.Ticker, err error) {
+func (m *mockPreevValid) GetTicker(_ context.Context, pairID string) (ticker *preev.Ticker, err error) {
 
 	ticker = &preev.Ticker{
 		ID:        pairID,
@@ -133,19 +133,19 @@ func (m *mockPreevValid) GetTicker(ctx context.Context, pairID string) (ticker *
 }
 
 // GetPair is a mock response
-func (m *mockPreevValid) GetPair(ctx context.Context, pairID string) (pair *preev.Pair, err error) {
+func (m *mockPreevValid) GetPair(_ context.Context, _ string) (pair *preev.Pair, err error) {
 
 	return
 }
 
 // GetPairs is a mock response
-func (m *mockPreevValid) GetPairs(ctx context.Context) (pairList *preev.PairList, err error) {
+func (m *mockPreevValid) GetPairs(_ context.Context) (pairList *preev.PairList, err error) {
 
 	return
 }
 
 // GetTickers is a mock response
-func (m *mockPreevValid) GetTickers(ctx context.Context) (tickerList *preev.TickerList, err error) {
+func (m *mockPreevValid) GetTickers(_ context.Context) (tickerList *preev.TickerList, err error) {
 
 	return
 }
@@ -154,26 +154,26 @@ func (m *mockPreevValid) GetTickers(ctx context.Context) (tickerList *preev.Tick
 type mockPaprikaFailed struct{}
 
 // GetMarketPrice is a mock response
-func (m *mockPaprikaFailed) GetMarketPrice(ctx context.Context, coinID string) (response *TickerResponse, err error) {
+func (m *mockPaprikaFailed) GetMarketPrice(_ context.Context, _ string) (response *TickerResponse, err error) {
 	err = fmt.Errorf("request to paprika fails... 502")
 	return
 }
 
 // GetBaseAmountAndCurrencyID is a mock response
-func (m *mockPaprikaFailed) GetBaseAmountAndCurrencyID(currency string, amount float64) (string, float64) {
+func (m *mockPaprikaFailed) GetBaseAmountAndCurrencyID(_ string, _ float64) (string, float64) {
 
 	return "", 0
 }
 
 // GetPriceConversion is a mock response
-func (m *mockPaprikaFailed) GetPriceConversion(ctx context.Context, baseCurrencyID, quoteCurrencyID string, amount float64) (response *PriceConversionResponse, err error) {
+func (m *mockPaprikaFailed) GetPriceConversion(_ context.Context, _, _ string, _ float64) (response *PriceConversionResponse, err error) {
 
 	return nil, fmt.Errorf("some error occurred")
 }
 
 // GetHistoricalTickers is a mock response
-func (m *mockPaprikaFailed) GetHistoricalTickers(ctx context.Context, coinID string, start, end time.Time, limit int,
-	quote tickerQuote, interval tickerInterval) (response *HistoricalResponse, err error) {
+func (m *mockPaprikaFailed) GetHistoricalTickers(_ context.Context, _ string, _, _ time.Time, _ int,
+	_ tickerQuote, _ tickerInterval) (response *HistoricalResponse, err error) {
 
 	// This is just a mock response
 
@@ -181,7 +181,7 @@ func (m *mockPaprikaFailed) GetHistoricalTickers(ctx context.Context, coinID str
 }
 
 // IsAcceptedCurrency is a mock response
-func (m *mockPaprikaFailed) IsAcceptedCurrency(currency string) bool {
+func (m *mockPaprikaFailed) IsAcceptedCurrency(_ string) bool {
 
 	return false
 }
@@ -190,25 +190,25 @@ func (m *mockPaprikaFailed) IsAcceptedCurrency(currency string) bool {
 type mockPreevFailed struct{}
 
 // GetPair is a mock response
-func (m *mockPreevFailed) GetPair(ctx context.Context, pairID string) (pair *preev.Pair, err error) {
+func (m *mockPreevFailed) GetPair(_ context.Context, _ string) (pair *preev.Pair, err error) {
 
 	return nil, fmt.Errorf("some error occurred")
 }
 
 // GetTicker is a mock response
-func (m *mockPreevFailed) GetTicker(ctx context.Context, pairID string) (ticker *preev.Ticker, err error) {
+func (m *mockPreevFailed) GetTicker(_ context.Context, _ string) (ticker *preev.Ticker, err error) {
 
 	return nil, fmt.Errorf("some error occurred")
 }
 
 // GetTickers is a mock response
-func (m *mockPreevFailed) GetTickers(ctx context.Context) (tickerList *preev.TickerList, err error) {
+func (m *mockPreevFailed) GetTickers(_ context.Context) (tickerList *preev.TickerList, err error) {
 
 	return nil, fmt.Errorf("some error occurred")
 }
 
 // GetPairs is a mock response
-func (m *mockPreevFailed) GetPairs(ctx context.Context) (pairList *preev.PairList, err error) {
+func (m *mockPreevFailed) GetPairs(_ context.Context) (pairList *preev.PairList, err error) {
 
 	return nil, fmt.Errorf("some error occurred")
 }

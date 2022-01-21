@@ -32,7 +32,7 @@ func (c *Client) GetConversion(ctx context.Context, currency Currency, amount fl
 			}
 		case ProviderWhatsOnChain:
 			var response *whatsonchain.ExchangeRate
-			if response, err = c.WhatsOnChain.GetExchangeRate(); err == nil && response != nil {
+			if response, err = c.WhatsOnChain.GetExchangeRate(ctx); err == nil && response != nil {
 				var rate float64
 				if rate, err = strconv.ParseFloat(response.Rate, 64); err == nil {
 					satoshis, err = ConvertPriceToSatoshis(rate, amount)

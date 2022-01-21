@@ -33,7 +33,7 @@ func (c *Client) GetRate(ctx context.Context, currency Currency) (rate float64, 
 			}
 		case ProviderWhatsOnChain:
 			var response *whatsonchain.ExchangeRate
-			if response, err = c.WhatsOnChain.GetExchangeRate(); err == nil && response != nil {
+			if response, err = c.WhatsOnChain.GetExchangeRate(ctx); err == nil && response != nil {
 				rate, err = strconv.ParseFloat(response.Rate, 64)
 			}
 		case ProviderPreev:
