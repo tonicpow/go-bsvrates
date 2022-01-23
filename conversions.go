@@ -20,19 +20,19 @@ func (c *Client) GetConversion(ctx context.Context, currency Currency, amount fl
 	}
 
 	// Loop providers and get a conversion value
-	for _, provider := range c.Providers {
+	for _, provider := range c.Providers() {
 		providerUsed = provider
 		switch provider {
 		case ProviderCoinPaprika:
 			var response *PriceConversionResponse
-			if response, err = c.CoinPaprika.GetPriceConversion(
+			if response, err = c.CoinPaprika().GetPriceConversion(
 				ctx, USDCurrencyID, CoinPaprikaQuoteID, amount,
 			); err == nil && response != nil {
 				satoshis, err = response.GetSatoshi()
 			}
 		case ProviderWhatsOnChain:
 			var response *whatsonchain.ExchangeRate
-			if response, err = c.WhatsOnChain.GetExchangeRate(ctx); err == nil && response != nil {
+			if response, err = c.WhatsOnChain().GetExchangeRate(ctx); err == nil && response != nil {
 				var rate float64
 				if rate, err = strconv.ParseFloat(response.Rate, 64); err == nil {
 					satoshis, err = ConvertPriceToSatoshis(rate, amount)
@@ -40,7 +40,7 @@ func (c *Client) GetConversion(ctx context.Context, currency Currency, amount fl
 			}
 		case ProviderPreev:
 			var response *preev.Ticker
-			if response, err = c.Preev.GetTicker(
+			if response, err = c.Preev().GetTicker(
 				ctx, PreevTickerID,
 			); err == nil && response != nil {
 				satoshis, err = ConvertPriceToSatoshis(response.Prices.Ppi.LastPrice, amount)

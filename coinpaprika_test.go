@@ -114,11 +114,10 @@ func (m *mockHTTPPaprika) Do(req *http.Request) (*http.Response, error) {
 }
 
 // newMockPaprikaClient returns a client for mocking (using a custom HTTP interface)
-func newMockPaprikaClient(httpClient httpInterface) *Client {
-	client := NewClient(nil, nil)
-	cp := createPaprikaClient(nil, nil)
-	cp.HTTPClient = httpClient
-	client.CoinPaprika = cp
+func newMockPaprikaClient(httpClient HTTPInterface) ClientInterface {
+	client := NewClient(nil, httpClient)
+	// cp := createPaprikaClient(nil, httpClient)
+	// client.CoinPaprika = cp
 	return client
 }
 
@@ -195,7 +194,7 @@ func TestPaprikaClient_GetBaseAmountAndCurrencyID(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.testCase, func(t *testing.T) {
-			currencyName, amount := client.CoinPaprika.GetBaseAmountAndCurrencyID(test.currency, test.amount)
+			currencyName, amount := client.CoinPaprika().GetBaseAmountAndCurrencyID(test.currency, test.amount)
 			assert.Equal(t, test.expectedAmount, amount)
 			assert.Equal(t, test.expectedCurrency, currencyName)
 		})
@@ -245,7 +244,7 @@ func TestPaprikaClient_GetPriceConversion(t *testing.T) {
 		}
 		for _, test := range tests {
 			t.Run(test.testCase, func(t *testing.T) {
-				output, err := client.CoinPaprika.GetPriceConversion(context.Background(), test.baseCurrency, test.quoteCurrency, test.amount)
+				output, err := client.CoinPaprika().GetPriceConversion(context.Background(), test.baseCurrency, test.quoteCurrency, test.amount)
 				assert.NoError(t, err)
 				assert.NotNil(t, output)
 				assert.Equal(t, test.expectedPrice, output.Price)
@@ -279,7 +278,7 @@ func TestPaprikaClient_GetPriceConversion(t *testing.T) {
 		}
 		for _, test := range tests {
 			t.Run(test.testCase, func(t *testing.T) {
-				output, err := client.CoinPaprika.GetPriceConversion(context.Background(), test.baseCurrency, test.quoteCurrency, test.amount)
+				output, err := client.CoinPaprika().GetPriceConversion(context.Background(), test.baseCurrency, test.quoteCurrency, test.amount)
 				assert.Error(t, err)
 				assert.NotNil(t, output)
 				assert.Equal(t, test.expectedStatusCode, output.LastRequest.StatusCode)
@@ -311,7 +310,7 @@ func TestPaprikaClient_GetMarketPrice(t *testing.T) {
 		}
 		for _, test := range tests {
 			t.Run(test.testCase, func(t *testing.T) {
-				output, err := client.CoinPaprika.GetMarketPrice(context.Background(), test.coinID)
+				output, err := client.CoinPaprika().GetMarketPrice(context.Background(), test.coinID)
 				assert.NoError(t, err)
 				assert.NotNil(t, output)
 				assert.Equal(t, test.expectedPrice, output.Quotes.USD.Price)
@@ -339,7 +338,7 @@ func TestPaprikaClient_GetMarketPrice(t *testing.T) {
 		}
 		for _, test := range tests {
 			t.Run(test.testCase, func(t *testing.T) {
-				output, err := client.CoinPaprika.GetMarketPrice(context.Background(), test.coinID)
+				output, err := client.CoinPaprika().GetMarketPrice(context.Background(), test.coinID)
 				assert.Error(t, err)
 				assert.NotNil(t, output)
 				assert.Equal(t, test.expectedStatusCode, output.LastRequest.StatusCode)
@@ -388,7 +387,7 @@ func TestPaprikaClient_IsAcceptedCurrency(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.testCase, func(t *testing.T) {
-			found := client.CoinPaprika.IsAcceptedCurrency(test.currency)
+			found := client.CoinPaprika().IsAcceptedCurrency(test.currency)
 			assert.Equal(t, test.expectedFound, found)
 		})
 	}
@@ -476,7 +475,7 @@ func TestPaprikaClient_GetHistoricalTickers(t *testing.T) {
 		}
 		for _, test := range tests {
 			t.Run(test.testCase, func(t *testing.T) {
-				output, err := client.CoinPaprika.GetHistoricalTickers(
+				output, err := client.CoinPaprika().GetHistoricalTickers(
 					context.Background(), test.coinID, test.start, test.end, test.limit, test.quote, test.interval,
 				)
 				assert.NoError(t, err)
@@ -489,7 +488,7 @@ func TestPaprikaClient_GetHistoricalTickers(t *testing.T) {
 	})
 
 	t.Run("invalid start time", func(t *testing.T) {
-		output, err := client.CoinPaprika.GetHistoricalTickers(
+		output, err := client.CoinPaprika().GetHistoricalTickers(
 			context.Background(), CoinPaprikaQuoteID, time.Time{}, time.Time{}, 100, TickerQuoteUSD, TickerInterval1h,
 		)
 		assert.Error(t, err)
@@ -498,7 +497,7 @@ func TestPaprikaClient_GetHistoricalTickers(t *testing.T) {
 	})
 
 	t.Run("empty end time, bad start time", func(t *testing.T) {
-		output, err := client.CoinPaprika.GetHistoricalTickers(
+		output, err := client.CoinPaprika().GetHistoricalTickers(
 			context.Background(), CoinPaprikaQuoteID, time.Now().UTC().Add(2*time.Hour), time.Time{}, 100, TickerQuoteUSD, TickerInterval1h,
 		)
 		assert.Error(t, err)
@@ -507,7 +506,7 @@ func TestPaprikaClient_GetHistoricalTickers(t *testing.T) {
 	})
 
 	t.Run("same times", func(t *testing.T) {
-		output, err := client.CoinPaprika.GetHistoricalTickers(
+		output, err := client.CoinPaprika().GetHistoricalTickers(
 			context.Background(), CoinPaprikaQuoteID,
 			time.Date(2021, 1, 1, 1, 1, 1, 1, time.UTC),
 			time.Date(2021, 1, 1, 1, 1, 1, 1, time.UTC),
@@ -519,7 +518,7 @@ func TestPaprikaClient_GetHistoricalTickers(t *testing.T) {
 	})
 
 	t.Run("over the limit", func(t *testing.T) {
-		output, err := client.CoinPaprika.GetHistoricalTickers(
+		output, err := client.CoinPaprika().GetHistoricalTickers(
 			context.Background(), CoinPaprikaQuoteID,
 			time.Date(2021, 1, 1, 1, 1, 1, 1, time.UTC),
 			time.Date(2021, 1, 2, 1, 1, 1, 1, time.UTC),
@@ -531,7 +530,7 @@ func TestPaprikaClient_GetHistoricalTickers(t *testing.T) {
 	})
 
 	t.Run("no limit set - use default", func(t *testing.T) {
-		output, err := client.CoinPaprika.GetHistoricalTickers(
+		output, err := client.CoinPaprika().GetHistoricalTickers(
 			context.Background(), CoinPaprikaQuoteID,
 			time.Date(2021, 1, 1, 1, 1, 1, 1, time.UTC),
 			time.Date(2021, 1, 2, 1, 1, 1, 1, time.UTC),
@@ -543,7 +542,7 @@ func TestPaprikaClient_GetHistoricalTickers(t *testing.T) {
 	})
 
 	t.Run("invalid ticker", func(t *testing.T) {
-		output, err := client.CoinPaprika.GetHistoricalTickers(
+		output, err := client.CoinPaprika().GetHistoricalTickers(
 			context.Background(), "unknown",
 			time.Date(2021, 1, 1, 1, 1, 1, 1, time.UTC),
 			time.Date(2021, 1, 2, 1, 1, 1, 1, time.UTC),
@@ -556,7 +555,7 @@ func TestPaprikaClient_GetHistoricalTickers(t *testing.T) {
 	})
 
 	t.Run("error response", func(t *testing.T) {
-		output, err := client.CoinPaprika.GetHistoricalTickers(
+		output, err := client.CoinPaprika().GetHistoricalTickers(
 			context.Background(), "error",
 			time.Date(2021, 1, 1, 1, 1, 1, 1, time.UTC),
 			time.Date(2021, 1, 2, 1, 1, 1, 1, time.UTC),
@@ -572,7 +571,7 @@ func TestPaprikaClient_GetHistoricalTickers(t *testing.T) {
 		client = newMockClient(&mockWOCValid{}, &mockPaprikaFailed{}, &mockPreevValid{})
 		assert.NotNil(t, client)
 
-		resp, rateErr := client.CoinPaprika.GetHistoricalTickers(
+		resp, rateErr := client.CoinPaprika().GetHistoricalTickers(
 			context.Background(), CoinPaprikaQuoteID, time.Now().UTC().Add(-1*time.Hour), time.Now().UTC(), maxHistoricalLimit+1, TickerQuoteUSD, TickerInterval1h,
 		)
 		assert.Error(t, rateErr)

@@ -135,7 +135,7 @@ func (p PriceConversionResponse) GetSatoshi() (satoshi int64, err error) {
 
 // PaprikaClient is the client for Coin Paprika
 type PaprikaClient struct {
-	HTTPClient httpInterface // carries out the http operations (heimdall client)
+	HTTPClient HTTPInterface // carries out the http operations (heimdall client)
 	UserAgent  string
 }
 
@@ -148,16 +148,10 @@ type lastRequest struct {
 }
 
 // createPaprikaClient will make a new http client based on the options provided
-func createPaprikaClient(options *ClientOptions, customHTTPClient *http.Client) (c *PaprikaClient) {
+func createPaprikaClient(options *ClientOptions, customHTTPClient HTTPInterface) CoinPaprikaInterface {
 
 	// Create a client
-	c = new(PaprikaClient)
-
-	// Is there a custom HTTP client to use?
-	if customHTTPClient != nil {
-		c.HTTPClient = customHTTPClient
-		return
-	}
+	c := new(PaprikaClient)
 
 	// Set options (either default or user modified)
 	if options == nil {
@@ -166,6 +160,12 @@ func createPaprikaClient(options *ClientOptions, customHTTPClient *http.Client) 
 
 	// Set the user agent
 	c.UserAgent = options.UserAgent
+
+	// Is there a custom HTTP client to use?
+	if customHTTPClient != nil {
+		c.HTTPClient = customHTTPClient
+		return c
+	}
 
 	// dial is the net dialer for clientDefaultTransport
 	dial := &net.Dialer{KeepAlive: options.DialerKeepAlive, Timeout: options.DialerTimeout}
@@ -209,7 +209,7 @@ func createPaprikaClient(options *ClientOptions, customHTTPClient *http.Client) 
 		)
 	}
 
-	return
+	return c
 }
 
 // GetBaseAmountAndCurrencyID will return an ID and default amount

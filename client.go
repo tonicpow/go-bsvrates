@@ -9,39 +9,26 @@ import (
 	"github.com/mrz1836/go-whatsonchain"
 )
 
-// httpInterface is used for the http client (mocking heimdall)
-type httpInterface interface {
+// HTTPInterface is used for the http client (mocking heimdall)
+type HTTPInterface interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
-// preevInterface is an interface for the Preev Client
-type preevInterface interface {
-	GetPair(ctx context.Context, pairID string) (pair *preev.Pair, err error)
-	GetPairs(ctx context.Context) (pairList *preev.PairList, err error)
-	GetTicker(ctx context.Context, pairID string) (ticker *preev.Ticker, err error)
-	GetTickers(ctx context.Context) (tickerList *preev.TickerList, err error)
-}
-
-// whatsOnChainInterface is an interface for the WOC Client
-type whatsOnChainInterface interface {
-	GetExchangeRate(ctx context.Context) (rate *whatsonchain.ExchangeRate, err error)
-}
-
-// coinPaprikaInterface is an interface for the Coin Paprika Client
-type coinPaprikaInterface interface {
+// CoinPaprikaInterface is an interface for the Coin Paprika Client
+type CoinPaprikaInterface interface {
 	GetBaseAmountAndCurrencyID(currency string, amount float64) (string, float64)
+	GetHistoricalTickers(ctx context.Context, coinID string, start, end time.Time, limit int, quote tickerQuote, interval tickerInterval) (response *HistoricalResponse, err error)
 	GetMarketPrice(ctx context.Context, coinID string) (response *TickerResponse, err error)
 	GetPriceConversion(ctx context.Context, baseCurrencyID, quoteCurrencyID string, amount float64) (response *PriceConversionResponse, err error)
 	IsAcceptedCurrency(currency string) bool
-	GetHistoricalTickers(ctx context.Context, coinID string, start, end time.Time, limit int, quote tickerQuote, interval tickerInterval) (response *HistoricalResponse, err error)
 }
 
 // Client is the parent struct that contains the provider clients and list of providers to use
 type Client struct {
-	CoinPaprika  coinPaprikaInterface  // Coin Paprika client
-	Preev        preevInterface        // Preev Client
-	Providers    []Provider            // List of providers to use (in order for fail-over)
-	WhatsOnChain whatsOnChainInterface // WhatsOnChain client
+	coinPaprika  CoinPaprikaInterface      // Coin Paprika client
+	preev        preev.ClientInterface     // Preev Client
+	providers    []Provider                // List of providers to use (in order for fail-over)
+	whatsOnChain whatsonchain.ChainService // WhatsOnChain (chain services)
 }
 
 // ClientOptions holds all the configuration for connection, dialer and transport
@@ -120,14 +107,16 @@ func DefaultClientOptions() (clientOptions *ClientOptions) {
 }
 
 // NewClient creates a new client for requests
-func NewClient(clientOptions *ClientOptions, customHTTPClient *http.Client, providers ...Provider) (client *Client) {
-	client = new(Client)
+func NewClient(clientOptions *ClientOptions, customHTTPClient HTTPInterface,
+	providers ...Provider) ClientInterface {
+
+	c := new(Client)
 
 	// No providers? (Use the default set for now)
 	if len(providers) == 0 {
-		client.Providers = defaultProviders
+		c.providers = defaultProviders
 	} else {
-		client.Providers = providers
+		c.providers = providers
 	}
 
 	// Set default options if none are provided
@@ -136,13 +125,60 @@ func NewClient(clientOptions *ClientOptions, customHTTPClient *http.Client, prov
 	}
 
 	// Create a client for Coin Paprika
-	client.CoinPaprika = createPaprikaClient(clientOptions, customHTTPClient)
+	c.coinPaprika = createPaprikaClient(
+		clientOptions, customHTTPClient,
+	)
 
 	// Create a client for Preev
-	client.Preev = preev.NewClient(clientOptions.ToPreevOptions(), customHTTPClient)
+	c.preev = preev.NewClient(
+		clientOptions.ToPreevOptions(), customHTTPClient,
+	)
 
 	// Create a client for WhatsOnChain
-	client.WhatsOnChain = whatsonchain.NewClient(whatsonchain.NetworkMain, clientOptions.ToWhatsOnChainOptions(), customHTTPClient)
+	c.whatsOnChain = whatsonchain.NewClient(
+		whatsonchain.NetworkMain, clientOptions.ToWhatsOnChainOptions(), customHTTPClient,
+	)
 
-	return
+	return c
+}
+
+// Providers is the list of providers
+func (c *Client) Providers() []Provider {
+	return c.providers
+}
+
+// CoinPaprika will return the client
+func (c *Client) CoinPaprika() CoinPaprikaInterface {
+	return c.coinPaprika
+}
+
+// SetCoinPaprika will set the client
+func (c *Client) SetCoinPaprika(client CoinPaprikaInterface) {
+	if client != nil {
+		c.coinPaprika = client
+	}
+}
+
+// Preev will return the client
+func (c *Client) Preev() preev.ClientInterface {
+	return c.preev
+}
+
+// SetPreev will set the client
+func (c *Client) SetPreev(client preev.ClientInterface) {
+	if client != nil {
+		c.preev = client
+	}
+}
+
+// WhatsOnChain will return the client
+func (c *Client) WhatsOnChain() whatsonchain.ChainService {
+	return c.whatsOnChain
+}
+
+// SetWhatsOnChain will set the client
+func (c *Client) SetWhatsOnChain(client whatsonchain.ChainService) {
+	if client != nil {
+		c.whatsOnChain = client
+	}
 }

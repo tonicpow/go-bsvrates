@@ -23,22 +23,22 @@ func (c *Client) GetRate(ctx context.Context, currency Currency) (rate float64, 
 	}
 
 	// Loop providers and get a rate
-	for _, provider := range c.Providers {
+	for _, provider := range c.Providers() {
 		providerUsed = provider
 		switch provider {
 		case ProviderCoinPaprika:
 			var response *TickerResponse
-			if response, err = c.CoinPaprika.GetMarketPrice(ctx, CoinPaprikaQuoteID); err == nil && response != nil {
+			if response, err = c.CoinPaprika().GetMarketPrice(ctx, CoinPaprikaQuoteID); err == nil && response != nil {
 				rate = response.Quotes.USD.Price
 			}
 		case ProviderWhatsOnChain:
 			var response *whatsonchain.ExchangeRate
-			if response, err = c.WhatsOnChain.GetExchangeRate(ctx); err == nil && response != nil {
+			if response, err = c.WhatsOnChain().GetExchangeRate(ctx); err == nil && response != nil {
 				rate, err = strconv.ParseFloat(response.Rate, 64)
 			}
 		case ProviderPreev:
 			var response *preev.Ticker
-			if response, err = c.Preev.GetTicker(ctx, PreevTickerID); err == nil && response != nil {
+			if response, err = c.Preev().GetTicker(ctx, PreevTickerID); err == nil && response != nil {
 				rate = response.Prices.Ppi.LastPrice
 			}
 		case providerLast:

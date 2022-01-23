@@ -17,9 +17,9 @@ func TestNewClient(t *testing.T) {
 		assert.NotNil(t, client)
 
 		// Test default providers
-		assert.Equal(t, ProviderCoinPaprika, client.Providers[0])
-		assert.Equal(t, ProviderWhatsOnChain, client.Providers[1])
-		assert.Equal(t, ProviderPreev, client.Providers[2])
+		assert.Equal(t, ProviderCoinPaprika, client.Providers()[0])
+		assert.Equal(t, ProviderWhatsOnChain, client.Providers()[1])
+		assert.Equal(t, ProviderPreev, client.Providers()[2])
 	})
 
 	t.Run("custom http client", func(t *testing.T) {
@@ -27,7 +27,7 @@ func TestNewClient(t *testing.T) {
 		assert.NotNil(t, client)
 
 		// Test custom providers
-		assert.Equal(t, ProviderPreev, client.Providers[0])
+		assert.Equal(t, ProviderPreev, client.Providers()[0])
 	})
 
 }

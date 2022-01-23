@@ -17,7 +17,7 @@ func main() {
 	client := bsvrates.NewClient(nil, nil)
 
 	// Get historical tickers
-	response, err := client.CoinPaprika.GetHistoricalTickers(
+	response, err := client.CoinPaprika().GetHistoricalTickers(
 		context.Background(),
 		bsvrates.CoinPaprikaQuoteID,
 		time.Now().UTC().Add(-1*24*time.Hour),
