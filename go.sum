@@ -14,8 +14,8 @@ github.com/jtolds/gls v4.2.1+incompatible/go.mod h1:QJZ7F/aHp+rZTRtaJ1ow/lLfFfVY
 github.com/mattn/goveralls v0.0.6/go.mod h1:h8b4ow6FxSPMQHF6o2ve3qsclnffZjYTNEKmLesRwqw=
 github.com/mrz1836/go-preev v0.3.0 h1:K8noknqWSOr+S3O1mJI/c6wd0TVo7Q/kpiC9hPtkl5I=
 github.com/mrz1836/go-preev v0.3.0/go.mod h1:tOcsi6SnHWQqA3Ujhr9vlbaV8R9lQo3Sb1bU3Wc6hNQ=
-github.com/mrz1836/go-whatsonchain v0.9.3 h1:ScxaLynpqb1p4PziuNCyEEypz4RMWLBpD66IwnEc+X4=
-github.com/mrz1836/go-whatsonchain v0.9.3/go.mod h1:qVch/m2I8ecQGqapkH4/41/mWoFO0J03R9QEPTOPSw4=
+github.com/mrz1836/go-whatsonchain v0.9.5 h1:AjdNvWscThC5GTmoTFPZJJi87TU2NXf4PgL0CyFp8RM=
+github.com/mrz1836/go-whatsonchain v0.9.5/go.mod h1:qVch/m2I8ecQGqapkH4/41/mWoFO0J03R9QEPTOPSw4=
 github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
