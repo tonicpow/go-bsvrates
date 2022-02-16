@@ -1,5 +1,5 @@
 # go-bsvrates
-> Real-time exchange rates for BitcoinSV using multiple providers with failover support
+> Real-time exchange rates for BitcoinSV using multiple providers with fail-over support
 
 [![Release](https://img.shields.io/github/release-pre/tonicpow/go-bsvrates.svg?logo=github&style=flat&v=3)](https://github.com/tonicpow/go-bsvrates/releases)
 [![Build Status](https://img.shields.io/github/workflow/status/tonicpow/go-bsvrates/run-go-tests?logo=github&v=3)](https://github.com/tonicpow/go-bsvrates/actions)
