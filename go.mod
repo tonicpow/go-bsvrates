@@ -1,6 +1,6 @@
 module github.com/tonicpow/go-bsvrates
 
-go 1.16
+go 1.17
 
 require (
 	github.com/centrifugal/protocol v0.8.7 // indirect
