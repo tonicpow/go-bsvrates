@@ -3,7 +3,6 @@ package bsvrates
 import (
 	"context"
 
-	"github.com/mrz1836/go-preev"
 	"github.com/mrz1836/go-whatsonchain"
 )
 
@@ -17,10 +16,8 @@ type RateService interface {
 type ClientInterface interface {
 	RateService
 	CoinPaprika() CoinPaprikaInterface
-	Preev() preev.ClientInterface
 	Providers() []Provider
 	SetCoinPaprika(client CoinPaprikaInterface)
-	SetPreev(client preev.ClientInterface)
 	SetWhatsOnChain(client whatsonchain.ChainService)
 	WhatsOnChain() whatsonchain.ChainService
 }

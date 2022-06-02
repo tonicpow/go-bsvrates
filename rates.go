@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/mrz1836/go-preev"
 	"github.com/mrz1836/go-whatsonchain"
 )
 
@@ -35,11 +34,6 @@ func (c *Client) GetRate(ctx context.Context, currency Currency) (rate float64, 
 			var response *whatsonchain.ExchangeRate
 			if response, err = c.WhatsOnChain().GetExchangeRate(ctx); err == nil && response != nil {
 				rate, err = strconv.ParseFloat(response.Rate, 64)
-			}
-		case ProviderPreev:
-			var response *preev.Ticker
-			if response, err = c.Preev().GetTicker(ctx, PreevTickerID); err == nil && response != nil {
-				rate = response.Prices.Ppi.LastPrice
 			}
 		case providerLast:
 			err = fmt.Errorf("provider unknown")

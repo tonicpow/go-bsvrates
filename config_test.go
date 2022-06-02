@@ -18,11 +18,9 @@ func TestProvider_IsValid(t *testing.T) {
 		{"provider 0", 0, false},
 		{"provider 1", 1, true},
 		{"provider 2", 2, true},
-		{"provider 3", 3, true},
-		{"provider 4", 4, false},
+		{"provider 3", 3, false},
 		{"ProviderWhatsOnChain", ProviderWhatsOnChain, true},
 		{"ProviderCoinPaprika", ProviderCoinPaprika, true},
-		{"ProviderPreev", ProviderPreev, true},
 		{"providerLast", providerLast, false},
 	}
 	for _, test := range tests {
@@ -45,11 +43,9 @@ func TestProvider_Name(t *testing.T) {
 		{"provider 0", 0, ""},
 		{"provider 1", 1, "WhatsOnChain"},
 		{"provider 2", 2, "CoinPaprika"},
-		{"provider 3", 3, "Preev"},
-		{"provider 4", 4, ""},
+		{"provider 4", 3, ""},
 		{"ProviderWhatsOnChain", ProviderWhatsOnChain, "WhatsOnChain"},
 		{"ProviderCoinPaprika", ProviderCoinPaprika, "CoinPaprika"},
-		{"ProviderPreev", ProviderPreev, "Preev"},
 		{"providerLast", providerLast, ""},
 	}
 	for _, test := range tests {
@@ -72,11 +68,9 @@ func TestProviderToName(t *testing.T) {
 		{"provider 0", 0, ""},
 		{"provider 1", 1, "WhatsOnChain"},
 		{"provider 2", 2, "CoinPaprika"},
-		{"provider 3", 3, "Preev"},
-		{"provider 4", 4, ""},
+		{"provider 4", 3, ""},
 		{"ProviderWhatsOnChain", ProviderWhatsOnChain, "WhatsOnChain"},
 		{"ProviderCoinPaprika", ProviderCoinPaprika, "CoinPaprika"},
-		{"ProviderPreev", ProviderPreev, "Preev"},
 		{"providerLast", providerLast, ""},
 	}
 	for _, test := range tests {

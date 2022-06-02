@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/mrz1836/go-preev"
 	"github.com/mrz1836/go-whatsonchain"
 )
 
@@ -26,7 +25,6 @@ type CoinPaprikaInterface interface {
 // Client is the parent struct that contains the provider clients and list of providers to use
 type Client struct {
 	coinPaprika  CoinPaprikaInterface      // Coin Paprika client
-	preev        preev.ClientInterface     // Preev Client
 	providers    []Provider                // List of providers to use (in order for fail-over)
 	whatsOnChain whatsonchain.ChainService // WhatsOnChain (chain services)
 }
@@ -46,25 +44,6 @@ type ClientOptions struct {
 	TransportMaxIdleConnections    int           `json:"transport_max_idle_connections"`
 	TransportTLSHandshakeTimeout   time.Duration `json:"transport_tls_handshake_timeout"`
 	UserAgent                      string        `json:"user_agent"`
-}
-
-// ToPreevOptions will convert the current options to Preev Options
-func (c *ClientOptions) ToPreevOptions() (options *preev.Options) {
-	options = preev.ClientDefaultOptions()
-	options.UserAgent = c.UserAgent + " using " + options.UserAgent
-	options.BackOffExponentFactor = c.BackOffExponentFactor
-	options.BackOffInitialTimeout = c.BackOffInitialTimeout
-	options.BackOffMaximumJitterInterval = c.BackOffMaximumJitterInterval
-	options.BackOffMaxTimeout = c.BackOffMaxTimeout
-	options.DialerKeepAlive = c.DialerKeepAlive
-	options.DialerTimeout = c.DialerTimeout
-	options.RequestRetryCount = c.RequestRetryCount
-	options.RequestTimeout = c.RequestTimeout
-	options.TransportExpectContinueTimeout = c.TransportExpectContinueTimeout
-	options.TransportIdleTimeout = c.TransportIdleTimeout
-	options.TransportMaxIdleConnections = c.TransportMaxIdleConnections
-	options.TransportTLSHandshakeTimeout = c.TransportTLSHandshakeTimeout
-	return
 }
 
 // ToWhatsOnChainOptions will convert the current options to WOC Options
@@ -129,11 +108,6 @@ func NewClient(clientOptions *ClientOptions, customHTTPClient HTTPInterface,
 		clientOptions, customHTTPClient,
 	)
 
-	// Create a client for Preev
-	c.preev = preev.NewClient(
-		clientOptions.ToPreevOptions(), customHTTPClient,
-	)
-
 	// Create a client for WhatsOnChain
 	c.whatsOnChain = whatsonchain.NewClient(
 		whatsonchain.NetworkMain, clientOptions.ToWhatsOnChainOptions(), customHTTPClient,
@@ -156,18 +130,6 @@ func (c *Client) CoinPaprika() CoinPaprikaInterface {
 func (c *Client) SetCoinPaprika(client CoinPaprikaInterface) {
 	if client != nil {
 		c.coinPaprika = client
-	}
-}
-
-// Preev will return the client
-func (c *Client) Preev() preev.ClientInterface {
-	return c.preev
-}
-
-// SetPreev will set the client
-func (c *Client) SetPreev(client preev.ClientInterface) {
-	if client != nil {
-		c.preev = client
 	}
 }
 

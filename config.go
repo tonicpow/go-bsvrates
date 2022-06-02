@@ -5,21 +5,18 @@ import "strings"
 const (
 
 	// version is the current package version
-	version = "v0.2.2"
+	version = "v0.3.0"
 
 	// defaultUserAgent is the default user agent for all requests
 	defaultUserAgent string = "go-bsvrates: " + version
 
 	// CoinPaprikaQuoteID is the id for CoinPaprika (BSV)
 	CoinPaprikaQuoteID = "bsv-bitcoin-sv"
-
-	// PreevTickerID is the id for Preev (BSV)
-	PreevTickerID = "12eLTxv1vyUeJtp5zqWbqpdWvfLdZ7dGf8"
 )
 
 var (
 	// defaultProviders (if no provider slice is set, use this as the default set)
-	defaultProviders = []Provider{ProviderCoinPaprika, ProviderWhatsOnChain, ProviderPreev}
+	defaultProviders = []Provider{ProviderCoinPaprika, ProviderWhatsOnChain}
 )
 
 // Provider is a provider for rates or prices
@@ -32,8 +29,7 @@ const (
 
 	ProviderWhatsOnChain // 1
 	ProviderCoinPaprika  // 2
-	ProviderPreev        // 3
-	providerLast         // 4
+	providerLast         // 3
 )
 
 // IsValid tests if the provider is valid or not
@@ -48,8 +44,6 @@ func (p Provider) Name() string {
 		return "WhatsOnChain"
 	case ProviderCoinPaprika:
 		return "CoinPaprika"
-	case ProviderPreev:
-		return "Preev"
 	case providerLast:
 		return ""
 	default:

@@ -568,7 +568,7 @@ func TestPaprikaClient_GetHistoricalTickers(t *testing.T) {
 	})
 
 	t.Run("invalid response", func(t *testing.T) {
-		client = newMockClient(&mockWOCValid{}, &mockPaprikaFailed{}, &mockPreevValid{})
+		client = newMockClient(&mockWOCValid{}, &mockPaprikaFailed{})
 		assert.NotNil(t, client)
 
 		resp, rateErr := client.CoinPaprika().GetHistoricalTickers(

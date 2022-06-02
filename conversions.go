@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/mrz1836/go-preev"
 	"github.com/mrz1836/go-whatsonchain"
 )
 
@@ -37,13 +36,6 @@ func (c *Client) GetConversion(ctx context.Context, currency Currency, amount fl
 				if rate, err = strconv.ParseFloat(response.Rate, 64); err == nil {
 					satoshis, err = ConvertPriceToSatoshis(rate, amount)
 				}
-			}
-		case ProviderPreev:
-			var response *preev.Ticker
-			if response, err = c.Preev().GetTicker(
-				ctx, PreevTickerID,
-			); err == nil && response != nil {
-				satoshis, err = ConvertPriceToSatoshis(response.Prices.Ppi.LastPrice, amount)
 			}
 		case providerLast:
 			err = fmt.Errorf("provider unknown")

@@ -2,6 +2,7 @@ package bsvrates
 
 import (
 	"context"
+	"errors"
 
 	"github.com/mrz1836/go-whatsonchain"
 )
@@ -48,5 +49,5 @@ type mockWOCFailed struct {
 // GetExchangeRate is a mock response
 func (m *mockWOCFailed) GetExchangeRate(_ context.Context) (rate *whatsonchain.ExchangeRate, err error) {
 
-	return
+	return nil, errors.New("some error occurred")
 }
