@@ -7,7 +7,7 @@
 [![codecov](https://codecov.io/gh/tonicpow/go-bsvrates/branch/master/graph/badge.svg?v=3)](https://codecov.io/gh/tonicpow/go-bsvrates)
 [![Go](https://img.shields.io/github/go-mod/go-version/tonicpow/go-bsvrates?v=3)](https://golang.org/)
 <br>
-[![Mergify Status](https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/tonicpow/go-bsvrates&style=flat&v=3)](https://mergify.io)
+[![Mergify Status](https://img.shields.io/endpoint.svg?url=https://api.mergify.com/v1/badges/tonicpow/go-bsvrates&style=flat&v=3)](https://mergify.io)
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/tonicpow/go-bsvrates)
 
 <br/>
@@ -64,11 +64,6 @@ View the generated [documentation](https://pkg.go.dev/github.com/tonicpow/go-bsv
       - [GetHistoricalTickers()](coinpaprika.go)
     - **[What's On Chain](https://developers.whatsonchain.com/)**
       - [GetExchangeRate()](https://github.com/mrz1836/go-whatsonchain)
-    - **[Preev](https://preev.pro/api/)**
-      - [GetPair()](https://github.com/mrz1836/go-preev)
-      - [GetPairs()](https://github.com/mrz1836/go-preev)
-      - [GetTicker()](https://github.com/mrz1836/go-preev)
-      - [GetTickers()](https://github.com/mrz1836/go-preev)
 
 <details>
 <summary><strong><code>Library Deployment</code></strong></summary>
@@ -230,7 +225,7 @@ or by making a [**bitcoin donation**](https://tonicpow.com/?utm_source=github&ut
 
 ### Credits
 
-[Coin Paprika](https://tncpw.co/7c2cae76), [What's On Chain](https://tncpw.co/638d8e8a) and [Preev](https://tncpw.co/d19f43a3) for their hard work on their public API
+[Coin Paprika](https://tncpw.co/7c2cae76) and [What's On Chain](https://tncpw.co/638d8e8a) for their hard work on their public API
 
 [Jad](https://github.com/jadwahab) for his contributions to the package!
 
