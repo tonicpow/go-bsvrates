@@ -14,14 +14,6 @@ changelog:
       - '^.github:'
       - '^.vscode:'
       - '^test:'
-
-# ---------------------------
-# Publishers
-# ---------------------------
-#publishers:
-#  - name: "Publish GoDocs"
-#    cmd: make godocs
-
 # ---------------------------
 # Builder
 # ---------------------------
