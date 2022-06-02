@@ -1,14 +1,14 @@
 # go-bsvrates
 > Real-time exchange rates for BitcoinSV using multiple providers with fail-over support
 
-[![Release](https://img.shields.io/github/release-pre/tonicpow/go-bsvrates.svg?logo=github&style=flat&v=3)](https://github.com/tonicpow/go-bsvrates/releases)
-[![Build Status](https://img.shields.io/github/workflow/status/tonicpow/go-bsvrates/run-go-tests?logo=github&v=3)](https://github.com/tonicpow/go-bsvrates/actions)
-[![Report](https://goreportcard.com/badge/github.com/tonicpow/go-bsvrates?style=flat&v=3)](https://goreportcard.com/report/github.com/tonicpow/go-bsvrates)
-[![codecov](https://codecov.io/gh/tonicpow/go-bsvrates/branch/master/graph/badge.svg?v=3)](https://codecov.io/gh/tonicpow/go-bsvrates)
-[![Go](https://img.shields.io/github/go-mod/go-version/tonicpow/go-bsvrates?v=3)](https://golang.org/)
+[![Release](https://img.shields.io/github/release-pre/tonicpow/go-bsvrates.svg?logo=github&style=flat&v=1)](https://github.com/tonicpow/go-bsvrates/releases)
+[![Build Status](https://img.shields.io/github/workflow/status/tonicpow/go-bsvrates/run-go-tests?logo=github&v=1)](https://github.com/tonicpow/go-bsvrates/actions)
+[![Report](https://goreportcard.com/badge/github.com/tonicpow/go-bsvrates?style=flat&v=1)](https://goreportcard.com/report/github.com/tonicpow/go-bsvrates)
+[![codecov](https://codecov.io/gh/tonicpow/go-bsvrates/branch/master/graph/badge.svg?v=1)](https://codecov.io/gh/tonicpow/go-bsvrates)
+[![Go](https://img.shields.io/github/go-mod/go-version/tonicpow/go-bsvrates?v=1)](https://golang.org/)
 <br>
-[![Mergify Status](https://img.shields.io/endpoint.svg?url=https://api.mergify.com/v1/badges/tonicpow/go-bsvrates&style=flat&v=3)](https://mergify.io)
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/tonicpow/go-bsvrates)
+[![Mergify Status](https://img.shields.io/endpoint.svg?url=https://api.mergify.com/v1/badges/tonicpow/go-bsvrates&style=flat&v=1)](https://mergify.io)
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod&v=1)](https://gitpod.io/#https://github.com/tonicpow/go-bsvrates)
 
 <br/>
 
@@ -37,7 +37,7 @@ go get -u github.com/tonicpow/go-bsvrates
 ## Documentation
 View the generated [documentation](https://pkg.go.dev/github.com/tonicpow/go-bsvrates)
 
-[![GoDoc](https://godoc.org/github.com/tonicpow/go-bsvrates?status.svg&style=flat)](https://pkg.go.dev/github.com/tonicpow/go-bsvrates)
+[![GoDoc](https://godoc.org/github.com/tonicpow/go-bsvrates?status.svg&style=flat&v=1)](https://pkg.go.dev/github.com/tonicpow/go-bsvrates)
 
 ### Features
 - [BSV Rates Client](client.go) is completely configurable
@@ -219,7 +219,7 @@ You can also support this project by [becoming a sponsor on GitHub](https://gith
 or by making a [**bitcoin donation**](https://tonicpow.com/?utm_source=github&utm_medium=sponsor-link&utm_campaign=go-bsvrates&utm_term=go-bsvrates&utm_content=go-bsvrates) to ensure this journey continues indefinitely! :rocket:
 
 
-[![Stars](https://img.shields.io/github/stars/tonicpow/go-bsvrates?label=Please%20like%20us&style=social)](https://github.com/tonicpow/go-bsvrates/stargazers)
+[![Stars](https://img.shields.io/github/stars/tonicpow/go-bsvrates?label=Please%20like%20us&style=social&v=1)](https://github.com/tonicpow/go-bsvrates/stargazers)
 
 <br/>
 
@@ -233,4 +233,4 @@ or by making a [**bitcoin donation**](https://tonicpow.com/?utm_source=github&ut
 
 ## License
 
-[![License](https://img.shields.io/github/license/tonicpow/go-bsvrates.svg?style=flat&v=3)](LICENSE)
+[![License](https://img.shields.io/github/license/tonicpow/go-bsvrates.svg?style=flat&v=1)](LICENSE)
