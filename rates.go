@@ -6,7 +6,6 @@ package bsvrates
 import (
 	"context"
 	"fmt"
-	"strconv"
 
 	"github.com/mrz1836/go-whatsonchain"
 )
@@ -33,7 +32,7 @@ func (c *Client) GetRate(ctx context.Context, currency Currency) (rate float64, 
 		case ProviderWhatsOnChain:
 			var response *whatsonchain.ExchangeRate
 			if response, err = c.WhatsOnChain().GetExchangeRate(ctx); err == nil && response != nil {
-				rate, err = strconv.ParseFloat(response.Rate, 64)
+				rate = response.Rate
 			}
 		case providerLast:
 			err = fmt.Errorf("provider unknown")

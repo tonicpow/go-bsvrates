@@ -3,6 +3,7 @@ package bsvrates
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/mrz1836/go-whatsonchain"
 )
@@ -34,7 +35,8 @@ type mockWOCValid struct {
 func (m *mockWOCValid) GetExchangeRate(_ context.Context) (rate *whatsonchain.ExchangeRate, err error) {
 
 	rate = &whatsonchain.ExchangeRate{
-		Rate:     "159.01",
+		Rate:     159.01,
+		Time:     time.Now().Unix(),
 		Currency: CurrencyToName(CurrencyDollars),
 	}
 

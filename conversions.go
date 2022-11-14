@@ -3,7 +3,6 @@ package bsvrates
 import (
 	"context"
 	"fmt"
-	"strconv"
 
 	"github.com/mrz1836/go-whatsonchain"
 )
@@ -32,10 +31,7 @@ func (c *Client) GetConversion(ctx context.Context, currency Currency, amount fl
 		case ProviderWhatsOnChain:
 			var response *whatsonchain.ExchangeRate
 			if response, err = c.WhatsOnChain().GetExchangeRate(ctx); err == nil && response != nil {
-				var rate float64
-				if rate, err = strconv.ParseFloat(response.Rate, 64); err == nil {
-					satoshis, err = ConvertPriceToSatoshis(rate, amount)
-				}
+				satoshis, err = ConvertPriceToSatoshis(response.Rate, amount)
 			}
 		case providerLast:
 			err = fmt.Errorf("provider unknown")
