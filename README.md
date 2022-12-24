@@ -2,7 +2,7 @@
 > Real-time exchange rates for BitcoinSV using multiple providers with fail-over support
 
 [![Release](https://img.shields.io/github/release-pre/tonicpow/go-bsvrates.svg?logo=github&style=flat&v=1)](https://github.com/tonicpow/go-bsvrates/releases)
-[![Build Status](https://img.shields.io/github/workflow/status/tonicpow/go-bsvrates/run-go-tests?logo=github&v=1)](https://github.com/tonicpow/go-bsvrates/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/tonicpow/go-bsvrates/run-tests.yml?branch=master&logo=github&v=1)](https://github.com/tonicpow/go-bsvrates/actions)
 [![Report](https://goreportcard.com/badge/github.com/tonicpow/go-bsvrates?style=flat&v=1)](https://goreportcard.com/report/github.com/tonicpow/go-bsvrates)
 [![codecov](https://codecov.io/gh/tonicpow/go-bsvrates/branch/master/graph/badge.svg?v=1)](https://codecov.io/gh/tonicpow/go-bsvrates)
 [![Go](https://img.shields.io/github/go-mod/go-version/tonicpow/go-bsvrates?v=1)](https://golang.org/)
