@@ -88,7 +88,7 @@ func (m *mockPaprikaValid) GetPriceConversion(_ context.Context, baseCurrencyID,
 
 // mockPaprikaFailed for mocking requests
 type mockPaprikaFailed struct {
-	mockPaprikaBase
+	mockPaprikaBase //nolint:unused,structcheck // this is a mock
 }
 
 // GetMarketPrice is a mock response
