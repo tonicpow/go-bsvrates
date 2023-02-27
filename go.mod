@@ -6,7 +6,7 @@ require (
 	github.com/gojektech/heimdall/v6 v6.1.0
 	github.com/mrz1836/go-whatsonchain v0.12.1
 	github.com/shopspring/decimal v1.3.1
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.2
 )
 
 require (
