@@ -11,7 +11,7 @@ import (
 type mockPaprikaBase struct{}
 
 // GetMarketPrice is a mock response
-func (m *mockPaprikaBase) GetMarketPrice(_ context.Context, coinID string) (response *TickerResponse, err error) {
+func (m *mockPaprikaBase) GetMarketPrice(_ context.Context, _ string) (response *TickerResponse, err error) {
 	return
 }
 
