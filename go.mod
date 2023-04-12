@@ -1,6 +1,6 @@
 module github.com/tonicpow/go-bsvrates
 
-go 1.17
+go 1.18
 
 require (
 	github.com/gojektech/heimdall/v6 v6.1.0
