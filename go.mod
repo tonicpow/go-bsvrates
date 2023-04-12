@@ -29,5 +29,8 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-// Breaking changes - needs a full refactor in WOC and BUX
+// Breaking changes - needs a full refactor in WOC
 replace github.com/centrifugal/centrifuge-go => github.com/centrifugal/centrifuge-go v0.8.3
+
+// Breaking changes - needs a full refactor in WOC
+replace github.com/centrifugal/protocol => github.com/centrifugal/protocol v0.9.1
