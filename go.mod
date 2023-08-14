@@ -4,13 +4,13 @@ go 1.18
 
 require (
 	github.com/gojektech/heimdall/v6 v6.1.0
-	github.com/mrz1836/go-whatsonchain v0.12.2
+	github.com/mrz1836/go-whatsonchain v0.13.0
 	github.com/shopspring/decimal v1.3.1
 	github.com/stretchr/testify v1.8.4
 )
 
 require (
-	github.com/centrifugal/centrifuge-go v0.9.4 // indirect
+	github.com/centrifugal/centrifuge-go v0.10.1 // indirect
 	github.com/centrifugal/protocol v0.10.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gojektech/valkyrie v0.0.0-20190210220504-8f62c1e7ba45 // indirect
@@ -22,10 +22,10 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/segmentio/encoding v0.3.6 // indirect
-	github.com/stretchr/objx v0.5.0 // indirect
+	github.com/stretchr/objx v0.5.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	golang.org/x/sys v0.7.0 // indirect
-	google.golang.org/protobuf v1.30.0 // indirect
+	golang.org/x/sys v0.11.0 // indirect
+	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
